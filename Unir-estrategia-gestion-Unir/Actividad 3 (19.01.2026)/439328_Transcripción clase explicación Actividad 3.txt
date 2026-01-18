@@ -1,0 +1,1853 @@
+¿Me confirmáis que me
+escucháis, por favor?
+Empezamos. Sí, profesor.
+Vale, gracias por ahí.
+Venga, pues nada, me alegro de veros.
+Feliz año lo primero.
+Espero que lo hayáis pasado muy bien
+estos días con la familia,
+con los amigos.
+Gracias por veros, si habéis
+viajado, si os habéis quedado en casa.
+Pues nada, son días para
+celebrar y espero que os
+hayan traído muchísimas cosas.
+Pues el Papá Noel, los Reyes
+Magos y todas estas cosas.
+Y que también, por supuesto,
+lo hayáis pasado bien, que
+hayáis descansado y que, por
+supuesto, hayáis sacado
+tiempecillo para, como dijimos,
+pues estudiar un poquito, ¿vale?
+¿Vale?
+Venga, estamos ya en la recta
+final, ¿vale?
+Así que hay que
+ponerse un poquito las pilas, ¿vale?
+Es un poco triste
+decirlo el primer día, pero
+ya mismo, ¿vale?
+Cuanto antes empecemos, antes
+recuperamos el ritmo, ¿vale?
+Así que, venga, el ánimo que
+no nos falte y venga, a tope con ello.
+Hoy, ¿qué vamos a ver?
+Vamos a explicar la actividad 3, ¿vale?
+Esto no para.
+Resolvemos la actividad 3 y
+la entregamos el día 19, creo
+que es la fecha que tenemos, ¿vale?
+Nos da tiempo de sobra.
+Tenemos 10 días para hacerlo
+más que de sobra, ¿eh?
+¿Vale? Y veréis que es una actividad
+que a mí personalmente me gusta mucho
+porque es una actividad donde
+yo prácticamente os doy el
+dataset y vosotros hacéis lo
+que hagáis, lo que queráis, ¿eh?
+¿Vale? Por eso me mola, ¿eh?
+¿Vale? Porque es muy, muy
+cercana a la realidad, ¿vale?
+Es, oye, pues nos podemos
+plantear que le vamos a hacer
+un análisis
+al director de marketing, al
+director comercial, ¿vale?
+Y, bueno, pues el director de
+marketing, el director comercial,
+no nos dice qué es lo que
+tenemos que hacer, ¿vale?
+Allá por, en la primera de las
+actividades, recordáis que
+Angels Brick, nuestra amiga
+Angels Brick, pues nos decía
+qué quería hacer y nosotros
+utilizábamos los datos para,
+oye, pues corroborar
+si eso que quería hacer ella
+era acertado o no. Aquí no.
+Aquí, cuando el director de
+marketing o el director
+comercial nos pide algo,
+no nos dice qué tenemos que
+hacer, qué hipótesis tenemos
+que corroborar o chequear, qué
+datos tenemos que utilizar, no.
+¿Vale? Aquí yo os voy a dar
+un dataset, ¿vale? Y luego
+cada grupo hará lo que
+considere, ¿vale?
+Con, eso sí, bueno, pues, digamos,
+unas mínimas, digamos,
+directrices, ¿eh?
+Para que todos lo hagamos más o menos
+enmarcados dentro de, digamos,
+del mismo entorno.
+Lo primero, dentro del mismo
+entorno y la misma extensión, ¿vale?
+Esto que muchas veces,
+pues, eh, profe, qué tal, que
+no sé qué.
+Como siempre, una de las
+cosas que tenemos que
+conseguir aprender es ser,
+digamos, bueno, pues,
+conseguir plasmar en poco
+espacio mucha información, ¿vale?
+O ser sintéticos en
+nuestros análisis o ser
+sintéticos en nuestras conclusiones.
+Bueno, pues, de igual manera
+que en otras actividades, esta
+actividad que voy a
+presentaros, voy a compartir,
+esta actividad es actividad
+grupal y también tiene una
+limitación, ¿eh?
+¿Vale?
+Tiene la limitación de tres
+páginas, ¿vale?
+A ver que hoy
+iba el Zoom un poquito, está
+desperezándose también, ¿vale?
+De las vacaciones, así que
+tarda un ratito en compartir.
+Ahí lo tenéis, ¿no?
+¿Vale? Venga, pues, esta actividad lo
+he chequeado y a mí me sale
+ya que es grupal. No es como
+pasaba en la actividad 2, ¿vale?
+Que ponía que era individual
+cuando era grupal. En esta, ¿vale?
+El documento sí que está corregido.
+Disculpar de nuevo lo que
+sucedió en la actividad 2, ¿vale?
+Y esas, bueno, por
+dudas que nos surgían.
+Esta actividad es grupal.
+Y además tiene un carácter
+transversal, ¿vale?
+Esto del carácter transversal,
+¿a qué nos referimos?
+Bueno, pues, que vamos a utilizar
+una base de datos
+que creo que la estáis
+utilizando también con el
+profesor Serge, que es un
+crack del SQL, ¿vale?
+Y, bueno, pues, estáis
+utilizando una base de datos
+que se llama Adventure Works, ¿no?
+Si mi memoria no me falla, ¿vale?
+Pues, es la misma base
+de datos que vamos a utilizar, ¿vale?
+Pero, bueno, pues, para que
+veáis qué profe más enrollado
+tenéis, los datos, el dataset
+que tenéis que analizar,
+ya os lo doy yo, ¿vale?
+Porque el objetivo de esta
+actividad no es que creéis en
+sí el dataset, ¿vale?
+Eso sería una actividad que
+tendríais que hacer, pues, en
+la asignatura de Sergei.
+En esta asignatura lo que se
+busca es extraer insights a
+través del análisis, ¿no?
+Entre otras muchas cosas.
+Bueno, pues, yo os doy el
+dataset y vosotros extraéis
+los insights.
+Y los insights que vosotros
+consideréis, ¿eh?
+Vale, entonces, que sepáis que
+está extraída la información
+de la base de datos de Adventure Works
+y, bueno, pues, oye, ¿qué se plantea?
+¿Vale? Más allá de los objetivos,
+lo que está colgado en el
+aula es un fichero .zip que
+contiene tanto este fichero,
+Word, el explicativo, ¿vale?
+como este fichero que es el
+dataset, ¿eh?
+¿Vale? ¿Sí?
+¿Vale? Entonces, cuando descarguéis el
+fichero .zip, en principio, os
+llenen estos dos ficheros, ¿vale?
+Entonces, y ese fichero, el
+dataset es este, ¿vale?
+La actividad 3, transversal
+bike, ¿vale?
+Luego vamos a ver los datos
+que nos vienen en ese dataset, ¿eh?
+¿Vale? Vamos a explicar un
+poquito brevemente qué tipo de
+información tenemos.
+Pero, bueno, venga, ¿qué se trata?
+¿De qué se trata la actividad?
+Se trata de analizar estos
+datos que vienen de la base
+de datos de Adventure Works, ¿vale?
+De tal manera que, a
+diferencia de la actividad 1,
+donde Inges Brick nos decía,
+oye, yo quiero poner un
+precio medio, máximo y mínimo X.
+Quiero, pues, por la dinámica
+del negocio, decía Inges,
+que quería poner un precio
+por pernoctación más bajo en
+función de, al aumentar el
+número de pernoctaciones, ¿no?
+Nos decía ese tipo de cuestiones, ¿no?
+Esas eran hipótesis que
+nosotros, a través de los
+datos, chequeábamos, validábamos, ¿no?
+Y decíamos si eran correctas
+o no, ¿os acordáis, no?
+En este caso, ¿vale?
+Lo que tenemos son los datos
+y las hipótesis a validar las
+ponemos nosotros, cada grupo.
+Cada grupo, pues, desarrollará,
+enunciará dos o tres hipótesis, ¿vale?
+A analizar, a explicar y a
+desarrollar las conclusiones
+del análisis que cada equipo,
+cada grupo ha desarrollado
+y que permitan afirmar la
+existencia o no, la realidad
+o la falsedad de esa hipótesis.
+¿Vale? Entonces, es totalmente
+abierto, ¿vale?
+Un grupo puede hacer, puede
+analizar una hipótesis, porque
+sea la cojo hipótesis,
+y tenga que hacer un análisis
+del data y le lleve, pues,
+dos páginas y media. Pues, fantástico.
+Otro grupo, pues, decide
+contrastar tres hipótesis.
+Pues, oye, pues, tres
+hipótesis, como la extensión
+máxima que veremos luego son
+tres páginas,
+pues, utiliza una página por
+cada hipótesis.
+Otro, dos hipótesis.
+Y otro, pues, no decide
+ninguna hipótesis a priori y
+lo que decide es,
+oye, pues, voy a extraer la
+mayor cantidad de insights
+relevantes de la información que tengo.
+Y entonces, nos enfrentamos
+directamente al dataset y
+vamos extrayendo información, ¿vale?
+Insights y eso los vamos
+reflejando en el documento.
+¿Me explico más o menos cuál
+es el objetivo?
+¿Sí?
+¿Cómo lo hacemos?
+Pues, es lo que os planteo
+por aquí, ¿vale?
+Pues, podemos hacer un primer
+análisis exploratorio utilizando la IA.
+¿Vale?
+Podemos hacerle determinadas
+preguntas a un chat GPT, a
+un Perplexity, a un Gemini, ¿vale?
+Le subimos este dataset, le
+explicamos ahí en el PROM lo
+que queremos, tal no sé qué,
+y vamos interactuando.
+Y por ahí vamos sacando
+primeras conclusiones.
+En ese primer análisis exploratorio.
+Bien sea a nivel análisis
+exploratorio global, sin tener
+una hipótesis previa,
+o bien le vamos preguntando a
+la IA en función de esa
+hipótesis de negocio que
+queremos validar.
+¿Me explico?
+¿Sí?
+¿Vale?
+Entonces, oye, pues podemos
+hacer ese tipo de análisis
+exploratorio con esa IA,
+tanto con un enfoque como con otro,
+y luego podemos definir una
+serie de KPIs
+y analizar esos KPIs a través
+de las dimensiones de análisis
+que tenemos disponibles en el dataset,
+para lo cual desarrollamos
+también un dashboard, ¿vale?
+Desarrollaremos un dashboard en
+la plataforma que queramos, ¿vale?
+La semana que viene vamos a
+dar una clase introductoria de Tableau.
+Pues el que quiera hacerlo
+con Tableau, pues fantástico.
+El que quiera hacerlo con BI,
+que es donde tenéis más
+expertise, pues fantástico.
+El que quiera hacerlo con
+ClipView, con Data Studio, con
+lo que queráis, ¿vale?
+Con lo que queráis, ¿vale?
+Con Looker Studio, con lo que queráis.
+Desarrollaremos un dashboard o
+dos que nos permitan analizar
+esa hipótesis de negocio en
+concreto, ¿vale?
+O analizar la globalidad de
+insights que podamos extraer
+del dataset, ¿vale?
+Y el documento, el entregable,
+pues era un documento Word,
+con por favor en el
+encabezado, el nombre de los
+participantes, ¿vale?
+Del grupo, por favor, ¿vale?
+Eso, de verdad, es un favor
+muy grande, una pequeña cosa,
+pero es un favor muy grande
+para los profes, ¿vale?
+Que indiquéis todos los
+integrantes del grupo.
+En ese encabezado ponéis,
+somos el grupo tal, estos
+somos los integrantes,
+y imaginemos que, Delfina,
+déjate las uñas, te estoy
+viendo por ahí.
+Imaginemos que Delfina y el
+grupo de Delfina, ¿vale?
+Dice, profe, pues nosotros
+hemos intentado validar o
+analizar estas dos hipótesis.
+O nos hemos planteado estas
+dos hipótesis de negocio y el
+análisis lo hemos dirigido
+para validar o no la realidad
+o no, o la falsedad de esta
+hipótesis de negocio.
+Primera hipótesis, tatatita,
+tatata, que ahora pondremos
+ejemplos, ¿vale?
+Tatatita, tatata, y lo que me
+tenéis que incorporar en esa
+extensión máxima de tres páginas
+es, aparte de todo el
+descriptivo, de todas las
+conclusiones y demás,
+oye, pues cualquier tipo de
+pantallazo que consideréis de
+ese análisis exploratorio
+que habéis hecho con la IA, ¿vale?
+No el PROM, a mí el PROM me
+da lo mismo, ¿vale?
+Me interesa más el output que
+habéis conseguido, ¿vale?
+Y que me lo expliquéis, oye,
+pues esto tal, a través de
+esto vemos esto,
+y luego le hemos preguntado
+esto y hemos sacado esta
+información, o sea que...
+Tanto eso como pantallazos del
+dashboard o de los dashboards
+que hayáis construido,
+solo los pantallazos, y me
+los explicáis.
+Pues en este pantallazo vemos
+esto, tatatita, estas dimensiones,
+lo que observamos es que el
+gasto aparece que tal, que no sé qué,
+y vemos tal, no sé qué, y
+las conclusiones acompañadas de
+esas imágenes,
+tanto del output de la IA
+como del output del dashboard, ¿vale?
+No me tenéis que hacer llegar
+ningún tipo de dashboard, ¿vale?
+Ni ningún tipo de documento
+con los PROMs.
+No tenemos que construir
+ningún tipo de script en Python,
+ni cosas de estas raras, ni
+modelo probabilístico,
+ni predictivo, ni nada, ¿vale?
+Yo quiero que interactuemos
+con la IA y quiero que interactuemos y
+desarrollemos un dashboard, ¿vale?
+Y a partir de ahí, tanto con
+la IA, lo que nos extraiga la IA,
+como con nuestra interacción
+con el dashboard que hemos construido,
+pues oye, pues extraer, bueno,
+extraer, establecer esos
+insights que nos permitan
+o extraer insights generales
+o, pues, rebatir o no,
+cada una de esas hipotesis de
+negocio previamente establecerlas.
+¿Sí? ¿Más o menos claro?
+¿Sí? Esto no se le puede poner
+puertas al campo, que se dice
+en muchas ocasiones.
+Pues esto igual, aquí no
+ponemos puertas al campo, ¿vale?
+Cada grupo define las
+hipótesis que considere, ¿vale?
+Es mejor una opción que otra,
+es decir, es mejor no
+establecer ningún tipo de
+hipótesis previa,
+empezar a analizar todo con
+todo y extraer los insights
+más relevantes.
+¿Es mejor esa opción o es
+mejor establecer unas hipótesis previas
+y dirigir el análisis para
+rebatir o no esas hipótesis?
+No es mejor una opción o
+otra, son opciones diferentes, ¿vale?
+Lo que sí que tenemos que
+tener presente, ¿vale?
+Lo que sí que tenemos que
+tener presente es que la
+primera tiene un riesgo
+que es que nos podemos perder
+en el análisis, ¿vale?
+Pero, oye, si somos un grupo,
+si sabemos controlar ese riesgo
+y podemos dirigir un poquito
+el análisis y tal, pues es
+fantástico, ¿vale?
+¿Que no queremos asumir ese
+pequeño riesgo y queremos
+definir una serie de hipótesis?
+Pues también fantástico.
+Que las hipótesis sean
+hipótesis de un máster en
+inteligencia de negocio, ¿vale?
+No que sea el gasto medio de
+los hombres es mayor que el
+gasto medio de las mujeres.
+Hombre, para eso no estamos aquí, ¿eh?
+¿Me explico?
+O sea, el ejemplo es un poco
+extremista, pero nos entendemos, ¿no?
+O sea, la hipótesis que
+queramos validar, pues que sea
+lo suficientemente compleja.
+Y entonces, tengo un chat por
+ahí, termino y luego ya me leo el chat,
+que creo que hay alguien por
+ahí que quiere comentar algo.
+Pero, esto, vale, esto es un
+ejemplo real, ¿vale?
+De cosas que te piden en la
+empresa, ¿vale?
+A mí el director de marketing
+me pide determinadas cosas y
+no me dice qué tengo que hacer,
+ni qué datos tengo que sacar,
+ni no sé qué.
+Me dice, oye, quiero ver si
+esto se cumple o no se cumple.
+Y ya me busco yo la vida, ¿vale?
+¿Sí?
+¿Vale? O me da una...
+Oye, ¿podríamos pensar en no sé qué?
+Me da un briefing de estos
+que dan los directores de marketing.
+¿Vale?
+Y sobre eso tú, pues, le
+dirás general al zinc.
+Pues, esto es un caso
+perfectamente compatible con
+esas situaciones que son
+reales de la empresa.
+¿Vale?
+Más cosas que os iba a decir.
+Más cosas que os iba a decir.
+Pa, pa, pa, pa, pa, pa.
+Eh, pa, pa, pa, pa.
+Vale.
+Voy al chat.
+Venga.
+Luego, seguro que se me
+ocurre alguna cosilla más.
+Vale.
+Las tres páginas contiene todo.
+¿Vale?
+O sea, hombre, no me hagas
+un pantallazo minimalista, ¿vale?
+Que sea una miniatura de
+estas japonesas.
+Tampoco.
+¿Vale?
+Que se vea.
+Yo soy un tío ya mayor,
+compré vicia y estas cosas.
+Pues, que se vea.
+¿Vale?
+La extensión da más que de sobra.
+Son tres páginas.
+Con un tamaño de letra, creo
+que ponen el documento 12.
+Y un interlineado de 1,5.
+¿Vale?
+Si queréis poner la letra un
+poquito más pequeña, pues al
+10, pues fantástico.
+¿Vale?
+El interlineado yo creo que
+sí, que 1,5 sobra.
+Y que las imágenes, hombre,
+pues que sean un poquito aquí.
+¿Vale?
+Muy difícil también agregar
+evidencia de la interacción con la IA.
+¿A qué te refieres exactamente?
+Yo no necesito que me pongas
+un pantallazo de tu PROM en ChaiGPT.
+Con que me pongas el output
+y me digas, oye, hemos
+preguntado determinadas
+cuestiones de esta manera al ChaiGPT.
+Ta-ta-ti, ta-ta-ta-ta.
+Pues, oye, hemos extraído este
+tipo de cosas.
+¿Vale?
+Claro, pero es limitado, pero
+no porque sean fastidios.
+¿Eh?
+Vale, no por haceros rabiar.
+Es limitado porque es
+necesario que seamos sintéticos.
+¿Vale?
+Lo que es necesario que
+nuestros análisis sean
+suficientemente sintéticos.
+Lo que sí que podemos hacer
+es hacer una versión
+extendida, como en las pelis.
+¿Vale?
+Hacer una versión extendida y
+a partir de la versión
+extendida, pues ir, digamos,
+destilando los insights.
+¿Vale?
+Y las imágenes y los outputs
+y quedándonos con la creme de la creme.
+Que nos llegue a esas tres páginas.
+Pero que tres páginas dan para mucho.
+¿Eh?
+También.
+¿Vale?
+Sí.
+Solo necesito el output.
+O te podemos compartir ahí.
+No, no hace falta que me
+compartáis en línea.
+Yo ahí hago acto de fe.
+¿Vale?
+¿Vale?
+Yo hago un acto de fe ahí.
+Que me lo hayáis extraído.
+Eso que me mostráis en ese
+primer análisis exploratorio.
+Me lo hayáis extraído por la IA.
+Yo me lo creo.
+¿Vale?
+Me da igual la IA que sea.
+Lo que sí que necesito es
+que me mostréis.
+Oye, pues hemos...
+O que me expliquéis un
+poquito de qué manera le
+hemos preguntado qué cosas.
+Y estos son los outputs que
+nos han dado.
+Y a partir de esas preguntas
+y esos outputs, pues
+establecemos estas conclusiones.
+¿Vale?
+Sí.
+Pero no necesito que me
+mandes el link de la conversación.
+¿Vale?
+Y no necesito que me
+adjuntéis el dashboard, ni mucho menos.
+No, no lo necesito.
+Con que me mandéis las
+pantallazos, que es la prueba.
+¿Vale?
+Oye, pues hemos analizado esto
+de esta manera.
+Y mira, en esta parte del
+dashboard hemos analizado esto.
+Y de aquí estaremos estas conclusiones.
+Y además, a partir de esto,
+hemos hecho otro dashboard.
+Donde hemos hecho no sé qué.
+Y junto con esto, hemos hecho esto.
+Y al final, estas son las conclusiones.
+Globales.
+Así.
+Pero no es necesario que me
+mandéis ningún fichero de BI,
+ni de tablón, ni nada. De verdad.
+¿Vale?
+Con que me expliquéis un
+poquito la conversación.
+Que le habéis preguntado y de
+qué manera.
+Que me mostréis bien el
+output y que me analicéis
+bien el output, que es lo
+interesante de esto.
+¿Vale?
+Me vale.
+Y también, si a eso le
+acompañamos, por supuesto, con
+uno, dos o tres pantallazos
+del dashboard,
+donde me expliquéis qué cosas
+se muestran y de qué manera.
+Y sobre todo, ¿a qué
+conclusiones llegamos a partir
+de esas imágenes?
+Fantástico.
+¿Vale?
+Yo busco más el porqué que el cómo.
+¿Vale?
+O sea, que me expliquéis, que lleguéis.
+Valoro más la capacidad de
+análisis, la capacidad de
+resolución del problema, la
+complejidad de la hipótesis o
+de las hipótesis que hayáis analizado,
+la complejidad de los insights
+que hayáis y lo interesante
+que es, cada uno de los
+insights que habéis sacado,
+y la descriptiva, que no que
+el dashboard sea súper bonito.
+A mí eso me da un poco igual.
+¿Vale?
+¿Sí?
+¿Sí?
+Vale.
+Venga, pues vamos a ver, si
+os parece, vemos el dataset.
+Sí que lo veis, ¿no?
+¿Veis el Excel? Sí, profesor.
+Sí, profesor.
+Vale.
+Venga, pues que, por situarnos, ¿vale?
+Imaginemos que somos un
+e-commerce, ¿vale?
+De que vende artículos de
+deporte, por ejemplo.
+¿Vale?
+¿Vale?
+Podemos vender artículos de
+deporte o más cosas.
+Estoy transcribiendo.
+Ah, vale.
+Vale.
+Fantástico.
+Esto de tactic, esto no lo
+había visto yo nunca.
+Esto es como el Gemini, ¿no?
+Entiendo yo.
+¿Vale?
+Nosotros ahora en las
+reuniones, que está muy bien,
+en las reuniones utilizamos
+Google, Google Meet,
+y, bueno, pues le das a
+transcribir y lo que te hace
+al final es un documento en Google Docs
+que te resume lo que ha
+dicho cada uno y te hace un
+resumen y tal.
+Eso es fantástico.
+Entiendo que el tactic este
+que utilizáis, entiendo que es
+la misma versión en Zoom, ¿no?
+Me imagino.
+O me puedo imaginar, pero no lo sé.
+¿Vale?
+Así que, sea como fuere.
+Venga.
+Lo que os decía.
+Somos un e-commerce de deporte.
+¿Vale?
+¿Y por qué digo de deporte?
+Pues porque tenemos un campo
+que es el Bike Purchase, que
+indica si el cliente ha
+comprado o no una bicicleta.
+Pero podemos pensar que somos
+un e-commerce exclusivo de
+deporte o que somos un
+marketplace de muchas más
+cosas, además de deporte.
+Podemos un Amazon, lo que
+queráis, ¿vale?
+Lo que queráis. Pero bueno.
+Entonces, con... Sí, Alejandro.
+Sí, perdón.
+Una pregunta muy rápida.
+No, no, nada.
+Tranquilo.
+Las que sean necesarias. Sí, mira.
+Sobre la actividad esta.
+Cuando dices realizar un
+análisis exploratorio del
+dataset con IA y por lo que
+estás comentando de los
+pantallazos o de copiar y pegar...
+¿Del dashboard? No, no.
+Del dashboard no.
+Ah, del output.
+Sí, del output eso, claro.
+Entiendo que el análisis
+exploratorio con IA, esto es
+todo el rato como con IA te
+refieres a eso, a con un LLM, ¿no?
+O sea, con...
+Sí, sí, sí.
+O sea, preguntando a la IA. Eso es.
+Tú le subes el fichero y
+haciendo preguntas.
+Eso.
+Pero primero le tienes que
+poner en situación de qué dato es.
+Sí, sí.
+Contexto y todo.
+Contexto, ese tipo de cosas.
+Y luego le vas preguntando en
+esa conversación.
+Pues el output que vayas
+consiguiendo de esa
+conversación te lo vas
+montando en un documento tuyo, ¿vale?
+Y luego todo eso lo condensas en...
+Oye, pues hemos sacado estas
+conclusiones a través de ese
+análisis exploratorio de la IA.
+Que además, junto con todas
+las conclusiones que sacamos
+del dashboard que he construido,
+que son estos dos pantallazos
+y que podemos ver no sé qué,
+hacemos el refrito con las
+dos cosas, ¿sí?
+Vale, pero no entiendo.
+O sea, si no hay que
+presentar el último punto, es
+saber un cuadro de mando.
+Sí.
+Y dices que no necesitas verlo.
+No, no necesito...
+Yo no necesito el dashboard.
+Lo que necesito es que me mandes...
+Pues si has utilizado, has
+construido un dashboard o dos
+donde has sacado determinadas
+conclusiones, ¿vale?
+Pues que me muestres un
+pantallazo de ese dashboard,
+esos dos dashboards,
+donde me digas...
+Aquí se observa que en esta...
+Y saco estas conclusiones.
+Sí, pero si las conclusiones
+me las da la IA,
+yo lo que tengo que hacer es
+verificarlas, por decirlo así.
+Porque las conclusiones...
+Bueno...
+O algunas, ¿vale?
+A lo mejor...
+A lo mejor...
+Hay una primera parte que es
+ese análisis exploratorio, ¿vale?
+Con la IA, ¿vale?
+Y de ahí sacas X conclusiones, ¿vale?
+Alejandro, los demás.
+¿Vale?
+Y yo puedo luego o bien
+rebatir esas conclusiones que
+he extraído con la IA
+o, oye, añadir nuevas
+conclusiones, ¿vale?
+Construyendo un dashboard, ¿vale?
+O sea, es complementario, una
+cosa y otra, ¿vale?
+Lo suyo es...
+En mi opinión, aporta más valor
+si desarrollas un dashboard
+que incorpore nuevas conclusiones
+a eso que has extraído con
+la IA, ¿vale?
+Que no hacer un dashboard que
+confirme lo que te dice la IA.
+Pero bueno, lo que consideréis, ¿vale?
+Alejandro.
+Entendido.
+Vale.
+Mientras me expliquéis lo que
+hacéis, a mí con eso me vale, ¿vale?
+Y mientras que las
+conclusiones sean, oye,
+suficientemente elaboradas, ¿vale?
+Que no lleguemos a
+conclusiones del tipo
+el gasto de los hombres es
+mayor que el gasto de las mujeres.
+Pues para eso no necesitamos
+al Chayipití, ¿vale?
+Ni al Darf.
+¿Eh?
+Sí, Alejandro, por llevarlo al extremo.
+¿Queda claro?
+Entendido, sí, gracias. Vale, venga.
+Pues entonces, sabiendo que
+somos, pues eso, un e-commerce.
+Lo digo, lo del e-commerce y
+tal, lo digo también,
+por ponerle, si queréis, el
+contexto también a la IA, ¿vale?
+Somos un e-commerce, ¿vale?
+Y tenemos esta información, ¿vale?
+Que está sacada, como digo,
+de la base de datos de Adventure Works.
+Que como está sacada de esa
+base de datos, no tenéis que
+sacar más datos.
+Son estos los que tenemos, ¿vale?
+O sea, que nadie se ponga
+aquí con la SQL a tope
+para sacar más información de
+estos clientes de otras cosas
+que tengamos en esa base de datos.
+No es necesario.
+¿Sí?
+Esta es la información que tenemos.
+¿Qué tenemos?
+Pues tenemos el total de gasto.
+El total de gasto de los clientes.
+Que han hecho históricamente.
+¿Vale?
+Cada fila es un cliente.
+Y cada columna es una variable.
+Y cada fila, como digo, es un cliente.
+Tenemos dos campos que nos
+puede indicar el cliente.
+¿Qué es este, el Customer ID?
+¿O qué es este, el Person ID?
+Como siempre, y lo hemos dicho,
+antes de empezar a hacer el
+análisis con un dataset,
+lo primero que tenemos que ver es, oye,
+qué calidad de datos tenemos.
+¿Vale?
+Eso lo podéis hacer antes.
+Del análisis exploratorio,
+antes del dashboard.
+¿Vale?
+Por fuera.
+Tipos de sanity check o de
+data quality process.
+De esto, ¿qué tenemos que hacer?
+Oye, pues, si yo tengo aquí
+el Customer ID
+y tengo el Person ID, lo
+primero que me pregunto, ¿qué sería?
+O la primera pregunta que me
+podría surgir, ¿cuál sería?
+¿Cuál sería la primera pregunta?
+Yo he dicho que cada fila es
+un cliente, ¿no?
+¿Sí?
+¿Que si se repiten? Eso es.
+Entonces, si existe una unicidad o no,
+entre el Customer ID y el Person ID.
+Es decir, si un Customer ID
+es solo un Person ID, ¿vale?
+O un Customer ID tiene varios
+Person ID,
+o un Person ID tiene varios
+Customer ID.
+¿En qué situación estoy?
+¿Por qué lo digo?
+¿Tiene números diferentes?
+Claro, esto me recuerda a la
+última de las sesiones que tuvimos
+de data quality, ¿vale?
+De los ETLs, ¿vale?
+Que os ponía ejemplos, ¿vale?
+Donde distintos usuarios eran
+el mismo cliente,
+porque tenían el mismo email y demás.
+Pues, aquí puede pasar lo mismo.
+Es decir, yo puedo tener que
+este Customer ID, ¿vale?
+Tenga varios Person ID.
+Puede suceder, ¿no?
+¿Vale?
+Vamos a imaginemos.
+Si yo me filtro, es que no
+quiero filtrar porque si no
+se me va a quedar petado, ¿vale?
+Lo que tengo que ver es que existe,
+si bien existe o no una
+relación uno a uno entre el
+Customer ID y el Person ID,
+es decir,
+¿un indicador de Customer es
+un indicador de Persona?
+O bien puede suceder que un
+indicador de Customer
+algunos puedan ser varios Person ID.
+Puede suceder eso, ¿no?
+O bien puede suceder al contrario,
+que un Person ID puede tener
+varios Customer ID.
+Y lo que tengo que ver es
+en qué situación estoy. ¿Por qué?
+Porque si tengo una relación
+uno a uno, no tengo problema.
+Tal y como tengo el fichero, me vale.
+¿Sí?
+Porque cada cliente es una línea.
+¿Me explico?
+Si tengo una relación uno a uno,
+pues para identificar al
+cliente me vale tanto el
+Customer ID como el Person ID.
+Me da igual uno que otro
+porque de total no me dicen nada.
+Es un indicador.
+Me puede valer cualquiera de los dos.
+Pero si un Customer ID tiene
+varios Person ID,
+pues a lo mejor tengo que
+hacer un proceso de agregación
+a nivel de Customer ID, ¿no?
+Porque tendré que sumar, al
+menos tendré que sumar la pasta, ¿no?
+¿Sí?
+O tendré que ver, ¿no? Por ejemplo.
+Y de igual manera...
+¿Pareciera que no son iguales?
+¿El qué, perdón, Ernesto?
+Que el Person ID y el
+Customer ID pareciera que no
+son iguales.
+No es la misma...
+No refiere a lo mismo.
+No, pero yo puedo coger un Person ID...
+Es que no...
+Claro, y tienes varios Customer ID.
+Claro.
+Costum.
+Entonces...
+Claro.
+Si yo cojo el Person ID X...
+A ver si...
+Que no quería hacerlo porque
+se me quedaba petado.
+Vale.
+La idea es si tengo que
+agregar o no variables.
+Variables.
+Si yo...
+Este 16, imaginemos, ¿vale?
+Si yo cojo este...
+A ver si me lo coge.
+El 1699, si yo le filtro...
+Esto para hacerlo en Excel es
+un poco rollo.
+A ver si me deja.
+Si yo me cojo este...
+Imagínate que yo filtro por este...
+¿Vale?
+Y aquí, en lugar de un
+Customer ID, me salen varios.
+¿Puede suceder eso?
+No lo sé. No sé.
+¿Vale?
+Que lo chequeéis.
+Es lo que os pido.
+¿Vale?
+Siempre...
+Como ejemplo sencillo.
+Siempre...
+Cuando vamos a utilizar...
+Datos...
+Siempre lo que tenemos que ver...
+O lo que tenemos que desarrollar...
+Son estos procesos de Data Quality.
+Para asegurar...
+Este y otro tipo de situaciones.
+Para asegurar si el registro
+que tengo hace referencia a
+un cliente o tengo que hacer
+algún tipo de agregación.
+¿Vale?
+¿Me estoy explicando, Ernesto,
+los demás?
+¿Sí?
+Sí.
+Sí.
+Delphina.
+Delphina. Por ahí.
+Vale. Gracias, Ernesto.
+Hola, profe.
+No, yo te quería preguntar si...
+Bueno, tenemos que hacer toda
+esta transformación y limpieza
+de datos.
+Si también esto lo tenemos que...
+No.
+Ahora...
+No.
+No.
+En las tres páginas, no.
+Exacto.
+Ok. Eso es.
+Perfecto.
+Vale, esto va por fuera.
+Vale, pero esto es un
+ejercicio que es perfectamente válido.
+Son dos o tres cositas las
+que tenéis que ver.
+¿Vale?
+Ya os he dicho una.
+¿Vale?
+¿Eh?
+¿Vale?
+Pero es un ejercicio bueno en
+el sentido de que siempre que
+os enfrentéis a un dataset,
+no penséis que ese dataset
+está fantástico.
+Desde el punto de vista de
+calidad del dato.
+¿Vale?
+¿Eh?
+Siempre tenéis que haceros las
+preguntas de...
+Oye, ah, pues...
+Y esas preguntas o las tenéis
+que hacer vosotros.
+No os las va a hacer nadie
+ni os las va a decir nadie.
+¿Vale?
+¿Sí?
+Entonces, si yo veo este
+fichero que digo, ah, pues
+mira, tengo un Customer ID y tengo
+un Person ID, pues lo que se
+me ocurre es...
+Angoño, pero ¿hay un Customer
+ID para cada Person ID o
+existen varios?
+Porque si existe uno y uno,
+no hay problema. Me vale.
+Pero si existe varios, un
+Person ID tiene varios
+Customer ID o al revés,
+entonces tendré que agregar,
+agregar al menos la pasta y
+luego tendré que hacer comprobaciones
+de si todos los Person ID
+vienen en el mismo sitio,
+tendré que hacer determinadas cosas.
+¿Vale?
+¿Sí?
+Venga, por aquí a ver en el
+chat cuál sería la lógica de tener...
+La lógica es, pues, errores, ¿vale?
+Como los que vimos en la
+última de las sesiones.
+En la última de las sesiones,
+creo que fue la última, la
+última o la penúltima de los ETLs.
+Y eso era un ejemplo real, ¿vale?
+El código de usuario era el
+email, si os recordáis, ¿vale?
+Y eso era un caso real, ¿eh?
+De una empresa, ¿vale?
+Para que yo, pues, hice un
+trabajo de consultoría X, ¿vale?
+Y ahí lo que se veía es que
+problemas en la codificación, ¿vale?
+En el formulario de introducir
+el email, ¿vale?
+Pues lo que producía es que
+si dejabas un carácter en
+blanco al final,
+.com, si le das al espacio, ¿vale?
+Ese email es distinto del
+mismo email sin ese espacio, ¿vale?
+Y lo que te va a crear son
+dos usuarios diferentes, ¿vale?
+Llevado a este ejemplo, podría
+ser la misma persona con dos
+Customer ID distintos, ¿sí?
+¿Vale?
+O sea, son problemas muchas
+veces de introducción de
+datos, de Data Quality,
+a nivel internacional, ¿vale?
+Nosotros aquí en España tenemos el DNI.
+Cuando tú te das de alta en
+algún sistema, metes el DNI, ¿vale?
+El DNI es el Documento
+Nacional de Identidad.
+Cada persona tiene un DNI.
+O sea, no hay dos personas
+en España que tengan el mismo
+DNI, ¿vale?
+Está formado por ocho números
+y una letra.
+En otros países no existe el
+DNI, como tal, ¿vale?
+Entonces, cuando hay en otros
+países se dan de alta en
+programas de fidelidad,
+pues tienen muchísimos
+problemas de deduplicación.
+Porque un mismo cliente puede
+haberse dado de alta varias veces.
+Porque si no tienes procesos
+de chequeo del nombre, de la
+dirección, de tal, no sé qué,
+pues ese cliente es distinto
+y se genera como un cliente
+diferente, ¿sí?
+¿Vale?
+Entonces, son problemas, por
+un lado, desde el punto de
+vista del front, ¿vale?
+Donde la gente se da de alta en la web.
+Y por otro lado, del back,
+de las comprobaciones que tú
+necesitas hacer
+para deduplicar a los clientes, ¿eh?
+¿Vale?
+¿Sí?
+Vale.
+En Perú, también DNI.
+¿Cómo se trataría?
+¿Cuál?
+No, no es identificar tanto
+el dato correcto como
+identificar qué registros
+tienes que agrupar
+para crear un, digamos, un
+identificador único.
+Nosotros, ¿vale?
+En Leroy Merlin.
+Leroy Merlin es una
+multinacional, ¿vale?
+Entonces, si bien en España
+no tenemos este tipo de
+problemas, en otros países sí
+que lo tienen, ¿vale?
+En un Francia, en un
+Sudáfrica, en un Rumanía, ¿vale?
+Entonces, se han definido
+determinadas reglas de tal
+manera que nosotros no
+trabajamos a nivel cliente,
+sino trabajamos a un nivel
+que se llama Golden Record, ¿vale?
+Entonces, si tú tuvieras que
+agrupar esa información, lo
+que trabajaría sería a un
+nivel superior de cliente
+que sería Golden Record.
+Donde tendrías, si un cliente
+solo lo tienes una vez, pues
+ese cliente es un Golden Record.
+Pero si un cliente tienes
+que, son tres personas o una
+persona son tres clientes,
+tienes que crearte un Golden
+Record que agrupe a esos tres clientes.
+De tal manera que cuando
+agregas datos de actividad, de
+transacciones,
+lo que tienes es que sumar
+el gasto que hacen todos los
+clientes que tienes bajo ese
+Golden Record.
+No sé si me explico, Andrea.
+¿Vale?
+Esa es la forma de resolverlo.
+¿Sí?
+Vale.
+Nada, gracias.
+Venga, pues seguimos por aquí, ¿vale?
+Entonces, tenemos el total de
+gasto, ¿vale?
+Gasto histórico que ha hecho
+el cliente.
+Si ha comprado o no ha
+comprado una bicicleta en
+algún momento, ¿vale?
+El 1 es que sí, la ha
+comprado, y el 0 es que no
+la ha comprado, ¿vale?
+Las variables estas binarias,
+1, 0, el 1 siempre suele ser
+el sí y el 0 siempre suele
+ser el no, ¿vale?
+Yo he visto casos que es al
+contrario, pero en este caso
+el 1 es el sí, ha comprado
+una bicicleta,
+el 0 es que no ha comprado
+una bicicleta.
+Tenemos este que comentamos,
+el casto Meridi.
+Tenemos el country, ¿vale? El país.
+Cuidado con los países, ¿vale?
+Cuidado con los países, ahí lo dejo.
+Tenemos un pequeño acrónimo,
+una pequeña, bueno, pues sí,
+bueno, un acrónimo del país, ¿vale?
+También tenemos el grupo, ¿vale?
+Los países los tenemos
+agrupados, ¿vale?
+Pues por Europa, Norteamérica
+y Pacífico, ¿vale?
+Entonces, el país hace
+referencia al país de
+residencia del cliente, ¿vale?
+Y los países los tenemos
+agrupados, ¿vale?
+En grupos, en zonas, ¿vale?
+En zonas geográficas.
+Tenemos el person ID.
+Tenemos la fecha de primera compra.
+Del cliente, ¿vale?
+Este cliente ha comprado por
+primera vez el 1 de julio del 2001.
+Por primera vez.
+Pero luego ha podido comprar
+muchas más veces.
+O no, o solo ha comprado esa
+vez, no lo sabemos.
+Lo que sí que sabemos es que
+su primera compra fue el 1 de julio
+y que el total de gasto que
+ha hecho con nosotros es de 8.139,29.
+Lo que queráis.
+Dólares, euros, bolívares,
+soles, ¿vale?
+Lo que queráis, ¿vale?
+Venga, día de primera compra.
+Fecha de nacimiento.
+Y sobre la fecha de
+nacimiento, yo ya os he
+calculado la edad.
+O sea, no la tenéis que
+recalcular la edad de hoy.
+Utilizar esta, ¿vale?
+Edad del cliente, ¿vale?
+Imaginemos que es a día de
+hoy y ya está y no pasa nada.
+Estado social.
+O sea, si está casado,
+soltero, single o married.
+El gasto, o los ingresos,
+perdón, anuales, ¿vale?
+Entre 0 y 25.000, entre
+25.000, 1 y 50.000, etc.
+Está tramificado.
+Si alguien, por alguna razón
+que sea, quiere poder utilizar
+los ingresos desde el punto
+de vista cuantitativo y no
+cualitativo, esta variable es
+cualitativa, está tramificada,
+en esos casos lo que se
+suele utilizar es lo que se
+llama la marca de clase.
+El punto medio del intervalo, ¿vale?
+Entonces, crearíais una nueva
+variable, ¿vale?
+De tal manera que asignaríais
+a la gente que gana entre 0
+y 25.000, a todos esos
+diríais que ganan 12.500 euros, ¿vale?
+Cada uno de ellos. ¿Me explico?
+Si la queréis utilizar en
+algún momento, a modo
+cuantitativo, ¿vale?
+En el caso de 100.000 o más,
+pues utilizar 100.000, ¿vale?
+Venga, sexo, hombre o mujer,
+male o female.
+Total de hijos, ¿vale?
+Pues, ¿cuántos hijos tiene?
+¿Vale?
+De 0 a 5.
+¿Vale?
+¿Qué ha estudiado?
+¿Qué nivel de educación tiene?
+Papi, papi, papi, ¿vale?
+¿Cuál es su ocupación?
+¿Vale?
+Tenemos clérigos también, ¿vale?
+Tenemos gente de management,
+tenemos manual, que serían,
+pues, los pintores, este tipo
+de cosas, ¿vale?
+Los fondaneros y demás,
+personales, manuales, nada,
+pues, tenéis, por ejemplo,
+manual y skillet manual.
+A lo mejor significa lo mismo, ¿eh?
+A lo mejor tenéis que agrupar.
+Ahí lo dejo, ¿vale?
+Si posee en propiedad, si es
+propietario de un piso, de un
+apartamento, de una casa, ¿sí o no?
+¿Vale?
+Y el número de coches que posee, ¿vale?
+De 0 a 4.
+¿Vale?
+Estas son las variables que
+tenemos, ¿vale?
+Este es el dataset que tenemos.
+Tenemos aquí unos cuantos,
+unos cuantos colegas, como
+18.000 y pico tíos, ¿vale?
+18.484 tenemos, ¿vale?
+Entonces, bueno, pues, ese
+dataset da mucho juego, ¿vale?
+Podemos plantear una gran
+cantidad de hipótesis de negocio.
+¿Vale?
+A ver, por aquí Edwin comenta
+una consulta en el dataset,
+una variable binaria, si ha
+comprado o no bicicleta.
+Si ha comprado o no una
+bicicleta, ¿vale?
+El total amount es el total
+de gasto, ¿vale?
+Entonces, ese total de gasto
+es el total de gasto.
+Haya comprado o no una bicicleta.
+Es decir, si ha comprado una
+bicicleta y el total amount
+son, me lo invento, 8.000 dólares,
+si ha comprado una bicicleta,
+la bicicleta no significa que
+la bicicleta haya costado
+8.000 dólares.
+Es que ha comprado una
+bicicleta y ha hecho un gasto
+total en toda la historia de
+8.000 dólares.
+¿Sí? ¿Me explico?
+O sea, que ese gasto no hace
+referencia a lo que ha...
+¿Vale?
+Vale, entonces, y la primera
+fecha, ¿existen datos de
+quienes no han comprado?
+¿Se podrían interpretar?
+A ver, pero cuando se ve el
+total amount y la fecha de
+primera compra,
+¿existen datos en quienes no
+han comprado?
+¿Se podría interpretar que es
+un dataset que quiero evaluar
+quienes compraron o no en una ficha?
+No entiendo Edwin, a ver. Sí, no.
+Se supone que...
+Para explicarle un poco mi duda.
+Sino, viendo el dataset,
+entiendo que en la columna de
+compra de bicicletas es una
+binaria que dice...
+¿Quién compró o no?
+No necesariamente el número
+de bicicletas.
+No, no, no, no, no.
+¿O es de una?
+No, no, no.
+¿Ha comprado o no una bicicleta?
+En algún momento.
+¿Puede haber comprado una o
+puede haber comprado una, al
+cabo del año otra y luego
+tres para los niños?
+Lo que sea.
+Y los que están con cero es
+que no han comprado ninguna.
+No han comprado ninguna, eso seguro.
+Ya, justamente esa es un poco
+mi inquietud, porque justo si
+uno refiltra a los que no
+han comprado ninguno,
+hay un valor en el monto
+total y hay un valor...
+Claro, claro, porque somos un
+e-commerce de deportes,
+vendemos muchas más cosas que
+no solo bicicletas.
+Puede haber comprado un saco
+de boxeo, por ejemplo. Ah, ok.
+O sea, se refiere al gasto
+en todo el e-commerce de ese
+cliente, no necesariamente
+en bicicletas.
+Sí, sí, sí. El total amount
+es el total de gasto que ese
+cliente ha hecho en el e-commerce.
+¿Vale?
+Sí.
+Entonces, ese e-commerce vende
+de todo, de deportes, pero
+vende de todos los deportes.
+De hípica, de golf, de pádel,
+de tenis, de lo que sea, de
+baloncesto, de fútbol, de
+running, de lo que sea.
+Y lo único que tenemos es,
+identificados aquellos clientes
+que en algún momento de la
+vida han comprado una bicicleta.
+¿Sí?
+Pero el gasto es relacionado
+con todo lo que han comprado
+los clientes.
+¿Vale? Ok, ok.
+Vale, nada.
+Fantástico, Andrea, Edwin. Muy bien.
+Delfina, por ahí. Hola, profe.
+No, te quería preguntar si,
+por ejemplo, si yo quiero
+hacer un análisis sobre, por
+ejemplo, la comparación del
+monto total, o sea, de todo
+lo que fue gastado, con el
+gasto solamente en las bicicletas.
+Yo, por ejemplo, ¿puedo
+agregar una columna inventada?
+No, no, no, no, no, no, no,
+no, no, porque si no ya es
+de la imaginación al poder.
+No, no, no, vamos a jugar
+con la información que tenemos.
+Vale, vale, entonces, desde el
+punto de vista de hipótesis,
+lo que tenemos es cuánto
+gasto hace la gente en total
+y luego tenemos identificado
+quién ha comprado o no una
+bicicleta en algún momento.
+¿Vale?
+Hipótesis que podríamos pensar
+de validar o preguntas, cuando
+yo hablo de hipótesis en el
+negocio, son preguntas que nos
+podemos hacer con esta información.
+Una pregunta que me podría
+hacer yo, por ejemplo, ¿vale?
+Me la invento tal y como
+estoy ahora mismo, o sea, no
+la tengo ni preparada, ¿vale?
+Entonces, lo mismo la
+enunciación, el enunciado de
+la pregunta, pues sintácticamente o
+gramaticalmente no es la más correcta.
+Pero bueno, la idea es, yo
+me podría preguntar, oye,
+¿existen los clientes que
+compran bicicletas, presentan
+diferentes características en
+función del país?
+Es decir, ¿la gente de
+Francia que compra bicicleta
+se diferencia en algo o en
+todo a la gente de Australia
+que compra bicicletas o a la
+gente del Reino Unido que
+compra bicicletas?
+Pues a priori no tengo ni idea.
+Y esas características es en todo.
+En el gasto que hace, en el
+rango de si son más singles
+que married, si son más
+poseedores de casa que no, si
+tienen más hijos o no, si
+ganan más pasta que no.
+Lo puedo ver desde manera
+univariante o lo puedo ver
+luego desde el punto de vista
+de los IES.
+El tío que me, o la persona
+que me compra bicicletas en
+Francia, mayoritariamente tiene
+estas características.
+Son casados con dos hijos o
+más, mayoritariamente tienen
+casa, tatatitata.
+Mientras que los de Australia
+tienen este perfil y son IES.
+Y lo puedo hacer con ambos enfoques.
+El univariante viendo
+variable a variable o el
+multivariante con los IES.
+Eso sería el desarrollo
+analítico que yo tendría que
+hacer para dar respuesta a
+esa pregunta.
+Porque de ahí extraigo unas
+determinadas conclusiones y a
+lo mejor yo como director de
+marketing, ya me acabo de
+promocionar, como director de
+marketing de este e-commerce,
+si yo sé qué características
+tienen los clientes que tienen
+bicicleta en Francia y qué
+características tienen los
+clientes que compran bicicleta
+en Australia
+y comparo cuántos clientes de
+esos que me compran, que
+tienen ese perfil en Francia,
+cuántos tengo que todavía no
+me han comprado,
+pues podría hacer acciones de
+captación para venderles una bicicleta.
+¿Me explico? ¿Me explico?
+Y podría llegar a esa recomendación.
+¿Sí? ¿Me explico? O sea, si
+venderles una bicicleta, con
+Alejandro Braith, mira.
+¿Me explico cuál es la idea
+del análisis?
+La idea del
+análisis no es hacer solo el
+análisis, es incluso,
+oye, si yo tengo un perfil
+de gente que me compra
+bicicletas en Francia y que
+veo que a lo mejor son
+clientes que gastan una pasta
+que te cagas,
+¿puedo ver cuántos tengo en
+Francia que todavía no me han
+comprado bicicleta y que
+tienen ese perfil?
+¿Vale? Y decirles, ah, pues
+mira, que es que además en
+este perfil tengo a 500
+clientes en Francia
+a los que podría hacer una
+acción de marketing con un
+descuento del 10% si me
+compro una bicicleta.
+Y encajo el análisis con la acción.
+Y eso es inteligencia de negocio.
+¿Sí?
+¿Queda más o menos claro? Sí, perfecto.
+¿Sí? ¿Delfina, los demás?
+¿Sí? Raúl, Ernesto, que lo veo por ahí.
+Edwin, Paulina, ¿sí? Esa es la idea.
+O sea, hagamos el análisis
+también pensando en, oye, pues
+que podamos proponer cosas.
+¿Vale? O al menos, si no se
+nos ocurre qué proponer, al
+menos entender sí el
+comportamiento de los clientes
+y extraer insights relevantes de esto.
+Más allá de, no, en Francia
+los hombres gastan más que
+las mujeres o las mujeres más
+que los hombres.
+Eso es de primero. Eso no lo
+buscamos aquí.
+Busquemos, intentemos plantear
+hipótesis, analizar que sean,
+hombre, pues complejas.
+Pues no sé, esta me la he
+inventado yo ahora mismo.
+Pues igual que esta, cualquiera.
+¿Eh? ¿Vale?
+¿Sí? Entonces, lo último y ahora,
+si queréis, me preguntáis
+alguna cosilla que tengamos
+todavía ahí en el tíntelo.
+¿Cómo yo suelo trabajar esto?
+¿Cómo solemos trabajar nosotros esto?
+Esto no significa que lo
+tengáis que hacer así.
+Yo, lo hemos hablado en otras
+ocasiones, también con
+otras actividades.
+Nosotros usualmente esto lo
+trabajamos de manera que,
+primero en divergencia y luego
+en convergencia.
+Y esto ya lo hemos hablado.
+¿Vale? Entonces, nos hacen esta
+petición quien sea, pues la
+priorizamos, tal, no sé qué, cuántos.
+Y luego, oye, pues yo se las
+puedo asignar a una persona o
+se las puedo asignar a dos.
+¿Vale? Para que la trabajen
+de manera conjunta.
+Y lo que hacemos es, de
+manera individual, se piensa
+cómo abordar, qué hipótesis de
+negocio validar o, ¿vale?
+Si es necesario sacar un
+pequeño dato o algunos
+pequeños datos para argumentar
+el por qué es interesante esa
+hipótesis o esas hipótesis que
+yo estoy planteando, pues los
+extrae, ¿vale?
+Sin hacer el cojo análisis,
+pero sí una primera aproximación.
+Y luego lo ponemos, luego convergemos.
+Luego nos juntamos, ¿vale? O se juntan.
+En este caso, vosotros, cada
+grupo por separado, de manera
+individual, y luego os juntáis.
+Todos los integrantes del grupo.
+Y cada uno, pues expone, oye,
+a mí se me han ocurrido estas dos.
+Y creo que es interesante
+esta por esto y por esto, y
+creo que es interesante esta
+por esto y por esto.
+Porque he sacado un dato,
+tal, no sé qué.
+Vale, pues venga, nos las apuntamos.
+Siguiente.
+Pues yo he pensado en esta.
+Vale, por esto y por esto.
+Ah, yo he pensado en esta.
+Y al final, entre todos,
+buscáis un consenso.
+Y buscáis las dos o las tres
+que sean más interesantes y
+que tengan cierto grado de complejidad.
+¿Sí?
+Y esa es la forma de trabajar esto.
+Primero divergencia y
+luego convergencia.
+O bien, lo que os decía al principio.
+Oye, pues, vamos a analizar
+esto como si por todas las
+caras del cubo.
+Este es un cubo n-dimensional.
+Cada dimensión es una variable.
+Vamos a analizarlo de manera
+univariante, bivariante, multivariante.
+Y vamos a extraer de todos
+los insights los más relevantes.
+Y los ponemos, ¿vale?
+¿Sí?
+Ponemos esas conclusiones y
+chequeamos esos insights con un dato.
+Oye, pues, esto está, no sé
+qué, por mía, tenemos esto.
+O esto está, no sé qué,
+tenemos este dashboard.
+Hacerlo como queráis.
+¿Vale?
+No tenéis limitación.
+La única, las tres páginas.
+¿Sí?
+Es una actividad lo más
+cercana a la realeza empresarial.
+Lo puedo asegurar, ¿eh?
+¿Vale?
+Lo más cercana a la
+realeza empresarial.
+¿Vale?
+¿Dudas?
+Para empezar el año, ni tan mal.
+¿Eh?
+¿Vale?
+Venga, muy bien. Gracias, Eurel.
+Es buscar patrones.
+Es, claro, es hacerte
+preguntas, Alejandro.
+¿Vale?
+Tú piensa que trabajas en
+esta empresa, que eres el
+director de marketing.
+Y, oye, pues, se te ocurre.
+Oye, pues, existe una relación
+entre cosas así.
+¿Vale?
+Plantear ese tipo de cosas.
+¿Vale?
+Pero, Alejandro, no estás solo.
+Hay más gente en el grupo.
+O sea, entre todos, seguro,
+seguro que planteáis
+hipótesis valiosas.
+Seguro.
+Esto es cuestión de pensarlo.
+No se nos tiene que ocurrir ahora.
+¿Vale?
+Por eso hay que madurarlo de
+manera individual y luego de
+manera conjunta.
+Y seguro que en todos los
+grupos, validar, si queréis
+validar hipótesis,
+hombre, por lo menos dos, ¿no?
+Dos hipótesis, ¿vale?
+Que sean con cierto grado
+de complejidad.
+Página y media para cada hipótesis.
+Espacio de sobra.
+¿Vale?
+Espacio de sobra tenéis.
+¿Ok?
+¿Sí? Muy bien.
+A mí me parece un reto fantástico, ¿eh?
+Vale, pues, insisto.
+Es muy cercano a la realidad, ¿eh?
+¿Vale?
+Así que darle al thinking.
+No hay que hacer ningún tipo
+de programación en Python y
+cosas de estas.
+Esto es pensar, ¿vale?
+Preguntarle a la IA y luego,
+oye, hacer un dashboard ahí o
+unos dashboards curiosos, ¿eh?
+Que nos permita validar esas
+cosas que queremos validar.
+Y sin más, si no hay más
+dudas, cuestiones, pues, venga.
+Mis mejores deseos para este
+año, ¿vale?
+Que seáis muy, muy felices y
+que aprendamos mucho y que
+estudiemos mucho, ¿vale?
+Si aprendemos y estudiamos,
+vamos a sacar buenas notas.
+Así que no nos preocupemos, ¿vale?
+Entonces, ahora, a tope con
+la actividad.
+Venga, un abrazo muy fuerte. Os subo.
+Ay, una cosa.
+Antes de acabar, perdonad.
+Antes de acabar, la sesión de
+la semana que viene, vamos a
+hacer cositas con tablo.
+¿Vale?
+Entonces, os voy a poner un
+anuncio, ¿vale?
+La idea es, no sé si habéis
+dado ahora o vais a dar tablo.
+Yo creo que sí, ¿vale?
+En alguna asignatura.
+Sea como fuere, a mí me
+interesa también, creo que es
+interesante que conozcáis,
+más allá de BI, de Microsoft
+BI, de Power BI, vamos, que
+conozcáis otras herramientas.
+En este caso, tablo me parece
+interesante, ¿vale?
+Entonces, nos vamos a
+descargar la versión gratuita
+de tablo, ¿vale?
+Os voy a poner un anuncio, ¿vale?
+Con un link, ¿vale?
+Donde os podéis descargar la
+versión gratuita de tablo.
+Solo os pide un email y tal.
+Nada más, ¿vale?
+Si no buscáis en Google, oye,
+descargar versión gratuita de tablo.
+Y os va a llevar al mismo
+sitio que os va a indicar.
+¿Vale?
+Entonces, la semana que viene
+vamos a hablar sobre
+visualización, ¿vale?
+Y entonces, os voy a subir
+un ficherito de PDF, ¿vale?
+Que va a hablar sobre visualización.
+Y os voy a subir también un
+fichero de datos, ¿vale?
+Vamos a hablar un poquito de
+visualización, un poquito.
+Y luego vamos a hacer algunas
+cositas muy sencillas también
+con el tablo.
+Eso es tablo public.
+Eso es, Paulín.
+¿Vale?
+Solo con un email os la
+podéis descargar, ¿vale?
+Y entonces, hablamos un
+poquito de lo que es visualización.
+Y luego hacemos tres, cuatro
+cositas sencillas en la propia
+herramienta, ¿vale?
+Entonces, sería guay que os
+la descarguéis, ¿vale?
+Para, en la medida en la que
+podamos, según yo voy haciendo cosas,
+vosotros las vais replicando, ¿vale?
+¿Sí?
+¿Visto?
+¿Vale?
+Si la tenéis instalada para
+la semana que viene, pues no
+invertimos tiempo de clase en eso.
+¿Ok?
+Pues venga, lo dicho.
+Que disfrutéis mucho el año,
+que seáis muy felices.
+Y nos vemos el lunes que viene.
+Un abrazo a todos y a todas por ahí.
+¿Vale?
+Gracias.
+Chao, chao.
+Gracias.
+Buenas noches.
+Chao.
+Chao, chao.
+Chao.
+Gracias.
