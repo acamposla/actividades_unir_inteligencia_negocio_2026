@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Actividad-3</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Untitled_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Untitled_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Untitled_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Untitled_files/libs/quarto-html/popper.min.js"></script>
+<script src="Untitled_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Untitled_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Untitled_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Untitled_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Untitled_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Untitled_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Untitled_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Actividad-3</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="de-qué-tipo-de-variables-se-compone-mi-base-de-datos-realize-un-análisis-descriptivos-de-las-varaibles-de-la-base-de-datos-estadística-descriptiva-correlación" class="level2">
+<h2 class="anchored" data-anchor-id="de-qué-tipo-de-variables-se-compone-mi-base-de-datos-realize-un-análisis-descriptivos-de-las-varaibles-de-la-base-de-datos-estadística-descriptiva-correlación">1. ¿De qué tipo de variables se compone mi base de datos? Realize un análisis descriptivos de las varaibles de la base de datos (Estadística descriptiva, correlación)</h2>
+<p>Cargamos los datos en una variable.</p>
+<p>Tenemos variables númericas, númericas booleanas y de caracteres (char).</p>
+<p>Procedemos a seleccionar las variables que necesitaremos para el ejercicio y convertir las variables a sus tipos pertinentes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"datos/DataSet SQL_Act3_ADMN.xlsx"</span>, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">sheet =</span> <span class="st">"Var Discreta Adq Bicicleta"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># str(datos)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># unique(datos$Country)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hemos considerado crear columnas condicionales para aquellas variables que fuera numéricas y booleanas. De esta forma podremos hacer un descriptivo estadístico más limpio y utilizar los factores para los modelos.</p>
+<p>Además hemos eliminado la columna “PersonType” dado que no aporta ninguna información relevante.</p>
+<p>Por último hemos quitado aquellos valores de Country que se referían a regiones y no países: “Northwest”, “Southeast”, “Central”, “Southwest”, “Northeast”</p>
+<p>A continuación procedemos a realizar el análisis descriptivo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># describimos los estadísticos numéricos</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> <span class="fu">summary</span>(<span class="at">use=</span><span class="st">"complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  TotalAmount        BikePurchase         Age         TotalChildren  
+ Min.   :    3.99   Min.   :0.0000   Min.   : 40.00   Min.   :0.000  
+ 1st Qu.:   59.98   1st Qu.:0.0000   1st Qu.: 49.00   1st Qu.:0.000  
+ Median :  570.47   Median :1.0000   Median : 56.00   Median :1.000  
+ Mean   : 1872.38   Mean   :0.5216   Mean   : 57.65   Mean   :1.727  
+ 3rd Qu.: 3242.83   3rd Qu.:1.0000   3rd Qu.: 65.00   3rd Qu.:3.000  
+ Max.   :13295.38   Max.   :1.0000   Max.   :110.00   Max.   :5.000  
+ HomeOwnerFlag    NumberCarsOwned
+ Min.   :0.0000   Min.   :0.000  
+ 1st Qu.:0.0000   1st Qu.:0.000  
+ Median :1.0000   Median :1.000  
+ Mean   :0.6534   Mean   :1.492  
+ 3rd Qu.:1.0000   3rd Qu.:2.000  
+ Max.   :1.0000   Max.   :4.000  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># observamos cómo se relacionan las variables</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span> <span class="fu">cor</span>(<span class="at">use=</span><span class="st">"complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                TotalAmount BikePurchase         Age TotalChildren
+TotalAmount      1.00000000   0.72967834 -0.04472744    -0.1001643
+BikePurchase     0.72967834   1.00000000 -0.10832727    -0.1773024
+Age             -0.04472744  -0.10832727  1.00000000     0.4829433
+TotalChildren   -0.10016426  -0.17730243  0.48294328     1.0000000
+HomeOwnerFlag    0.06035990   0.02697915  0.10174065     0.1920752
+NumberCarsOwned -0.04270160  -0.22335703  0.15848367     0.3143478
+                HomeOwnerFlag NumberCarsOwned
+TotalAmount        0.06035990     -0.04270160
+BikePurchase       0.02697915     -0.22335703
+Age                0.10174065      0.15848367
+TotalChildren      0.19207524      0.31434779
+HomeOwnerFlag      1.00000000     -0.04772723
+NumberCarsOwned   -0.04772723      1.00000000</code></pre>
+</div>
+</div>
+<p><strong>Descriptivo</strong></p>
+<p>Vemos como nuestra medida de negocio TotalAmount tiene una ditribución sesgada a la derecha puesto que la media es significativamente menor que la mediana, esto quiere decir que puede que existan algunos valores atípicos, como por ejemplo su valor máximo (13295.38), pero también es posible que el sesgo sea una característica de cómo se comporta este negocio.</p>
+<p><strong>Correlación</strong></p>
+<p>Observamos algunas variables que correlacionan fuerte, como TotalAmount y BikePurchase; cuando la compra incluye bicicletas la facturación incrementa. Y TotalChildern y Age; cuanta más edad mayor número de hijos.</p>
+</section>
+<section id="podría-estimar-un-modelo-que-le-permitiera-clasificar-si-un-individuo-realizará-una-compra-o-no" class="level2">
+<h2 class="anchored" data-anchor-id="podría-estimar-un-modelo-que-le-permitiera-clasificar-si-un-individuo-realizará-una-compra-o-no">2 ¿Podría estimar un modelo que le permitiera <strong>clasificar</strong> si un individuo realizará una compra o no?</h2>
+<p><em>Use un modelo de regresión logística y un árbol de decisión. (utilice la pestaña Var Discreta Adq Bicicleta)</em></p>
+<p>En este caso la variable a predicir sería BikePurchase. Procedemos a crear los subsets necesarios para modelar (Train &amp; Test)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#split: seleccionamos el monto de entrenamiento y lo guardamos en la variabble de train</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>indice <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(datos), <span class="at">size =</span> <span class="fl">0.8</span> <span class="sc">*</span> <span class="fu">nrow</span>(datos))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Train: entrenamos al modelo con el subset de testeo</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[indice, ]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># test: tomamos el monto a testar</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> datos[<span class="sc">-</span>indice, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Una vez tenemos los subsets de entrenamiento y testeo pasamos entrenar al modelo</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>modelo_logit <span class="ot">&lt;-</span> <span class="fu">glm</span>(BikePurchase <span class="sc">~</span>   Country <span class="sc">+</span> MaritalStatus <span class="sc">+</span> HomeOwnerFlag_f <span class="sc">+</span> Education <span class="sc">+</span> YearlyIncome <span class="sc">+</span> Occupation, <span class="at">data =</span> train, <span class="at">family =</span> <span class="st">"binomial"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_logit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = BikePurchase ~ Country + MaritalStatus + HomeOwnerFlag_f + 
+    Education + YearlyIncome + Occupation, family = "binomial", 
+    data = train)
+
+Coefficients:
+                                Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                      0.16492    0.11245   1.467   0.1425    
+CountryCanada                   -0.90130    0.07657 -11.770  &lt; 2e-16 ***
+CountryFrance                   -0.87950    0.07865 -11.182  &lt; 2e-16 ***
+CountryGermany                  -0.70341    0.07982  -8.812  &lt; 2e-16 ***
+CountryUnited Kingdom           -0.67812    0.07889  -8.596  &lt; 2e-16 ***
+MaritalStatusS                   0.32127    0.04952   6.488 8.70e-11 ***
+HomeOwnerFlag_fTRUE              0.21154    0.05073   4.170 3.05e-05 ***
+EducationGraduate Degree         0.15741    0.08274   1.903   0.0571 .  
+EducationHigh School            -0.44795    0.07446  -6.016 1.79e-09 ***
+EducationPartial College        -0.41576    0.06849  -6.070 1.28e-09 ***
+EducationPartial High School    -1.06655    0.09488 -11.240  &lt; 2e-16 ***
+YearlyIncome25001-50000          1.03844    0.09764  10.636  &lt; 2e-16 ***
+YearlyIncome50001-75000          0.74613    0.12813   5.823 5.77e-09 ***
+YearlyIncome75001-100000         0.78857    0.13529   5.829 5.58e-09 ***
+YearlyIncomegreater than 100000  1.52551    0.15983   9.545  &lt; 2e-16 ***
+OccupationManagement            -1.04650    0.13215  -7.919 2.39e-15 ***
+OccupationManual                 0.41291    0.10396   3.972 7.13e-05 ***
+OccupationProfessional          -0.80229    0.11562  -6.939 3.95e-12 ***
+OccupationSkilled Manual        -0.12890    0.09069  -1.421   0.1552    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 11810  on 8531  degrees of freedom
+Residual deviance: 11113  on 8513  degrees of freedom
+AIC: 11151
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p>Eliminamos Gender dado que tiene un P-value &gt; 0.05 para evitar overfitting,</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Ajuste del modelo (Cambiamos 'family' por 'method')</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>modelo_arbol <span class="ot">&lt;-</span> <span class="fu">rpart</span>(BikePurchase <span class="sc">~</span> Country <span class="sc">+</span> MaritalStatus <span class="sc">+</span> HomeOwnerFlag_f <span class="sc">+</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                      Education <span class="sc">+</span> YearlyIncome <span class="sc">+</span> Occupation, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                      <span class="at">data =</span> train, </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                      <span class="at">method =</span> <span class="st">"class"</span>) </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Visualización</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(modelo_arbol,<span class="at">main =</span> <span class="st">"Árbol de Decisión: Predicción de Bike Purchase"</span>,     </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="dv">2</span>, </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">extra =</span> <span class="dv">104</span>, </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">nn =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Untitled_files/figure-html/entrenamiento%20arbol-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="cómo-de-buenos-son-los-modelos-cuál-o-cuáles-son-las-variables-más-importantes-a-la-hora-de-realizar-una-compra-por-parte-del-cliente-utilice-la-pestaña-var-discreta-adq-bicicleta" class="level2">
+<h2 class="anchored" data-anchor-id="cómo-de-buenos-son-los-modelos-cuál-o-cuáles-son-las-variables-más-importantes-a-la-hora-de-realizar-una-compra-por-parte-del-cliente-utilice-la-pestaña-var-discreta-adq-bicicleta">3 ¿Cómo de buenos son los modelos? ¿Cuál o cuáles son las variables más importantes a la hora de realizar una compra por parte del cliente? (utilice la pestaña Var Discreta Adq Bicicleta)</h2>
+<p>Hacemos la matriz de confusión del logit</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pred_logit_prob <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_logit, <span class="at">newdata =</span> test, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1# 1. Convertimos tus probabilidades a clases (0 o 1) con el corte de 0.5</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>pred_clase <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(pred_logit_prob <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Convertimos AMBOS a factor asegurando que tengan los mismos niveles</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>pred_factor <span class="ot">&lt;-</span> <span class="fu">factor</span>(pred_clase, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>real_factor <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>BikePurchase, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Magia: Generamos la matriz completa</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="at">data =</span> pred_factor, <span class="at">reference =</span> real_factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 551 336
+         1 479 767
+                                          
+               Accuracy : 0.6179          
+                 95% CI : (0.5969, 0.6386)
+    No Information Rate : 0.5171          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.2314          
+                                          
+ Mcnemar's Test P-Value : 6.557e-07       
+                                          
+            Sensitivity : 0.5350          
+            Specificity : 0.6954          
+         Pos Pred Value : 0.6212          
+         Neg Pred Value : 0.6156          
+             Prevalence : 0.4829          
+         Detection Rate : 0.2583          
+   Detection Prevalence : 0.4158          
+      Balanced Accuracy : 0.6152          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
+<p>hacemos la matriz de confusión del arbol:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Pide la clase directamente (type = "class")</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pred_clase_arbol <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_arbol, <span class="at">newdata =</span> test, <span class="at">type =</span> <span class="st">"class"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Aseguramos que sea factor y tenga los mismos niveles que la realidad</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Nota: predict con type="class" ya suele devolver factor, pero esto es doble seguridad</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>pred_factor_arbol <span class="ot">&lt;-</span> <span class="fu">factor</span>(pred_clase_arbol, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>real_factor_arbol <span class="ot">&lt;-</span> <span class="fu">factor</span>(test<span class="sc">$</span>BikePurchase, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"1"</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Matriz</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="at">data =</span> pred_factor_arbol, <span class="at">reference =</span> real_factor_arbol)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction   0   1
+         0 576 397
+         1 454 706
+                                          
+               Accuracy : 0.601           
+                 95% CI : (0.5799, 0.6219)
+    No Information Rate : 0.5171          
+    P-Value [Acc &gt; NIR] : 4.012e-15       
+                                          
+                  Kappa : 0.1997          
+                                          
+ Mcnemar's Test P-Value : 0.0549          
+                                          
+            Sensitivity : 0.5592          
+            Specificity : 0.6401          
+         Pos Pred Value : 0.5920          
+         Neg Pred Value : 0.6086          
+             Prevalence : 0.4829          
+         Detection Rate : 0.2700          
+   Detection Prevalence : 0.4562          
+      Balanced Accuracy : 0.5996          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<p>Ambos modelos presentan un rendimiento global moderado (Accuracy ~62%), siendo el <strong>Árbol de Decisión ligeramente superior</strong>.Las varaibles más importantes</p>
+<p>Sin embargo, al analizar los errores, vemos un comportamiento interesante: ambos modelos son <strong>‘agresivos’ prediciendo ventas</strong>.</p>
+<ul>
+<li><p>Son buenos detectando potenciales clientes (<strong>Sensibilidad &gt; 70%</strong>).</p></li>
+<li><p>Pero fallan bastante al filtrar a los que no están interesados (<strong>Especificidad ~50%</strong>). Es decir, el modelo tiende a pensar que mucha gente comprará la bici cuando en realidad no lo hará (muchos Falsos Positivos).”</p></li>
+</ul>
+<p>Las variables más importantes son las siguientes: País, Ingresos y Ocupación.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver qué variables usó realmente el árbol y cuánto importaron</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>modelo_arbol<span class="sc">$</span>variable.importance</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Education YearlyIncome   Occupation      Country 
+   152.90232    104.59552     65.93367     57.30915 </code></pre>
+</div>
+</div>
+</section>
+<section id="con-el-total-de-la-muestra-aplicando-técnicas-de-aprendizaje-no-supervisado-sería-capaz-de-definir-tipologías-de-clientes-diferentes-puede-usar-las-variables-que-considere-oportunas-utilice-la-pestaña-var-discreta-adq-bicicleta" class="level2">
+<h2 class="anchored" data-anchor-id="con-el-total-de-la-muestra-aplicando-técnicas-de-aprendizaje-no-supervisado-sería-capaz-de-definir-tipologías-de-clientes-diferentes-puede-usar-las-variables-que-considere-oportunas-utilice-la-pestaña-var-discreta-adq-bicicleta">3 Con el total de la muestra, aplicando técnicas de aprendizaje no supervisado ¿sería capaz de definir tipologías de clientes diferentes? Puede usar las variables que considere oportunas (utilice la pestaña Var Discreta Adq Bicicleta)</h2>
+<p>Utilizaremos Clusterización con técnica K-means para descubrir patrones naturales.</p>
+<p>Para utilziar el algoritmo de Kmeans solo pueden haber variables numéricas, por lo que el restohabría que convertirlo en variables numéricas, y los escalamos dado que tenemos variables booleanas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>datos_cluster_input <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>BikePurchase)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>datos_escalados <span class="ot">&lt;-</span> <span class="fu">scale</span>(datos_cluster_input)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>clusterizacion <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(datos_escalados, <span class="at">centers =</span> <span class="dv">4</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hemos elegido clusterizar por 4 elementos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>resumen_clusters <span class="ot">&lt;-</span> datos_cluster_input <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Cluster =</span> clusterizacion<span class="sc">$</span>cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), mean)) </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(resumen_clusters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 6
+  Cluster TotalAmount   Age TotalChildren HomeOwnerFlag NumberCarsOwned
+    &lt;int&gt;       &lt;dbl&gt; &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;           &lt;dbl&gt;
+1       1       5965.  58.1         1.63          0.809           1.58 
+2       2       1061.  53.8         1.19          1               0.800
+3       3        655.  67.9         3.40          0.703           2.46 
+4       4       1321.  50.4         0.550         0               1.22 </code></pre>
+</div>
+</div>
+</section>
+<section id="como-podemos-ver-por-ejemplo-el-primer-grupo-es-el-qué-más-compra-y-se-cracteriza-principalmente-por-no-tener-casa-y-tampoco-hijos.-pero-vamos-a-hacer-un-árbol-de-decisión-para-saber-qué-variables-son-las-más-importantes." class="level1">
+<h1>4 Como podemos ver por ejemplo el primer grupo es el qué más compra y se cracteriza principalmente por no tener casa y tampoco hijos. Pero vamos a hacer un árbol de decisión para saber qué variables son las más importantes.</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>datos_para_arbol <span class="ot">&lt;-</span> datos_cluster_input <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Cluster =</span> <span class="fu">as.factor</span>(clusterizacion<span class="sc">$</span>cluster)) <span class="co"># &lt;--- CORREGIDO AQUÍ</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Creamos el árbol explicativo</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># "Cluster ~ ." significa: Predice el Cluster usando TODAS las demás columnas</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>arbol_explicativo <span class="ot">&lt;-</span> <span class="fu">rpart</span>(Cluster <span class="sc">~</span> ., </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">data =</span> datos_para_arbol, </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">method =</span> <span class="st">"class"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Lo visualizamos</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(arbol_explicativo, </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">type =</span> <span class="dv">2</span>, </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">extra =</span> <span class="dv">101</span>, </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">nn =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>           <span class="at">box.palette =</span> <span class="st">"BuGn"</span>,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">main =</span> <span class="st">"Reglas que definen cada Cluster"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Untitled_files/figure-html/arbol%20de%20cluster-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<pre><code></code></pre>
+<section id="realice-una-predicción-de-las-ventas-totales-utilice-la-pestaña-st-ventas-totales-la-primera-columna-para-los-próximos-2-meses." class="level2">
+<h2 class="anchored" data-anchor-id="realice-una-predicción-de-las-ventas-totales-utilice-la-pestaña-st-ventas-totales-la-primera-columna-para-los-próximos-2-meses.">5 Realice una predicción de las ventas totales (utilice la pestaña ST Ventas totales, la primera columna) para los próximos 2 meses.</h2>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
