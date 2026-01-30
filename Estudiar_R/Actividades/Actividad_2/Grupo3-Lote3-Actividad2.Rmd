@@ -1,0 +1,311 @@
+---
+title: "Actividad_2-Grupo3-Lote3"
+author: "Leticia Florido, Iván Gómez, Alejandro Cita, Alejandro Campos"
+date: "2026-01-05"
+output:
+  pdf_document:
+    latex_engine: xelatex
+  html_document:
+    df_print: paged
+editor_options: 
+  markdown: 
+    wrap: sentence
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+# Introducción
+
+Para esta actividad, utilizaremos un enfoque de Ciencia de Datos Mínimo Viable.
+Nuestro objetivo es predecir el abandono de clientes (Churn) utilizando Regresión Logística y Árboles de Decisión.(qu
+
+```{r Directorio}
+# setup del directorio
+getwd()
+setwd("/Users/alejandrocamposlamas/Library/CloudStorage/GoogleDrive-alejandro.camposla@gmail.com/My\ Drive/UNIR\ -\ Master\ en\ Inteligencia\ de\ Negocio/Análisis\ de\ Datos\ Masivos\ para\ el\ Negocio/Actividades/Actividad02_ADMN")
+#setup librerias 
+library(tidyverse)
+# Tidyverse: El núcleo de manipulación de datos.
+# limpia datos con(dplyr) y graficar exploratorios (ggplot2).
+library(caret)
+# Caret (Classification And REgression Training)
+# Vital aquí para: dividir datos (Train/Test) y entrenar modelos de forma unificada.
+library(rpart)
+# Rpart (Recursive Partitioning): El motor matemático.
+# Es la librería que construye el modelo de Árbol de Decisión.
+library(rpart.plot)
+# Rpart.plot: Visualización del modelo.
+# Sin esto, el árbol de rpart es solo una lista de reglas de texto ilegibles. Dibuja el árbol.
+library(pROC)
+# pROC: Auditoría del modelo.
+# Al ser un problema binario (Churn: Sí/No), necesitas la Curva ROC y el AUC para medir la calidad real, no solo la precisión.
+
+library(pscl) # opcional!
+# Pscl (Political Science Computational Laboratory): Métricas específicas.
+# Se usa para calcular el "Pseudo-R2" (McFadden) en la Regresión Logística, ya que el R2 normal no existe ahí.
+```
+
+# 2. Carga y breve exploración para primera limpieza de Datos
+
+Cargamos los datos tratando de forzar las columnas al tipo adecuado e inspeccionamos el tipo de dato que tiene cada columna.
+Además seleccionaremos solamente las columnas solicitadas en la actividad para el modelado.
+
+```{r load_clean}
+# IMPORTANTE: Ajusta esta ruta relativa según tu estructura de carpetas real
+# Si el csv está en la misma carpeta que este .Rmd, borra "../data/raw/"
+datos <- read.csv("datos_teleco_Act2_ADMN.csv", stringsAsFactors = TRUE)
+
+# Inspeccionamos los tipos de datos
+
+str(datos)
+
+# Conversión de tipo, Junilado como Factor. 
+datos$Jubilado <- as.factor(datos$Jubilado)
+
+# elegimos las columnas necesarias. 
+datos_modelo <- datos %>%
+  select(
+    Abandono,               # Variable Objetivo
+    Contrato,               # Variable Predictora 1
+    Factura_digital,        # Variable Predictora 2
+    Servicio_Internet,      # Variable Predictora 3
+    Soporte_tecnico,        # Variable Predictora 4
+    CopiaSeguridad_Online,  # Variable Predictora 5 
+    Television_carta,       # Variable Predictora 6 
+    Meses_alta              # Variable Predictora 7
+  )
+
+# Verificación rápida
+glimpse(datos_modelo)
+
+
+```
+
+Nos hemos asegurado que cada columna tiene el tipo de dato adecuado, factores (fact) para las columnas categorías o lógicas, y numérico (int) para aquellas que son númericas, en este caso "Meses_alta".
+
+A continuación realizamos un breve Análisis Exploratorio (EDA), lo que queremos conseguir es verificar la integridad de los datos, por ejemplo comprobamos si hay algún null.
+
+```{R EDA}
+# Estructura y Resumen
+summary(datos_modelo)
+colSums(is.na(datos_modelo)) # Verificación de Nulos
+```
+
+Verificamos que no existen nulos en ninguna de las columnas, por lo que no es necesario hacer más limpieza.
+
+En la actividad se nos pide que hagamos el árbol de decisión basándonos en estas columnas exclusivamente: Contrato, Factura digital, Servicio Internet, Soporte técnico, Copia de Seguridad Online, Televisión, Meses de alta en el servicio.
+
+Sin embargo, queremos antes llevar a cabo dos o tres hipótesis por si encontráramos algunas correlaciones espurias o anomalías entre la variable de estudio "Abandono" y algunas otras variables.
+
+# Hipótesis
+
+## Hipótesis 1: La gente con contrato mensual tiende a abandonar más el servicio.
+
+```{R Hipótesis 1}
+
+# Tabla Cruzada: Contrato vs Abandono
+tabla_contrato <- table(datos_modelo$Contrato, datos_modelo$Abandono)
+# Porcentajes por fila (Margin = 1)
+prop.table(tabla_contrato, margin = 1) * 100
+
+```
+
+Descartamos la Hipótesis Nula en este caso.
+Parece haber una alta probabilidad de que en el caso de los contratos pagagos mes a mes la tasa de abandono sea mayor
+
+## Hipotesis 2: Los clientes sin soporte técnico son más propensos a irse.
+
+```{R Hipótesis 2 }
+tabla_soporte <- table(datos_modelo$Soporte_tecnico, datos_modelo$Abandono)
+prop.table(tabla_soporte, margin = 1) * 100
+
+```
+
+De nuevo, descartamos la hipotesis nula: hay probabilidad alta de marcharse cuando el cliente no tienen soporte técnico.
+
+### conclusiones de las hipotesis:
+
+Parece haber diferencias probabables significativas según las variables independientes y la variable de estudio.
+Por lo que procedemos a ejecutar el modelo de clasificación
+
+# Modelado: Regresión Logística
+
+Establecemos una semilla (123) para asegurar reproducibilidad
+
+## Partición de Datos (Train/Test)
+
+Realizamos una partición estratificada 80/20 para asegurar la representatividad de la clase objetivo.
+
+```{R Train-test}
+set.seed(123) 
+indice <- createDataPartition(y = datos_modelo$Abandono, p = 0.8, list = FALSE)
+entrenamiento <- datos_modelo[indice, ]
+test <- datos_modelo[-indice, ]
+
+```
+
+## Ajuste del Modelo Logit
+
+Utilizamos un modelo lineal generalizado (glm) con familia binomial.
+
+```{R modelo_logit}
+modelo_logit <- glm(Abandono ~ Contrato + Factura_digital + Servicio_Internet + 
+                      Soporte_tecnico + CopiaSeguridad_Online + Television_carta + 
+                      Meses_alta, 
+                    data = entrenamiento, 
+                    family = "binomial")
+
+summary(modelo_logit)
+```
+
+Observamos que variables como CopiaSeguridad_Online tienen un p-valor alto (\> 0.05), lo que sugiere, aparentemente, que no son estadísticamente significativas.
+Sin embargo, sospechamos que existe multicolinealidad con 'Servicio_Internet' (técnicamente redundantes porque si no hay servicio de internet no puede haber servicio de Copia de Seguridad).
+Al eliminarla, simplificamos el modelo reduciendo el ruido, asumiendo que el efecto de la conectividad ya está capturado por la variable de Internet.
+
+Procedemos a refinar el modelo eliminando esa variable.
+También calcularemos el Pseudo R2 para medir la certidumbre alcanzada con nuestro modelo
+
+```{R refinamiento}
+# Modelo V2 sin variables no significativas
+modelo_logit_v2 <- glm(Abandono ~ Contrato + Factura_digital + Servicio_Internet + 
+                         Soporte_tecnico + Television_carta + Meses_alta, 
+                       data = entrenamiento, 
+                       family = "binomial")
+
+# Pseudo R2 (McFadden)
+print(pR2(modelo_logit_v2)["McFadden"])
+
+print(summary(modelo_logit_v2))
+
+
+
+```
+
+# Evaluación del Logit
+
+Calculamos la matriz de confusión y el Accuracy sobre el conjunto de Test.
+Utilizamos un umbral de decisión del 50%
+
+```{R evaluacion}
+# Predicción de probabilidades
+probabilidades <- predict(modelo_logit_v2, newdata = test, type = "response")
+
+# Umbral de decisión 0.5
+prediccion_clase <- ifelse(probabilidades > 0.5, "Yes", "No")
+
+# Matriz de Confusión
+matriz_confusion <- table(test$Abandono, prediccion_clase)
+print(matriz_confusion)
+
+# Cálculo de Accuracy
+accuracy_logit <- sum(diag(matriz_confusion)) / sum(matriz_confusion)
+paste("Accuracy Logit (Umbral 0.5):", round(accuracy_logit * 100, 2), "%")
+
+```
+
+Este modelo vale para predecir bien aquellos que se quedan, pero no predice bien aquellos que se marchan (Falsos negativos)
+
+Asumimos que nuestro objetivo es retener clientes (evitar que se vayan).
+
+**¿Qué error me cuesta más dinero?** Al bajar el umbral a 0.30, sacrificamos Accuracy global y Especificidad (aumentan las falsas alarmas), pero aumentamos drásticamente la Sensibilidad (Recall).
+Esto alinea el modelo con el objetivo de negocio: es más barato incentivar a un cliente que se iba a quedar (Falso Positivo) que perder a un cliente real por no detectarlo (Falso Negativo).
+
+```{R evaluacion-remodelado}
+
+# Predicción de probabilidades
+probabilidades <- predict(modelo_logit_v2, newdata = test, type = "response")
+
+# Umbral de decisión 0.3 (Somos más agresivos prediciendo fugas)
+prediccion_clase <- ifelse(probabilidades > 0.30, "Yes", "No")
+
+# Convertimos a factor para que Caret lo entienda (asegura que los niveles coincidan)
+# IMPORTANTE: El nivel de referencia ("Positivo") debe ser "Yes" (Fuga)
+prediccion_factor <- factor(prediccion_clase, levels = c("No", "Yes"))
+real_factor <- factor(test$Abandono, levels = c("No", "Yes"))
+
+# Usamos caret para la evaluación completa
+matriz_completa <- confusionMatrix(data = prediccion_factor, 
+                                   reference = real_factor, 
+                                   positive = "Yes") # Indicamos que "Yes" es lo que buscamos
+
+print(matriz_completa)
+
+# Extraemos la Sensibilidad (Recall) para el texto
+recall_logit <- matriz_completa$byClass["Sensitivity"]
+# Guardamos el accuracy final de este modelo ajustado
+accuracy_logit_final <- matriz_completa$overall['Accuracy']
+
+print(paste("Sensibilidad (Recall) con umbral 0.3:", round(recall_logit, 4)))
+
+
+```
+
+# 5. Modelado: Árbol de Decisión
+
+Hacemos arbol de decisión para comprar modelos
+
+```{R arbol}
+modelo_arbol <- rpart(Abandono ~ Contrato + Factura_digital + Servicio_Internet + 
+                        Soporte_tecnico + Television_carta + Meses_alta,
+                      data = entrenamiento,
+                      method = "class")
+
+# Visualización del Árbol
+rpart.plot(modelo_arbol, extra = 106, main = "Árbol de Decisión: Fuga", 
+           cex = 0.7, tweak = 1.1)
+
+
+```
+
+## Evaluamos el modelo del arbol
+
+```{R evaluacion-arbol}
+prediccion_arbol <- predict(modelo_arbol, newdata = test, type = "class")
+matriz_arbol <- table(test$Abandono, prediccion_arbol)
+accuracy_arbol <- sum(diag(matriz_arbol)) / sum(matriz_arbol)
+
+print(matriz_arbol)
+paste("Accuracy Árbol:", round(accuracy_arbol * 100, 2), "%")
+
+
+```
+
+El arbol muestra un modelo de toma de decisiones peor para nuestro objetivo de negocio de retención del clientes y para el error que cuesta más dinero.
+
+# conclusiones y comparativa
+
+## Importancia de las variables
+
+```{R importancia_variables}
+
+# Calculamos la importancia
+importancia <- varImp(modelo_logit_v2)
+
+# 1. Gráfico (Caret lo ordena visualmente de forma automática)
+print(plot(importancia, main = "Variables más influyentes (Logit)"))
+
+# 2. Tabla de texto (Hay que ordenarla manualmente para leerla bien)
+# Ordenamos las filas basándonos en la columna "Overall" de mayor a menor
+importancia_ordenada <- importancia[order(importancia$Overall, decreasing = TRUE), , drop = FALSE]
+
+print(importancia_ordenada)
+
+```
+
+## Curva ROC
+
+```{R Curva}
+
+curva_roc <- roc(test$Abandono, probabilidades)
+plot(curva_roc, col = "blue", main = "Curva ROC - Modelo Logit", print.auc = TRUE)
+
+```
+
+# Conclusión Final
+
+El modelo Logit (ajustado a umbral 0.3) presenta un Accuracy del `r round(accuracy_logit_final*100, 1)`%, mientras que el Árbol obtiene un `r round(accuracy_arbol*100, 1)`%.
+
+Aunque el Accuracy del árbol pueda parecer superior en ciertos contextos, basándonos en el AUC y la capacidad de ajustar el umbral para priorizar la Sensibilidad (Recall), recomendamos el modelo Logit.
+Este nos permite cuantificar mejor cuánto aumenta el riesgo de fuga (Odds Ratio) y adaptar la estrategia de retención para minimizar la pérdida de clientes reales, aunque pensamos que sería demasiado arriesgado implementarlo en un entorno real.

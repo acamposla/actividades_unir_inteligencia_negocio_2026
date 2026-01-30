@@ -1,0 +1,353 @@
+---
+title: "Actividad 1 – Análisis de datos de aguacate"
+author: "Grupo 3 - Lote 3 - Alejandro Campos, Leticia Florido, Alejandro Cita, Iván Gómez "
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+# Cargar librerías necesarias
+library(psych)    # describe()
+library(Hmisc)    # rcorr()
+library(ggplot2)  # gráficos
+library(dplyr)    # manipulación de datos
+library(tidyr)    # pivot_longer()
+```
+
+## 1. Carga de datos y preparación
+
+En esta sección se carga la base de datos de precios de aguacate, se eliminan algunas regiones agregadas de Estados Unidos (Total U.S., West, etc.) y se preparan las variables para el análisis.
+
+Se asume que el fichero `avocado-updated-2020.csv` está en la misma carpeta que este archivo `.Rmd`.
+
+```{r carga-y-limpieza}
+# Cargar datos desde el archivo CSV
+avocado <- read.csv("avocado-updated-2020.csv")
+
+# Estructura inicial de la base
+str(avocado)
+names(avocado)
+
+# Conteo de observaciones por región
+avocado %>%
+  count(geography, sort = TRUE)
+
+# Lista de regiones agregadas que se van a excluir
+regiones_grandes <- c(
+  "Total U.S.", "West", "South Central", "Northeast",
+  "Southeast", "Midsouth", "Great Lakes", "Plains", "California"
+)
+
+# Filtramos para quedarnos con regiones de mercado más desagregadas
+avocado_limpio <- avocado %>%
+  filter(!geography %in% regiones_grandes)
+
+# Convertimos algunas variables a factor (categóricas)
+avocado_limpio$type      <- as.factor(avocado_limpio$type)
+avocado_limpio$geography <- as.factor(avocado_limpio$geography)
+avocado_limpio$year      <- as.factor(avocado_limpio$year)
+
+# Renombramos las columnas de PLU a nombres más legibles (si existen)
+avocado_limpio <- avocado_limpio %>%
+  rename(
+    plu_small  = `X4046`,
+    plu_large  = `X4225`,
+    plu_xlarge = `X4770`
+  )
+
+# Estructura después de la limpieza y renombrado
+str(avocado_limpio)
+```
+
+**Comentario:**  
+- `date` es una variable de fecha (frecuencia semanal).  
+- `average_price`, `total_volume`, `total_bags`, `small_bags`, `large_bags`, `xlarge_bags`, `plu_small`, `plu_large`, `plu_xlarge` son variables numéricas continuas.  
+- `type`, `geography` y `year` son variables categóricas (factor).  
+
+---
+
+## 2. Tipos de variables y análisis exploratorio de las variables numéricas
+
+La actividad pide identificar los tipos de variables y realizar un análisis exploratorio de las variables numéricas (media, varianza, diagramas de caja, etc.). Nos centraremos en `average_price` y `total_volume` por ser las variables clave en el resto del ejercicio.
+
+```{r descriptivos-numericos}
+# Seleccionamos las variables numéricas principales
+main_vars_num <- c("average_price", "total_volume")
+
+# Subconjunto numérico
+datos_num <- avocado_limpio[ , main_vars_num]
+
+# Función para obtener un resumen extendido de cada variable
+resumen_extendido <- function(x) {
+  qs <- quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = TRUE)
+  c(
+    Q1      = qs[1],
+    mediana = qs[2],
+    Q3      = qs[3],
+    IQR     = IQR(x, na.rm = TRUE),
+    media   = mean(x, na.rm = TRUE),
+    sd      = sd(x, na.rm = TRUE),
+    var     = var(x, na.rm = TRUE)
+  )
+}
+
+tabla_desc <- t(apply(datos_num, 2, resumen_extendido))
+tabla_desc_redonda <- round(tabla_desc, 3)
+
+tabla_desc_redonda
+```
+
+```{r boxplots-numericos, fig.height=4, fig.width=6}
+# Pasamos a formato largo para hacer boxplots de ambas variables a la vez
+avocado_long <- avocado_limpio %>%
+  select(all_of(main_vars_num)) %>%
+  pivot_longer(cols = everything(),
+               names_to = "variable",
+               values_to = "valor")
+
+ggplot(avocado_long, aes(x = "", y = valor)) +
+  geom_boxplot(fill = "skyblue") +
+  theme_bw() +
+  facet_wrap(~ variable, scales = "free_y") +
+  labs(
+    title = "Diagramas de caja del precio medio y volumen total",
+    x = "",
+    y = ""
+  )
+```
+
+**Comentario:**  
+
+En la muestra, el precio medio de un aguacate es de aproximadamente 1,39 dólares, con una mediana muy similar (1,35). Esto indica que la distribución de `average_price` es bastante simétrica y que no hay una cola muy pronunciada hacia valores extremos. El rango intercuartílico (IQR) es de unos 0,53 dólares, por lo que el 50 % central de las observaciones se sitúa aproximadamente entre 1,10 y 1,63 dólares, lo que refleja una dispersión moderada del precio.   
+
+En cambio, el volumen total vendido (`total_volume`) presenta una media cercana a 283.735 unidades y una mediana mucho más baja (alrededor de 78.186). La diferencia tan grande entre media y mediana, junto con un IQR muy elevado, indica una distribución muy asimétrica a la derecha: la mayoría de las semanas tienen volúmenes relativamente bajos, pero hay algunas semanas con ventas muy altas que empujan la media hacia arriba. Los diagramas de caja confirman esta situación, mostrando una concentración de datos cerca del cero y varios valores atípicos en la parte superior del boxplot de `total_volume`.
+
+
+
+
+---
+
+## 3. Submuestras: precio de los aguacates orgánicos en Albany y Boston
+
+La actividad pide extraer el precio de venta de los aguacates orgánicos vendidos en Albany y Boston. Para ello creamos una submuestra con esas dos regiones y tipo orgánico y calculamos también el precio medio global por ciudad.
+
+```{r precios-organic-albany-boston}
+# Definimos un vector con las regiones de interés
+albanyboston <- c("Albany", "Boston")
+
+# Submuestra: aguacates orgánicos en Albany y Boston
+precios_org_albanyboston <- subset(
+  avocado_limpio,
+  type == "organic" & geography %in% albanyboston,
+  select = c(geography, average_price)
+)
+
+head(precios_org_albanyboston)
+
+# Resumen: precio medio global por ciudad
+resumen_precios_albanyboston <- aggregate(
+  average_price ~ geography,
+  data = precios_org_albanyboston,
+  FUN  = mean
+)
+
+names(resumen_precios_albanyboston)[2] <- "precio_medio_global"
+
+resumen_precios_albanyboston
+```
+
+**Comentario:**  
+
+La submuestra contiene las observaciones de aguacates orgánicos vendidos en Albany y Boston. A partir del resumen, se observa que el precio medio global del aguacate orgánico en Albany es de aproximadamente 1,68 dólares por unidad, mientras que en Boston es algo mayor, en torno a 1,74 dólares.   
+
+Por tanto, en promedio el aguacate orgánico resulta ligeramente más caro en Boston que en Albany. La diferencia no es muy grande, pero sugiere que el mercado de Boston soporta precios algo más altos para este tipo de producto.
+
+
+---
+
+## 4. Covarianza y matriz de correlación
+
+Como paso previo al modelado, la actividad pide calcular la covarianza y la matriz de correlación del precio de los aguacates orgánicos, convencionales y su volumen de ventas. Para ello construimos una tabla en la que, para cada combinación de fecha y región, aparezcan las observaciones de ambos tipos (orgánico y convencional).
+
+```{r covarianza-correlacion}
+# 1) Separar orgánico y convencional
+org  <- subset(avocado_limpio, type == "organic")
+conv <- subset(avocado_limpio, type == "conventional")
+
+# 2) Nos quedamos con las variables necesarias
+org_small  <- org[ , c("date", "geography", "average_price", "total_volume")]
+conv_small <- conv[ , c("date", "geography", "average_price", "total_volume")]
+
+# 3) Unir por fecha y región: sólo casos donde existan los dos tipos
+datos_merge <- merge(
+  org_small,
+  conv_small,
+  by = c("date", "geography"),
+  suffixes = c("_org", "_conv")
+)
+
+# 4) Crear las 3 variables de interés
+vars_cor <- data.frame(
+  price_org  = datos_merge$average_price_org,
+  price_conv = datos_merge$average_price_conv,
+  vol_total  = datos_merge$total_volume_org + datos_merge$total_volume_conv
+)
+
+head(vars_cor)
+
+# Matriz de covarianzas
+cov_matrix <- cov(vars_cor, use = "complete.obs")
+cov_matrix
+
+# Matriz de correlaciones
+cor_matrix <- cor(vars_cor, use = "complete.obs")
+cor_matrix
+
+# Matriz de correlaciones con p-values (Hmisc::rcorr)
+rcorr(as.matrix(vars_cor), type = "pearson")
+```
+
+```{r pairs-plot, fig.height=4, fig.width=6}
+pairs(
+  vars_cor,
+  main   = "Relaciones entre precios y volumen",
+  labels = c("Precio orgánico", "Precio convencional", "Volumen total")
+)
+```
+**Comentario e interpretación**
+
+La matriz de correlaciones muestra una correlación positiva moderada (≈ 0,52) entre el precio de los aguacates orgánicos y el de los convencionales. Esto indica que, cuando sube el precio de uno de los tipos, suele subir también el del otro, lo cual es razonable si ambos responden a factores comunes de mercado (costes, demanda, etc.).   
+
+En cuanto a la relación con el volumen total de ventas, las correlaciones son negativas: alrededor de −0,05 entre el precio orgánico y el volumen, y de −0,23 entre el precio convencional y el volumen. La relación es débil para el orgánico y algo más marcada para el convencional. Este signo negativo es coherente con la teoría económica: precios más altos tienden a asociarse con menores cantidades vendidas. Sin embargo, la magnitud no es muy grande, por lo que el precio por sí solo no explica toda la variación observada en las ventas. Los p-values prácticamente nulos se deben al tamaño muestral muy elevado, pero desde el punto de vista económico las correlaciones deben interpretarse como moderadas (precio–precio) y débiles/medias (precio–volumen).
+
+---
+
+## 5. Relación precios–volumen y uso de logaritmos
+
+La actividad pide determinar la relación entre los precios y el volumen de ventas, y analizar cómo cambia dicha relación al tomar logaritmos. Para ilustrarlo, se trabaja con la submuestra de aguacates orgánicos vendidos en Albany.
+
+```{r relacion-precio-volumen}
+# Submuestra: orgánicos en Albany
+albany_org <- subset(
+  avocado_limpio,
+  type == "organic" & geography == "Albany"
+)
+
+# Eliminamos posibles NA
+albany_org <- na.omit(albany_org)
+
+# Dispersión precio vs volumen
+ggplot(albany_org,
+       aes(x = average_price, y = total_volume)) +
+  geom_point(alpha = 0.6) +
+  theme_bw() +
+  labs(title = "Relación entre precio y volumen (orgánicos, Albany)",
+       x = "Precio medio (average_price)",
+       y = "Volumen total (total_volume)")
+```
+
+```{r regresiones-niveles-y-log}
+# Modelo lineal en niveles
+modelo_lin <- lm(total_volume ~ average_price, data = albany_org)
+summary(modelo_lin)
+
+# Modelo lineal con logaritmos (elasticidad)
+albany_org2 <- subset(albany_org, total_volume > 0)
+
+modelo_log <- lm(log(total_volume) ~ log(average_price),
+                 data = albany_org2)
+summary(modelo_log)
+```
+
+**Comentario e interpretación**
+
+En el modelo lineal en niveles, la pendiente asociada al precio (`average_price`) es de aproximadamente −4057. Esto significa que, manteniendo el resto constante, un aumento de 1 dólar en el precio medio se asocia con una reducción de unas 4.057 unidades en el volumen semanal vendido de aguacates orgánicos en Albany. El coeficiente es estadísticamente significativo (p-value < 0,001) y el R² ≈ 0,48 indica que casi la mitad de la variabilidad del volumen se explica únicamente por el precio.   
+
+En el modelo log-log, el coeficiente de `log(average_price)` es aproximadamente −2,51. Este valor se interpreta como una elasticidad precio de la demanda: un aumento del 1 % en el precio se asocia, en promedio, con una caída de alrededor del 2,5 % en el volumen de ventas. De nuevo, el coeficiente es altamente significativo y el R² ≈ 0,44 muestra que el modelo explica una parte importante, aunque no total, de la variabilidad del volumen. En conjunto, ambos modelos confirman una relación negativa entre precio y cantidad demandada, consistente con la teoría de la demanda.
+
+
+---
+
+## 6. Predicción del precio en Albany a 3 meses
+
+Por último, se realiza una predicción del precio de venta de los aguacates orgánicos vendidos en Albany a 3 meses vista. Para ello se ajusta un modelo de tendencia temporal lineal sobre la serie de precios y se extrapola 12 semanas a partir de la última observación disponible.
+
+
+```r
+```{r prediccion-3-meses, fig.height=4, fig.width=7}
+# Nos aseguramos de que la fecha es de tipo Date
+albany_org$date <- as.Date(albany_org$date)
+
+# Ordenamos por fecha
+albany_org <- albany_org[order(albany_org$date), ]
+
+# Creamos un índice temporal
+albany_org$time_index <- 1:nrow(albany_org)
+
+head(albany_org[, c("date", "average_price", "time_index")])
+tail(albany_org[, c("date", "average_price", "time_index")])
+
+# Modelo de tendencia lineal
+modelo_precio <- lm(average_price ~ time_index, data = albany_org)
+summary(modelo_precio)
+
+# Última fecha observada
+ultima_fecha <- max(albany_org$date)
+
+# 3 meses ≈ 12 semanas
+horizonte_semanas <- 12
+
+nuevo_tiempo <- data.frame(
+  time_index = nrow(albany_org) + horizonte_semanas
+)
+
+pred_3m <- predict(
+  modelo_precio,
+  newdata  = nuevo_tiempo,
+  interval = "prediction"
+)
+
+pred_3m
+ultima_fecha
+ultima_fecha + 7 * horizonte_semanas   # fecha aproximada para la predicción
+
+# ------- Gráfico del modelo y la predicción -------
+
+# Fecha de la predicción
+fecha_pred <- ultima_fecha + 7 * horizonte_semanas
+
+# Data frame con el punto de predicción
+punto_pred <- data.frame(
+  date          = fecha_pred,
+  average_price = pred_3m[1, "fit"]
+)
+
+# Gráfico: serie histórica + recta de tendencia + punto de predicción
+ggplot(albany_org, aes(x = date, y = average_price)) +
+  geom_line(color = "grey70") +
+  geom_point(alpha = 0.5, color = "grey40") +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  geom_point(data = punto_pred,
+             aes(x = date, y = average_price),
+             color = "red", size = 3) +
+  theme_bw() +
+  labs(
+    title = "Precio histórico y predicción a 3 meses (Albany, orgánico)",
+    x = "Fecha",
+    y = "Precio medio (average_price)"
+  )
+```
+
+**Comentario e interpretación**
+
+La tendencia estimada para el precio de los aguacates orgánicos en Albany es ligeramente descendente: el coeficiente del índice temporal es de aproximadamente −0,0013 dólares por semana, y resulta estadísticamente significativo (p-value < 0,001).   
+
+Al extrapolar 12 semanas (≈ 3 meses) a partir de la última observación disponible (29-11-2020), el modelo predice un precio esperado de unos 1,47 dólares por unidad para alrededor del 21-02-2021. El intervalo de predicción al 95 % se sitúa aproximadamente entre 1,14 y 1,80 dólares, lo que indica una incertidumbre considerable en la predicción puntual. En cualquier caso, el modelo sugiere que, si se mantiene la tendencia observada, el precio de los aguacates orgánicos en Albany se mantendría en torno a valores similares o ligeramente inferiores a los actuales.
+
+En el gráfico anterior se representa la evolución del precio medio de los aguacates orgánicos en Albany (puntos y línea gris), junto con la recta de tendencia estimada por el modelo lineal (línea azul). El punto rojo marca la predicción a 3 meses vista obtenida a partir de dicho modelo. Se aprecia que la tendencia general del precio es ligeramente descendente y que la predicción se sitúa en la prolongación natural de esta recta, en torno a 1,47 dólares por unidad para finales de febrero de 2021.
+

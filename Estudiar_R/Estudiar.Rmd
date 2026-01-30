@@ -1,0 +1,48 @@
+---
+title: "Estudio"
+author: "Alejandro"
+date: "2026-01-30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+setwd("/Users/alejandrocamposlamas/Proyectos/ACTIVIDADES_UNIR/Estudiar_R")
+
+```
+
+**Ronda de Active Recall - Nivel 0: Fundamentos**
+
+Respóndeme sin mirar apuntes: 
+
+1\. **Tipos de datos**: En R, ¿cuál es la diferencia entre un vector y un data.frame? Dame un ejemplo de cuándo usarías cada uno:
+
+*Contestación*
+
+Un vector es un objeto que alberga un listado de valores de cualquier tipo. Un data.frame está compuesto por un índice vectorial vertical (registros) y un índice vectorial horizontal (columnas) que sirven como indices de los valores que albergan.
+
+Un vector lo utilizaría para almacenar una lista y un data.frame para alamacenar registros con diferentes dimensiones.
+
+*Corrección*
+
+Error: Un vector solo almacenar valores dle mismo tipo. Si metes números y textos juntos, R hace coerción silenciosa (esto es convierte todo a character). Por ejemplo
+
+```{r}
+vector <- c(1,2, "tres")
+class(vector)
+```
+
+Un data.frame es una tabla donde cada columna es un vector.
+
+2\. **Acceso a datos**: Si tengo un data.frame llamado datos con una columna edad, ¿cómo accedo a esa columna usando la sintaxis base de R (la que pide la profesora)?
+
+Accedería así: datos\$edad
+
+3\. **Factores**: ¿Por qué es crítico convertir una variable como "Género" (Hombre/Mujer) a factor antes de meterla en un modelo? ¿Qué pasa si no lo haces?
+
+Es importante porque el dato pasa de ser un dato VARCHAR también conocido como dato en Texto o String a un tipo de dato categoríco, especialmente útil porque acelarea la rápidez de trabajo del código y para algunos modelos es fundamental porque solo trabajo con factores o valores numéricos.
+
+4\. **Semilla**: ¿Para qué sirve set.seed(123)? ¿Por qué la profesora insiste tanto en esto?
+
+La semilla set.seed(123) sirve para asegurar la reproducibilidad del código. Esto es: que el output del código será siempre el mismo en equipos diferentes.
