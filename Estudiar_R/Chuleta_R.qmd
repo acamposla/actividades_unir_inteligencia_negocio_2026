@@ -1,0 +1,317 @@
+---
+title: "Chuleta R - Análisis de Datos Masivos"
+author: "Alejandro Campos"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+# Flujos de Trabajo Típicos
+
+## Flujo de Exploración Inicial (Iterativo)
+
+```
+1. str(datos)        → Ver tipos de variables
+2. summary(datos)    → Detectar anomalías, rangos, NAs
+3. Convertir factores donde sea necesario
+4. Detectar y tratar NAs
+5. Filtrar registros inválidos
+6. summary(datos)    → Verificar limpieza
+```
+
+**Regla de oro**: `summary()` es iterativo. Se ejecuta, se detectan problemas, se corrigen, se vuelve a ejecutar.
+
+## Flujo de Modelado (Train/Test)
+
+```
+1. set.seed(123)                    → Reproducibilidad
+2. Dividir en Train/Test (80/20)    → createDataPartition()
+3. Entrenar modelo con Train
+4. Predecir con Test
+5. Evaluar con confusionMatrix()
+```
+
+**Checkpoint antisuspenso**: NUNCA validar con los mismos datos de entrenamiento.
+
+---
+
+# Exploración de Datos
+
+## Estructura y dimensiones
+
+```{r}
+#| eval: false
+
+str(datos)              # Estructura: tipos de cada columna
+summary(datos)          # Resumen estadístico
+dim(datos)              # c(filas, columnas) - como size() en Python
+nrow(datos)             # Número de filas
+ncol(datos)             # Número de columnas
+names(datos)            # Nombres de columnas
+head(datos, 10)         # Primeras 10 filas
+tail(datos, 10)         # Últimas 10 filas
+```
+
+## Explorar valores únicos
+
+```{r}
+#| eval: false
+
+unique(datos$columna)           # Valores únicos
+length(unique(datos$columna))   # Cuántos valores únicos
+```
+
+## Detección de NAs
+
+```{r}
+#| eval: false
+
+sum(is.na(datos))               # Total NAs en todo el dataset
+colSums(is.na(datos))           # NAs por columna
+any(is.na(datos$columna))       # ¿Hay algún NA en esta columna?
+```
+
+## Eliminar NAs
+
+```{r}
+#| eval: false
+
+na.omit(datos)                          # Elimina filas con cualquier NA
+datos[complete.cases(datos), ]          # Equivalente
+datos$col[is.na(datos$col)] <- valor    # Reemplazar NA por valor
+```
+
+---
+
+# Tipos de Datos y Conversiones
+
+## Verificar tipo
+
+```{r}
+#| eval: false
+
+class(datos$columna)        # Tipo de la columna
+is.numeric(datos$columna)   # ¿Es numérica?
+is.factor(datos$columna)    # ¿Es factor?
+is.character(datos$columna) # ¿Es texto?
+```
+
+## Conversiones
+
+```{r}
+#| eval: false
+
+as.factor(datos$columna)    # Convertir a factor (categórica)
+as.numeric(datos$columna)   # Convertir a numérica
+as.character(datos$columna) # Convertir a texto
+as.Date(datos$columna)      # Convertir a fecha
+```
+
+**Cuándo usar factor**: Variables categóricas con pocos valores que se repiten (género, tipo, región). NO para identificadores únicos (nombre, ID).
+
+**Checkpoint antisuspenso**: Si una variable como `codigo_postal` es numérica pero representa categorías, conviértela a factor. Si no, R intentará hacer operaciones matemáticas con ella.
+
+---
+
+# Acceso y Filtrado de Datos
+
+## Acceso a columnas (R base)
+
+```{r}
+#| eval: false
+
+datos$columna               # Acceso con $
+datos[, "columna"]          # Acceso con corchetes
+datos[, c("col1", "col2")]  # Varias columnas
+datos[1:10, ]               # Primeras 10 filas
+datos[datos$edad > 30, ]    # Filas donde edad > 30
+```
+
+## Filtrado con subset() - R base
+
+```{r}
+#| eval: false
+
+# Sintaxis: subset(datos, condición, select = columnas)
+
+# Filtrar filas
+subset(datos, type == "organic")
+subset(datos, type == "organic" & geography == "Albany")  # AND
+subset(datos, type == "organic" | geography == "Albany")  # OR
+
+# Filtrar filas Y seleccionar columnas
+subset(datos, type == "organic", select = c(geography, average_price))
+
+# Excluir columnas (con -)
+subset(datos, type == "organic", select = -c(columna_a_excluir))
+```
+
+## Filtrado con dplyr (librería)
+
+```{r}
+#| eval: false
+
+library(dplyr)
+
+datos %>% filter(type == "organic")                    # Filtrar filas
+datos %>% select(geography, average_price)             # Seleccionar columnas
+datos %>% filter(type == "organic") %>% select(price)  # Encadenar
+```
+
+---
+
+# Estadísticos Descriptivos
+
+## Medidas de tendencia central y dispersión
+
+```{r}
+#| eval: false
+
+mean(datos$col)             # Media
+median(datos$col)           # Mediana
+sd(datos$col)               # Desviación estándar
+var(datos$col)              # Varianza
+min(datos$col)              # Mínimo
+max(datos$col)              # Máximo
+range(datos$col)            # c(min, max)
+quantile(datos$col, 0.25)   # Percentil 25 (Q1)
+IQR(datos$col)              # Rango intercuartílico (Q3 - Q1)
+```
+
+**Nota**: Si hay NAs, añadir `na.rm = TRUE`: `mean(datos$col, na.rm = TRUE)`
+
+## Tablas de frecuencia
+
+```{r}
+#| eval: false
+
+table(datos$col)                        # Frecuencia absoluta (conteo)
+prop.table(table(datos$col))            # Frecuencia relativa (0-1)
+prop.table(table(datos$col)) * 100      # Porcentaje
+
+# Tabla cruzada (dos variables)
+table(datos$col1, datos$col2)
+```
+
+## Agregaciones por grupo
+
+```{r}
+#| eval: false
+
+# R base - aggregate()
+aggregate(precio ~ region, data = datos, FUN = mean)
+aggregate(precio ~ region + tipo, data = datos, FUN = mean)  # Dos grupos
+
+# dplyr
+datos %>% group_by(region) %>% summarize(precio_medio = mean(precio))
+```
+
+---
+
+# Correlación y Covarianza
+
+```{r}
+#| eval: false
+
+cor(datos$var1, datos$var2)                 # Correlación entre dos variables
+cor(datos[, c("var1", "var2", "var3")])     # Matriz de correlación
+cov(datos$var1, datos$var2)                 # Covarianza
+```
+
+## Interpretación de correlación
+
+| Valor | Interpretación |
+|-------|----------------|
+| 0.7 a 1.0 | Correlación positiva fuerte |
+| 0.4 a 0.7 | Correlación positiva moderada |
+| 0.0 a 0.4 | Correlación positiva débil |
+| 0 | Sin correlación lineal |
+| -0.4 a 0 | Correlación negativa débil |
+| -0.7 a -0.4 | Correlación negativa moderada |
+| -1.0 a -0.7 | Correlación negativa fuerte |
+
+**Interpretación de negocio**: Una correlación negativa entre precio y volumen significa que a mayor precio, menor cantidad vendida (ley de demanda).
+
+---
+
+# Visualización Básica (R base)
+
+```{r}
+#| eval: false
+
+hist(datos$col)                     # Histograma
+boxplot(datos$col)                  # Diagrama de caja
+boxplot(precio ~ tipo, data=datos)  # Boxplot por grupos
+plot(datos$x, datos$y)              # Dispersión
+barplot(table(datos$col))           # Barras
+```
+
+---
+
+# Semilla y Reproducibilidad
+
+```{r}
+#| eval: false
+
+set.seed(123)   # Fijar semilla ANTES de cualquier operación aleatoria
+```
+
+**Por qué es crítico**: Operaciones como `sample()`, `createDataPartition()`, o entrenar modelos usan números aleatorios. Sin semilla, cada ejecución da resultados diferentes. Con semilla, el resultado es reproducible en cualquier equipo.
+
+---
+
+# Librerías Clave del Curso
+
+| Librería | Uso principal |
+|----------|---------------|
+| `readxl` | Leer Excel (.xlsx) |
+| `readr` | Leer CSV |
+| `dplyr` | Manipulación de datos (filter, select, %>%) |
+| `ggplot2` | Gráficos avanzados |
+| `caret` | Partición train/test, confusionMatrix |
+| `rpart` | Árboles de decisión |
+| `rpart.plot` | Visualizar árboles |
+| `forecast` | Series temporales, auto.arima |
+| `NbClust` | Número óptimo de clusters |
+| `factoextra` | Visualizar clustering |
+
+---
+
+# Notas de Interpretación (50% del examen)
+
+## Cómo interpretar summary() de un modelo
+
+- **Asteriscos (*, **, ***)**: Indican significancia estadística
+  - `***` = p < 0.001 (muy significativo)
+  - `**` = p < 0.01
+  - `*` = p < 0.05
+  - `.` = p < 0.1 (marginal)
+  - (vacío) = no significativo
+
+- **R²**: Proporción de variabilidad explicada
+  - R² = 0.80 → "El modelo explica el 80% de la variabilidad"
+
+- **P-valor**: Probabilidad de obtener ese resultado por azar
+  - p < 0.05 → Rechazamos hipótesis nula, el efecto es significativo
+
+## Traducir para el CEO
+
+| Técnico | Para el CEO |
+|---------|-------------|
+| "R² = 0.8" | "Nuestro modelo explica el 80% de la variabilidad, es fiable para tomar decisiones" |
+| "Coeficiente = -2.5, p < 0.001" | "Por cada unidad que sube X, Y baja 2.5 unidades, y esto no es casualidad" |
+| "Correlación = -0.6" | "Hay una relación inversa moderada: cuando uno sube, el otro baja" |
+
+---
+
+# Checkpoints Antisuspenso
+
+1. **Overfitting**: ¿Estás validando con datos de test separados?
+2. **Factores**: ¿Convertiste las categóricas a factor?
+3. **Semilla**: ¿Pusiste set.seed() antes de particionar?
+4. **NAs**: ¿Revisaste y trataste los valores faltantes?
+5. **Interpretación**: ¿Cada gráfico tiene explicación debajo?
+6. **Código postal trampa**: ¿Es numérico pero debería ser factor?
+

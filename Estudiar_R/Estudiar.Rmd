@@ -46,3 +46,125 @@ Es importante porque el dato pasa de ser un dato VARCHAR también conocido como 
 4\. **Semilla**: ¿Para qué sirve set.seed(123)? ¿Por qué la profesora insiste tanto en esto?
 
 La semilla set.seed(123) sirve para asegurar la reproducibilidad del código. Esto es: que el output del código será siempre el mismo en equipos diferentes.
+
+# Ejercicio de código
+
+  1. Crea un vector numérico llamado edades con los valores: 25, 32, 41, 28, 35
+
+  2. Crea un vector character llamado nombres con 5 nombres inventados
+
+  3. Combínalos en un data.frame llamado personas
+
+  4. Accede solo a la columna edades e imprime su media
+
+```{r ejercicio de código}
+
+edades <- c(25, 32, 41, 28, 35 )
+nombres <-  c("Alejandro", "Jorge", "Ramon", "Judy", "Pablo")
+
+personas <- data.frame(edades, nombres)
+
+
+mean(personas$edades)
+```
+
+# Siguiente ejercicio: 
+
+ Ahora vamos con algo más cercano al examen. En el mismo Rmd, crea un nuevo chunk que haga:
+
+  1. Añade una tercera columna al data.frame llamada genero con valores: "H", "H", "M", "M", "H"
+
+  2. Convierte genero a factor
+
+  3. Usa summary() sobre el data.frame completo
+
+  4. Usa table() para contar cuántos hombres y mujeres hay
+
+  **Restricción**: Hazlo usando sintaxis base de R (nada de tidyverse).
+
+```{r siguiente ejercicio}
+
+genero = c("H", "H","M", "M", "H")
+
+personas <- data.frame(edades, nombres, genero)
+
+personas$genero <-as.factor(personas$genero)
+summary(personas)
+table(personas$genero) # conteo de frecuencias
+
+```
+
+# Ejercicio 1 - Carga y exploración
+
+  \# 1. Carga el CSV del aguacate (está en Actividades/Actividad_1/)    
+
+  \# 2. Usa str() para ver la estructura     
+
+  \# 3. Usa summary() para ver el resumen    
+
+  \# 4. ¿Cuántas filas y columnas tiene? (usa las funciones nrow() y ncol()) 
+
+  \# 5. ¿Qué tipo de variable es "type"? ¿Debería ser factor?  
+
+```{r  Carga y exploración aguacates}
+
+#cargamos
+aguacates <- read.csv("Actividades/Actividad_1/Actividad 1 – Grupo3 - Análisis de datos de aguacate.csv")
+
+#vemos estructura
+
+str(aguacates) # aquí deberiamos  filtrar seguramente la geografía 
+
+
+# usamos summary()
+summary(aguacates) # deberiamos convertir a factor type 
+
+# cuantas filas y columnas tiene? 
+nrow(aguacates)
+ncol(aguacates) 
+dim(aguacates)
+dim(aguacates)[1]
+dim(aguacates)[2]
+# ¿no hay alguna manera de hacer una especia de size() como en python?
+
+# Type debería ser un factor porque es una cateogría y ahora está en varchar
+
+aguacates$type <- as.factor(aguacates$type)
+
+# creo que también tendría que mirar si hay algun null, creo que sea hacer con colSums(is.na) o algo asi, en el caso de hacer null filtrar quitando los nulls
+# parece que filtrar es importante tanto nulls como registros de geografías que no son importantes, estos son temas que pueden surgir en el examen. Veo que subset() es algo que tiene preparado el profesor y tiene relación con esto
+
+# summary() es un proceso iterativo, uno hace el summary y se da cuenta que quizás deba filtrar columnas o elegir solo las numericas, etc. 
+#Parece que al igual de importante que saber hacer un summary() es importante saber interpretar, posiblemente no interpretar todo de todas las columnas, pero si de aquellas que sean objeto de estudio, por ejemplo averge_price o total_colume. 
+
+# Creo que la profesora menciono que todo aquello que fuera 0, 1, 
+
+colSums(is.na(aguacates))
+sum(is.na(aguacates))
+
+
+prop.table(table(aguacates$type)) * 100
+
+```
+
+```{r Filtrado}
+
+aguacates_org <- subset(aguacates, aguacates$type == "organic")
+
+nrow(aguacates_org)
+
+# miro names(aguacates)
+# miro unique(aguacates$geography)
+
+aguacates_org <- subset(aguacates, aguacates$type == "organic" & aguacates$geography == "Albany")
+nrow(aguacates_org)  
+# Creo que las condiciones pueden ser OR o AND, en este caso he usado AND pero podria ser OR que es asi | 
+
+# precio medio aguacates
+
+mean(aguacates_org$average_price)
+
+# creo que filtrar es muy importante, además de para filtrar a veces hay que investigar las columnas, las filas, si hay nans, o si algun dato no debería estar, por ejemplo, hay regiones en geography que no tienen sentido, me di cuenta hacer un   unique(aguacates$geography), o aveces querrremos omitir columnas en el subset, creo importante hacer esto. 
+
+
+```
