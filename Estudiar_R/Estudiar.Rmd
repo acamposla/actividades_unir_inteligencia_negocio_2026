@@ -68,7 +68,7 @@ personas <- data.frame(edades, nombres)
 mean(personas$edades)
 ```
 
-# Siguiente ejercicio: 
+# Siguiente ejercicio:
 
  Ahora vamos con algo más cercano al examen. En el mismo Rmd, crea un nuevo chunk que haga:
 
