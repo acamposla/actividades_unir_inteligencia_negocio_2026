@@ -15,9 +15,10 @@ para especificar el modo de agrupar. Para su óptima visualización, lo ideal es
 */
 
 
+
 SELECT
 SH.OrderDate, 
-SUM(so.LineTotal) as Subtotal
+SUM(so.LineTotal) as Sales
 FROM  adventureworks.salesorderheader AS SH
 INNER JOIN adventureworks.salesorderdetail as SO
 ON SH.SalesOrderID  = SO.SalesOrderID 
@@ -30,17 +31,61 @@ ORDER BY OrderDate DESC
  incluyendo, un dataset final que contenga las mencionadas variables. Siendo 3 consultas en totaL OJO CTE!!!!!!
  */
 
+
+
+SELECT
+SH.OrderDate, 
+SUM(so.LineTotal) as Sales
+FROM  adventureworks.salesorderheader AS SH
+INNER JOIN adventureworks.salesorderdetail as SO
+ON SH.SalesOrderID  = SO.SalesOrderID 
+
+GROUP BY SH.OrderDate
+ORDER BY OrderDate DESC
+
+
+
+
+
 SELECT 
 SH.OrderDate, 
-SUM(so.LineTotal) as Subtotal
+SUM(so.LineTotal) as Sales_USA
 FROM  adventureworks.salesorderheader AS SH
 INNER JOIN adventureworks.salesorderdetail as SO
 ON SH.SalesOrderID  = SO.SalesOrderID
 LEFT JOIN adventureworks.salesterritory as ST
 ON SH.TerritoryID = ST.TerritoryID 
-WHERE ST.GROUP IN ("North America","Europe", "Pacific")
+WHERE ST.GROUP =  "North America"
 GROUP BY SH.OrderDate
 ORDER BY OrderDate DESC
+
+
+
+SELECT 
+SH.OrderDate, 
+SUM(so.LineTotal) as Sales_EU
+FROM  adventureworks.salesorderheader AS SH
+INNER JOIN adventureworks.salesorderdetail as SO
+ON SH.SalesOrderID  = SO.SalesOrderID
+LEFT JOIN adventureworks.salesterritory as ST
+ON SH.TerritoryID = ST.TerritoryID 
+WHERE ST.GROUP =  "Europe"
+GROUP BY SH.OrderDate
+ORDER BY OrderDate DESC
+
+SELECT 
+SH.OrderDate, 
+SUM(so.LineTotal) as Sales_Pac
+FROM  adventureworks.salesorderheader AS SH
+INNER JOIN adventureworks.salesorderdetail as SO
+ON SH.SalesOrderID  = SO.SalesOrderID
+LEFT JOIN adventureworks.salesterritory as ST
+ON SH.TerritoryID = ST.TerritoryID 
+WHERE ST.GROUP =  "Pacific"
+GROUP BY SH.OrderDate
+ORDER BY OrderDate DESC
+
+
 
 /*
 3. Para poder combinar las consultas anteriores debemos utilizar 
@@ -58,52 +103,84 @@ con ventas en ciertas regiones y en otras no
  *  */
 
 
-WITH 
-Facturas AS (
-SELECT 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Crear Primera
+WITH TOTAL_SALES AS(
+SELECT
 SH.OrderDate, 
-SUM(so.LineTotal) as Subtotal
+SUM(so.LineTotal) as Sales
 FROM  adventureworks.salesorderheader AS SH
 INNER JOIN adventureworks.salesorderdetail as SO
 ON SH.SalesOrderID  = SO.SalesOrderID 
 GROUP BY SH.OrderDate
+ORDER BY OrderDate DESC), 
+-- Crear segunda
+SALES_NA AS (
+SELECT 
+SH.OrderDate, 
+SUM(so.LineTotal) as Sales_USA
+FROM  adventureworks.salesorderheader AS SH
+INNER JOIN adventureworks.salesorderdetail as SO
+ON SH.SalesOrderID  = SO.SalesOrderID
+LEFT JOIN adventureworks.salesterritory as ST
+ON SH.TerritoryID = ST.TerritoryID 
+WHERE ST.GROUP =  "North America"
+GROUP BY SH.OrderDate
 ORDER BY OrderDate DESC
-) 
-Select * FROM Facturas 
-
-
-
-WITH 
-VentasNA AS (
-SELECT SH.TerritoryID, 
-SH.OrderDate 
-FROM adventureworks.salesorderheader as SH
+),
+--  Crear tercera
+SALES_EUROPE AS(
+SELECT 
+SH.OrderDate, 
+SUM(so.LineTotal) as Sales_EU
+FROM  adventureworks.salesorderheader AS SH
+INNER JOIN adventureworks.salesorderdetail as SO
+ON SH.SalesOrderID  = SO.SalesOrderID
 LEFT JOIN adventureworks.salesterritory as ST
 ON SH.TerritoryID = ST.TerritoryID 
-WHERE ST.GROUP = "North America"
-) Select * FROM VentasNA 
-
-
-
-WITH 
-VentasEurope AS (
-SELECT SH.TerritoryID, 
-SH.OrderDate 
-FROM adventureworks.salesorderheader as SH
+WHERE ST.GROUP =  "Europe"
+GROUP BY SH.OrderDate
+ORDER BY OrderDate DESC),
+--  Crear cuarta
+SALES_PAC AS(
+SELECT 
+SH.OrderDate, 
+SUM(so.LineTotal) as Sales_Pac
+FROM  adventureworks.salesorderheader AS SH
+INNER JOIN adventureworks.salesorderdetail as SO
+ON SH.SalesOrderID  = SO.SalesOrderID
 LEFT JOIN adventureworks.salesterritory as ST
 ON SH.TerritoryID = ST.TerritoryID 
-WHERE ST.GROUP = "Europe"
-) Select * FROM VentasEurope 
+WHERE ST.GROUP =  "Pacific"
+GROUP BY SH.OrderDate
+ORDER BY OrderDate DESC)
 
-WITH 
-VentasPacific AS (
-SELECT SH.TerritoryID, 
-SH.OrderDate 
-FROM adventureworks.salesorderheader as SH
-LEFT JOIN adventureworks.salesterritory as ST
-ON SH.TerritoryID = ST.TerritoryID 
-WHERE ST.GROUP = "Pacific"
-) Select * FROM VentasPacific 
+
+-- ahora las juntamos todo
+
+SELECT TOTAL_SALES.*,
+SALES_NA.Sales_USA,
+SALES_EUROPE.Sales_EU,
+SALES_PAC.Sales_Pac
+FROM TOTAL_SALES
+LEFT JOIN SALES_NA ON TOTAL_SALES.OrderDate = SALES_NA.OrderDate
+LEFT JOIN SALES_EUROPE ON TOTAL_SALES.OrderDate = SALES_EUROPE.OrderDate
+LEFT JOIN SALES_PAC ON TOTAL_SALES.OrderDate = SALES_PAC.OrderDate
 
 
 
