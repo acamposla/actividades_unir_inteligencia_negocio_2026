@@ -12,7 +12,7 @@ format:
 
 ## Flujo de Exploración Inicial (Iterativo)
 
-```
+```         
 1. str(datos)        → Ver tipos de variables
 2. summary(datos)    → Detectar anomalías, rangos, NAs
 3. Convertir factores donde sea necesario
@@ -25,7 +25,7 @@ format:
 
 ## Flujo de Modelado (Train/Test)
 
-```
+```         
 1. set.seed(123)                    → Reproducibilidad
 2. Dividir en Train/Test (80/20)    → createDataPartition()
 3. Entrenar modelo con Train
@@ -35,7 +35,7 @@ format:
 
 **Checkpoint antisuspenso**: NUNCA validar con los mismos datos de entrenamiento.
 
----
+------------------------------------------------------------------------
 
 # Exploración de Datos
 
@@ -83,7 +83,7 @@ datos[complete.cases(datos), ]          # Equivalente
 datos$col[is.na(datos$col)] <- valor    # Reemplazar NA por valor
 ```
 
----
+------------------------------------------------------------------------
 
 # Tipos de Datos y Conversiones
 
@@ -113,7 +113,7 @@ as.Date(datos$columna)      # Convertir a fecha
 
 **Checkpoint antisuspenso**: Si una variable como `codigo_postal` es numérica pero representa categorías, conviértela a factor. Si no, R intentará hacer operaciones matemáticas con ella.
 
----
+------------------------------------------------------------------------
 
 # Acceso y Filtrado de Datos
 
@@ -160,7 +160,7 @@ datos %>% select(geography, average_price)             # Seleccionar columnas
 datos %>% filter(type == "organic") %>% select(price)  # Encadenar
 ```
 
----
+------------------------------------------------------------------------
 
 # Estadísticos Descriptivos
 
@@ -208,7 +208,7 @@ aggregate(precio ~ region + tipo, data = datos, FUN = mean)  # Dos grupos
 datos %>% group_by(region) %>% summarize(precio_medio = mean(precio))
 ```
 
----
+------------------------------------------------------------------------
 
 # Correlación y Covarianza
 
@@ -222,19 +222,19 @@ cov(datos$var1, datos$var2)                 # Covarianza
 
 ## Interpretación de correlación
 
-| Valor | Interpretación |
-|-------|----------------|
-| 0.7 a 1.0 | Correlación positiva fuerte |
-| 0.4 a 0.7 | Correlación positiva moderada |
-| 0.0 a 0.4 | Correlación positiva débil |
-| 0 | Sin correlación lineal |
-| -0.4 a 0 | Correlación negativa débil |
+| Valor       | Interpretación                |
+|-------------|-------------------------------|
+| 0.7 a 1.0   | Correlación positiva fuerte   |
+| 0.4 a 0.7   | Correlación positiva moderada |
+| 0.0 a 0.4   | Correlación positiva débil    |
+| 0           | Sin correlación lineal        |
+| -0.4 a 0    | Correlación negativa débil    |
 | -0.7 a -0.4 | Correlación negativa moderada |
-| -1.0 a -0.7 | Correlación negativa fuerte |
+| -1.0 a -0.7 | Correlación negativa fuerte   |
 
 **Interpretación de negocio**: Una correlación negativa entre precio y volumen significa que a mayor precio, menor cantidad vendida (ley de demanda).
 
----
+------------------------------------------------------------------------
 
 # Visualización Básica (R base)
 
@@ -248,7 +248,7 @@ plot(datos$x, datos$y)              # Dispersión
 barplot(table(datos$col))           # Barras
 ```
 
----
+------------------------------------------------------------------------
 
 # Semilla y Reproducibilidad
 
@@ -260,58 +260,55 @@ set.seed(123)   # Fijar semilla ANTES de cualquier operación aleatoria
 
 **Por qué es crítico**: Operaciones como `sample()`, `createDataPartition()`, o entrenar modelos usan números aleatorios. Sin semilla, cada ejecución da resultados diferentes. Con semilla, el resultado es reproducible en cualquier equipo.
 
----
+------------------------------------------------------------------------
 
 # Librerías Clave del Curso
 
-| Librería | Uso principal |
-|----------|---------------|
-| `readxl` | Leer Excel (.xlsx) |
-| `readr` | Leer CSV |
-| `dplyr` | Manipulación de datos (filter, select, %>%) |
-| `ggplot2` | Gráficos avanzados |
-| `caret` | Partición train/test, confusionMatrix |
-| `rpart` | Árboles de decisión |
-| `rpart.plot` | Visualizar árboles |
-| `forecast` | Series temporales, auto.arima |
-| `NbClust` | Número óptimo de clusters |
-| `factoextra` | Visualizar clustering |
+| Librería     | Uso principal                                |
+|--------------|----------------------------------------------|
+| `readxl`     | Leer Excel (.xlsx)                           |
+| `readr`      | Leer CSV                                     |
+| `dplyr`      | Manipulación de datos (filter, select, %\>%) |
+| `ggplot2`    | Gráficos avanzados                           |
+| `caret`      | Partición train/test, confusionMatrix        |
+| `rpart`      | Árboles de decisión                          |
+| `rpart.plot` | Visualizar árboles                           |
+| `forecast`   | Series temporales, auto.arima                |
+| `NbClust`    | Número óptimo de clusters                    |
+| `factoextra` | Visualizar clustering                        |
 
----
+------------------------------------------------------------------------
 
 # Notas de Interpretación (50% del examen)
 
 ## Cómo interpretar summary() de un modelo
 
-- **Asteriscos (*, **, ***)**: Indican significancia estadística
-  - `***` = p < 0.001 (muy significativo)
-  - `**` = p < 0.01
-  - `*` = p < 0.05
-  - `.` = p < 0.1 (marginal)
-  - (vacío) = no significativo
-
-- **R²**: Proporción de variabilidad explicada
-  - R² = 0.80 → "El modelo explica el 80% de la variabilidad"
-
-- **P-valor**: Probabilidad de obtener ese resultado por azar
-  - p < 0.05 → Rechazamos hipótesis nula, el efecto es significativo
+-   **Asteriscos (*, ,*** ): Indican significancia estadística
+    -   `***` = p \< 0.001 (muy significativo)
+    -   `**` = p \< 0.01
+    -   `*` = p \< 0.05
+    -   `.` = p \< 0.1 (marginal)
+    -   (vacío) = no significativo
+-   **R²**: Proporción de variabilidad explicada
+    -   R² = 0.80 → "El modelo explica el 80% de la variabilidad"
+-   **P-valor**: Probabilidad de obtener ese resultado por azar
+    -   p \< 0.05 → Rechazamos hipótesis nula, el efecto es significativo
 
 ## Traducir para el CEO
 
 | Técnico | Para el CEO |
-|---------|-------------|
+|----|----|
 | "R² = 0.8" | "Nuestro modelo explica el 80% de la variabilidad, es fiable para tomar decisiones" |
-| "Coeficiente = -2.5, p < 0.001" | "Por cada unidad que sube X, Y baja 2.5 unidades, y esto no es casualidad" |
+| "Coeficiente = -2.5, p \< 0.001" | "Por cada unidad que sube X, Y baja 2.5 unidades, y esto no es casualidad" |
 | "Correlación = -0.6" | "Hay una relación inversa moderada: cuando uno sube, el otro baja" |
 
----
+------------------------------------------------------------------------
 
 # Checkpoints Antisuspenso
 
-1. **Overfitting**: ¿Estás validando con datos de test separados?
-2. **Factores**: ¿Convertiste las categóricas a factor?
-3. **Semilla**: ¿Pusiste set.seed() antes de particionar?
-4. **NAs**: ¿Revisaste y trataste los valores faltantes?
-5. **Interpretación**: ¿Cada gráfico tiene explicación debajo?
-6. **Código postal trampa**: ¿Es numérico pero debería ser factor?
-
+1.  **Overfitting**: ¿Estás validando con datos de test separados?
+2.  **Factores**: ¿Convertiste las categóricas a factor?
+3.  **Semilla**: ¿Pusiste set.seed() antes de particionar?
+4.  **NAs**: ¿Revisaste y trataste los valores faltantes?
+5.  **Interpretación**: ¿Cada gráfico tiene explicación debajo?
+6.  **Código postal trampa**: ¿Es numérico pero debería ser factor?

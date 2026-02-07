@@ -1,170 +1,499 @@
 ---
-title: "Estudio"
-author: "Alejandro"
-date: "2026-01-30"
+title: "Cuaderno de Estudio - R para Análisis de Datos Masivos"
+author: "Alejandro Campos"
+date: "2026-02-07"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 setwd("/Users/alejandrocamposlamas/Proyectos/ACTIVIDADES_UNIR/Estudiar_R")
+```
+
+------------------------------------------------------------------------
+
+# Sesión 0:
+
+## 0.1 Variables
+
+```{r 01Variables}
+
+nombre <-  "Alejandro"
+apellido <-  "Campos"
+
 
 ```
 
-**Ronda de Active Recall - Nivel 0: Fundamentos**
+### 0.1.1 Tipo de variables 
 
-Respóndeme sin mirar apuntes: 
+```{r tipo de varibales}
 
-1\. **Tipos de datos**: En R, ¿cuál es la diferencia entre un vector y un data.frame? Dame un ejemplo de cuándo usarías cada uno:
+x <-  3.14
+class(x)
 
-*Contestación*
+x <- as.integer(x)
+x
+class(x)
 
-Un vector es un objeto que alberga un listado de valores de cualquier tipo. Un data.frame está compuesto por un índice vectorial vertical (registros) y un índice vectorial horizontal (columnas) que sirven como indices de los valores que albergan.
+x = 0 
+class (x)
+x <-  as.logical(x)
 
-Un vector lo utilizaría para almacenar una lista y un data.frame para alamacenar registros con diferentes dimensiones.
-
-*Corrección*
-
-Error: Un vector solo almacenar valores dle mismo tipo. Si metes números y textos juntos, R hace coerción silenciosa (esto es convierte todo a character). Por ejemplo
-
-```{r}
-vector <- c(1,2, "tres")
-class(vector)
 ```
 
-Un data.frame es una tabla donde cada columna es un vector.
+### 0.1.2 Mostrar y preguntar información
 
-2\. **Acceso a datos**: Si tengo un data.frame llamado datos con una columna edad, ¿cómo accedo a esa columna usando la sintaxis base de R (la que pide la profesora)?
+```{r 012 Mostrar y preguntar información}
 
-Accedería así: datos\$edad
+cat("Hola Mundo \n")
+nombre <-  readline("ingresa tu nombre: ")
+cat("Hola", nombre)
+```
 
-3\. **Factores**: ¿Por qué es crítico convertir una variable como "Género" (Hombre/Mujer) a factor antes de meterla en un modelo? ¿Qué pasa si no lo haces?
+## 0.2 Condionales
 
-Es importante porque el dato pasa de ser un dato VARCHAR también conocido como dato en Texto o String a un tipo de dato categoríco, especialmente útil porque acelarea la rápidez de trabajo del código y para algunos modelos es fundamental porque solo trabajo con factores o valores numéricos.
+```{r 02 Condicionales}
 
-4\. **Semilla**: ¿Para qué sirve set.seed(123)? ¿Por qué la profesora insiste tanto en esto?
-
-La semilla set.seed(123) sirve para asegurar la reproducibilidad del código. Esto es: que el output del código será siempre el mismo en equipos diferentes.
-
-# Ejercicio de código
-
-  1. Crea un vector numérico llamado edades con los valores: 25, 32, 41, 28, 35
-
-  2. Crea un vector character llamado nombres con 5 nombres inventados
-
-  3. Combínalos en un data.frame llamado personas
-
-  4. Accede solo a la columna edades e imprime su media
-
-```{r ejercicio de código}
-
-edades <- c(25, 32, 41, 28, 35 )
-nombres <-  c("Alejandro", "Jorge", "Ramon", "Judy", "Pablo")
-
-personas <- data.frame(edades, nombres)
+x <-  -5
+if (x>0) {
+  cat("x es positivio \n")
+} else if (x < 0) {
+  cat("x es negativo \n")
+} else {
+  cat("x es cero \n")
+}
 
 
+
+```
+
+## 1.3 Buccles
+
+# 3. Tratamientos de Datos
+
+## 3.2 Cargar archivos
+
+### 3.2.1 Archivos Excel y csv
+
+```{r 321 Archivos excel}
+library(readxl)
+
+#datos_excel <- read_excel("archivo.xlsx")
+coaster_db <- read.csv("./datasets/coaster_db.csv")
+
+```
+
+## 3.3 Información
+
+### 3.3.1 Abrir la tabla
+
+```{r 331 abrir la tabla}
+View(coaster_db)
+
+```
+
+### 3.3.2 Dimesión del dataset
+
+```{r 332 Dimesion del dataset}
+
+dim(coaster_db)
+
+```
+
+### 3.3.3 Muestra las primeras fileas
+
+```{r 333 muestra las primeras filas}
+
+head(coaster_db)
+
+```
+
+### 3.3.4 Estructura y tipo de datos
+
+```{r 334 estructura y tipo de datos}
+
+str(coaster_db)
+
+```
+
+### 3.3.5 Nombre de las columnas de un dataset
+
+```{r 335 nombre de las columnas}
+
+names(coaster_db)
+```
+
+### 3.3.6 Valores únicos de una columnas
+
+```{r 336 Valores unicos}
+
+unique(coaster_db$Status)
+
+```
+
+```{r Principales Estadísticos}
+
+summary(coaster_db)
+
+summary(coaster_db[, sapply(coaster_db, is.numeric)]) # solo las numéricas
+summary(na.omit(coaster_db[, sapply(coaster_db, is.numeric)])) # solo numericas y y sin nans
+
+library(dplyr)
+
+#datos %>%
+#  select(where(is.numeric)) %>% # Selecciona numeric e integer
+#  na.omit() %>%                # Elimina filas que contengan NA
+#  summary()
+
+var(coaster_db$latitude, na.rm=TRUE)
+mean(coaster_db$latitude, na.rm=TRUE) # importante na.rm=TRUE
+```
+
+## 3.4 Selección de columnas
+
+Para entender esto, imagina que Base R es como operar con `NumPy` puro o listas de listas, mientras que `dplyr` es el equivalente a `Pandas` con su encadenamiento de métodos.
+
+#### Base R: La aproximación matricial
+
+-   **Lógica:** `dataframe[filas, columnas]`
+
+-   **Ventaja:** Cero dependencias. Tu código funcionará dentro de 10 años. Es extremadamente estable.
+
+-   **Desventaja:** Ilegible para humanos en operaciones complejas. Requiere mucha repetición del nombre del dataframe (`df$columna`).
+
+1.  **R Base (`[, ]` + `%in%`)**: Para scripts robustos y automatizados.
+
+2.  **`dplyr` (`select` + `|>`)**: Para análisis interactivo y legible.
+
+3.  **`dplyr` Avanzado (`all_of`)**: Para usar variables dentro de `select`.
+
+```{r 43 seleccion columnas}
+# sin usar library(dplyr)
+
+## OPCION A
+filtro_columnas <- names(coaster_db) != "Height"
+coaster_db_sin_height <- coaster_db[,filtro_columnas]
+
+vars_to_drop <-  c("Height", "Speed")
+filtro_columnas <- !names(coaster_db) %in% vars_to_drop
+coaster_db_sin_cols <-  coaster_db[, filtro_columnas]
+
+
+## OPCIÓN B
+coaster_db_sin_height <-  subset(coaster_db, select= -Height)
+coaster_db_sin_height <-  subset(coaster_db, select= -c(Height, Speed))
+solo_height <- subset(coaster_db, select= Height)
+
+# Usando Dplyr
+library(dplyr)
+
+coaster_db_sin_height <- coaster_db %>% select(-Height)
+
+
+coaster_db_sin_height <- coaster_db |> 
+  select(-Height, -Speed)
+
+
+coaster_db_sin_height <- coaster_db |> 
+  select(-c(Height, Speed))
+
+
+```
+
+## 3.5 Filtros
+
+#### dplyr (Tidyverse): La gramática de manipulación
+
+-   **Lógica:** `datos |> verbo(acción)` (usando el pipe nativo `|>` o el de magrittr `%>%`).
+
+-   **Ventaja:** Se lee como prosa (SQL-like). Abstrae la complejidad de los índices. Optimizado en C++ bajo el capó.
+
+-   **Desventaja:** "Dependency Hell". Si `dplyr` se actualiza, tu código puede romperse. Oculta lo que realmente pasa con la memoria.
+
+------------------------------------------------------------------------
+
+### 2. Las 5 Operaciones Críticas (El "Curso")
+
+Vas a aprender estas cinco. No necesitas más para el 90% del ETL.
+
+#### A. Filtrar Filas (WHERE en SQL)
+
+-   **Base R:** Usas vectores lógicos dentro de los corchetes.
+
+    R
+
+    ```         
+    # ¿Ves lo redundante que es repetir 'df'?
+    df[df$ventas > 1000 & df$region == "Norte", ]
+    ```
+
+-   **dplyr:**
+
+    R
+
+    ```         
+    df |> filter(ventas > 1000, region == "Norte")
+    ```
+
+#### B. Seleccionar Columnas (SELECT en SQL)
+
+-   **Base R:**
+
+    R
+
+    ```         
+    df[, c("producto", "precio")]
+    ```
+
+-   **dplyr:**
+
+    R
+
+    ```         
+    df |> select(producto, precio)
+    ```
+
+#### C. Crear/Modificar Columnas (Calculated Fields)
+
+-   **Base R:** Asignación directa vectorial.
+
+    R
+
+    ```         
+    df$margen <- df$precio - df$coste
+    ```
+
+-   **dplyr:**
+
+    R
+
+    ```         
+    df |> mutate(margen = precio - coste)
+    ```
+
+#### D. Agrupación y Resumen (GROUP BY)
+
+*Aquí es donde Base R se vuelve doloroso y dplyr brilla.*
+
+-   **Base R:** (Función `aggregate` o `tapply`). Es arcaico y difícil de leer.
+
+    R
+
+    ```         
+    aggregate(ventas ~ region, data = df, FUN = sum)
+    ```
+
+-   **dplyr:**
+
+    R
+
+    ```         
+    df |>
+      group_by(region) |>
+      summarise(total_ventas = sum(ventas))
+    ```
+
+#### E. Ordenar (ORDER BY)
+
+-   **Base R:** Tienes que ordenar los *índices* y luego usarlos para reordenar las filas. Mentalmente costoso.
+
+    R
+
+    ```         
+    df[order(df$ventas), ]
+    ```
+
+-   **dplyr:**
+
+    R
+
+    ```         
+    df |> arrange(ventas)
+    ```
+
+------------------------------------------------------------------------
+
+### 3. Diagnóstico Estratégico: ¿Debes aprender ambos?
+
+Aquí está mi veredicto como Senior, considerando que vienes de Python/Pandas y buscas eficiencia de negocio:
+
+**Céntrate en `dplyr` para producir, pero NO ignores la indexación de Base R.**
+
+1.  **Por qué `dplyr` es tu prioridad:**
+
+    -   Como analista/ingeniero, tu tiempo es el recurso más caro. `dplyr` te permite escribir y leer ETL 5 veces más rápido.
+
+    -   Se integra nativamente con `dbplyr`, lo que te permite escribir código R que se traduce automáticamente a SQL y se ejecuta en tu base de datos (clave para Garza e Imprex si los datos crecen).
+
+2.  **Por qué Base R es obligatorio (Nivel Básico):**
+
+    -   **Debugging:** Cuando `dplyr` falla, el error a menudo te devuelve a estructuras básicas.
+
+    -   \*\*Indexación `[ , ]` y `$`: \*\* Si no entiendes cómo acceder a un valor específico dentro de una lista o vector usando `$` o `[[ ]]`, te quedarás bloqueado en problemas triviales que `dplyr` no resuelve (como manipular la salida de un modelo estadístico o un JSON complejo).
+
+------------------------------------------------------------------------
+
+### 4. Tu "Examen" de Active Recall
+
+Para validar que no solo estás leyendo, sino asimilando la estructura mental:
+
+R tiene un dataset nativo llamado `mtcars`. Abre tu entorno R (o RStudio).
+
+1.  **Hipótesis:** Quiero que filtres los coches con más de 100 caballos de fuerza (`hp`) y calcules la media de consumo (`mpg`) agrupado por número de cilindros (`cyl`).
+
+2.  **Reto:**
+
+    -   Intenta escribirlo primero en **Base R**. Si te frustras con el `aggregate` o los corchetes, es normal. Analiza *por qué* es frustrante.
+
+    -   Escríbelo en **dplyr**.
+
+3.  **Reflexión:** Compara la legibilidad de ambos scripts.
+
+**¿Quieres que te muestre la solución de este ejercicio o prefieres pegarme tu intento primero para que lo audite?**
+
+# Sesión 1: Fundamentos de R
+
+## Active Recall - Conceptos Básicos
+
+**1. Vector vs Data.frame**
+
+-   **Vector**: Almacena valores del MISMO tipo. Si mezclas tipos, R hace coerción silenciosa.
+-   **Data.frame**: Tabla donde cada columna es un vector.
+
+```{r vector-coercion}
+# Ejemplo de coerción: números + texto = todo texto
+vector_mixto <- c(1, 2, "tres")
+class(vector_mixto)  # "character"
+```
+
+**2. Acceso a columnas**: `datos$columna`
+
+**3. Factores**: Convertir categóricas a factor para que los modelos las traten correctamente. Si no, R puede hacer operaciones numéricas absurdas (ej: sumar códigos postales).
+
+**4. Semilla**: `set.seed(123)` garantiza reproducibilidad en operaciones aleatorias.
+
+------------------------------------------------------------------------
+
+## Ejercicio: Crear data.frame básico
+
+```{r dataframe-basico}
+edades <- c(25, 32, 41, 28, 35)
+nombres <- c("Alejandro", "Jorge", "Ramon", "Judy", "Pablo")
+genero <- c("H", "H", "M", "M", "H")
+
+personas <- data.frame(edades, nombres, genero)
+personas$genero <- as.factor(personas$genero)
+
+# Exploración
+summary(personas)
+table(personas$genero)
 mean(personas$edades)
 ```
 
-# Siguiente ejercicio:
+------------------------------------------------------------------------
 
- Ahora vamos con algo más cercano al examen. En el mismo Rmd, crea un nuevo chunk que haga:
+# Sesión 1: Exploración de Datos Reales (Aguacates)
 
-  1. Añade una tercera columna al data.frame llamada genero con valores: "H", "H", "M", "M", "H"
+## Carga y estructura
 
-  2. Convierte genero a factor
+```{r carga-aguacates}
+aguacates <- read.csv("Actividades/Actividad_1/Actividad 1 – Grupo3 - Análisis de datos de aguacate.csv")
 
-  3. Usa summary() sobre el data.frame completo
+# Estructura
+str(aguacates)
 
-  4. Usa table() para contar cuántos hombres y mujeres hay
+# Dimensiones
+dim(aguacates)  # filas, columnas
 
-  **Restricción**: Hazlo usando sintaxis base de R (nada de tidyverse).
-
-```{r siguiente ejercicio}
-
-genero = c("H", "H","M", "M", "H")
-
-personas <- data.frame(edades, nombres, genero)
-
-personas$genero <-as.factor(personas$genero)
-summary(personas)
-table(personas$genero) # conteo de frecuencias
-
+# Nombres de columnas
+names(aguacates)
 ```
 
-# Ejercicio 1 - Carga y exploración
+## Conversión a factor
 
-  \# 1. Carga el CSV del aguacate (está en Actividades/Actividad_1/)    
-
-  \# 2. Usa str() para ver la estructura     
-
-  \# 3. Usa summary() para ver el resumen    
-
-  \# 4. ¿Cuántas filas y columnas tiene? (usa las funciones nrow() y ncol()) 
-
-  \# 5. ¿Qué tipo de variable es "type"? ¿Debería ser factor?  
-
-```{r  Carga y exploración aguacates}
-
-#cargamos
-aguacates <- read.csv("Actividades/Actividad_1/Actividad 1 – Grupo3 - Análisis de datos de aguacate.csv")
-
-#vemos estructura
-
-str(aguacates) # aquí deberiamos  filtrar seguramente la geografía 
-
-
-# usamos summary()
-summary(aguacates) # deberiamos convertir a factor type 
-
-# cuantas filas y columnas tiene? 
-nrow(aguacates)
-ncol(aguacates) 
-dim(aguacates)
-dim(aguacates)[1]
-dim(aguacates)[2]
-# ¿no hay alguna manera de hacer una especia de size() como en python?
-
-# Type debería ser un factor porque es una cateogría y ahora está en varchar
-
+```{r conversion-factor}
+# Type es categórica, debe ser factor
 aguacates$type <- as.factor(aguacates$type)
-
-# creo que también tendría que mirar si hay algun null, creo que sea hacer con colSums(is.na) o algo asi, en el caso de hacer null filtrar quitando los nulls
-# parece que filtrar es importante tanto nulls como registros de geografías que no son importantes, estos son temas que pueden surgir en el examen. Veo que subset() es algo que tiene preparado el profesor y tiene relación con esto
-
-# summary() es un proceso iterativo, uno hace el summary y se da cuenta que quizás deba filtrar columnas o elegir solo las numericas, etc. 
-#Parece que al igual de importante que saber hacer un summary() es importante saber interpretar, posiblemente no interpretar todo de todas las columnas, pero si de aquellas que sean objeto de estudio, por ejemplo averge_price o total_colume. 
-
-# Creo que la profesora menciono que todo aquello que fuera 0, 1, 
-
-colSums(is.na(aguacates))
-sum(is.na(aguacates))
-
-
-prop.table(table(aguacates$type)) * 100
-
 ```
 
-```{r Filtrado}
+## Detección de NAs
 
-aguacates_org <- subset(aguacates, aguacates$type == "organic")
+```{r deteccion-nas}
+sum(is.na(aguacates))        # Total NAs
+colSums(is.na(aguacates))    # NAs por columna
+```
 
+## Summary e interpretación
+
+```{r summary-aguacates}
+summary(aguacates)
+
+# Para ver solo columnas numéricas:
+# aguacates[, sapply(aguacates, is.numeric)]
+```
+
+**Nota**: `summary()` es iterativo. Se ejecuta, se detectan anomalías, se corrigen, se vuelve a ejecutar.
+
+## Frecuencias
+
+```{r frecuencias}
+# Absoluta
+table(aguacates$type)
+
+# Relativa (porcentaje)
+prop.table(table(aguacates$type)) * 100
+```
+
+------------------------------------------------------------------------
+
+# Sesión 1: Filtrado con subset()
+
+## Sintaxis correcta
+
+```{r filtrado-subset}
+# Filtrar orgánicos (NO repetir aguacates$ dentro de subset)
+aguacates_org <- subset(aguacates, type == "organic")
 nrow(aguacates_org)
 
-# miro names(aguacates)
-# miro unique(aguacates$geography)
+# Filtrar orgánicos de Albany (AND)
+aguacates_org_albany <- subset(aguacates, type == "organic" & geography == "Albany")
+nrow(aguacates_org_albany)
 
-aguacates_org <- subset(aguacates, aguacates$type == "organic" & aguacates$geography == "Albany")
-nrow(aguacates_org)  
-# Creo que las condiciones pueden ser OR o AND, en este caso he usado AND pero podria ser OR que es asi | 
+# Filtrar con OR
+# subset(aguacates, type == "organic" | geography == "Boston")
 
-# precio medio aguacates
-
-mean(aguacates_org$average_price)
-
-# creo que filtrar es muy importante, además de para filtrar a veces hay que investigar las columnas, las filas, si hay nans, o si algun dato no debería estar, por ejemplo, hay regiones en geography que no tienen sentido, me di cuenta hacer un   unique(aguacates$geography), o aveces querrremos omitir columnas en el subset, creo importante hacer esto. 
-
-
+# Seleccionar columnas específicas
+# subset(aguacates, type == "organic", select = c(geography, average_price))
 ```
+
+**Errores comunes**: - Usar `=` en vez de `==` para comparar - Repetir `datos$` dentro de subset (funciona pero es redundante)
+
+------------------------------------------------------------------------
+
+# Sesión 2: Estadísticos y Correlación
+
+## Estadísticos básicos
+
+```{r estadisticos}
+# Usando el subset de Albany
+mean(aguacates_org_albany$average_price)
+sd(aguacates_org_albany$average_price)
+```
+
+## Correlación
+
+```{r correlacion}
+cor(aguacates_org_albany$average_price, aguacates_org_albany$total_volume)
+```
+
+**Interpretación**: La correlación es negativa (-0.69 aprox), lo que indica una relación inversa moderada-fuerte. A mayor precio, menor volumen de ventas. Esto es coherente con la ley de demanda económica.
+
+------------------------------------------------------------------------
+
+# Próximos temas
+
+-   [ ] Regresión lineal (`lm()`)
+-   [ ] Partición train/test
+-   [ ] Árboles de decisión
+-   [ ] Clustering
+-   [ ] Series temporales
