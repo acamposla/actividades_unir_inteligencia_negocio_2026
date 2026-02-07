@@ -7,7 +7,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-setwd("/Users/alejandrocamposlamas/Proyectos/ACTIVIDADES_UNIR/Estudiar_R")
+#setwd("ACTIVIDADES_UNIR/Estudiar_R")
 ```
 
 ------------------------------------------------------------------------
@@ -24,7 +24,7 @@ apellido <-  "Campos"
 
 ```
 
-### 0.1.1 Tipo de variables 
+### 0.1.1 Tipo de variables
 
 ```{r tipo de varibales}
 
@@ -167,6 +167,14 @@ Para entender esto, imagina que Base R es como operar con `NumPy` puro o listas 
 
 3.  **`dplyr` Avanzado (`all_of`)**: Para usar variables dentro de `select`.
 
+#### dplyr (Tidyverse): La gramática de manipulación
+
+-   **Lógica:** `datos |> verbo(acción)` (usando el pipe nativo `|>` o el de magrittr `%>%`).
+
+-   **Ventaja:** Se lee como prosa (SQL-like). Abstrae la complejidad de los índices. Optimizado en C++ bajo el capó.
+
+-   **Desventaja:** "Dependency Hell". Si `dplyr` se actualiza, tu código puede romperse. Oculta lo que realmente pasa con la memoria.
+
 ```{r 43 seleccion columnas}
 # sin usar library(dplyr)
 
@@ -202,17 +210,7 @@ coaster_db_sin_height <- coaster_db |>
 
 ## 3.5 Filtros
 
-#### dplyr (Tidyverse): La gramática de manipulación
-
--   **Lógica:** `datos |> verbo(acción)` (usando el pipe nativo `|>` o el de magrittr `%>%`).
-
--   **Ventaja:** Se lee como prosa (SQL-like). Abstrae la complejidad de los índices. Optimizado en C++ bajo el capó.
-
--   **Desventaja:** "Dependency Hell". Si `dplyr` se actualiza, tu código puede romperse. Oculta lo que realmente pasa con la memoria.
-
-------------------------------------------------------------------------
-
-### 2. Las 5 Operaciones Críticas (El "Curso")
+### Las 5 Operaciones Críticas (El "Curso")
 
 Vas a aprender estas cinco. No necesitas más para el 90% del ETL.
 
@@ -235,7 +233,28 @@ Vas a aprender estas cinco. No necesitas más para el 90% del ETL.
     df |> filter(ventas > 1000, region == "Norte")
     ```
 
-#### B. Seleccionar Columnas (SELECT en SQL)
+```{r filtros}
+
+# R de base
+coaster_filtrado <- coaster_db[coaster_db$Status %in% c("Closed", "Removed") & coaster_db$year_introduced > 1985, ]
+
+coaster_filtrado_c <- coaster_db[coaster_db$Status %in% c("Closed", "Removed") & coaster_db$year_introduced > 1985, "coaster_name"]
+
+# Opción Robusta A (Explicita):
+condicion <- coaster_db$year_introduced > 1985 & !is.na(coaster_db$year_introduced)
+coaster_filtrado <- coaster_db[condicion, ]
+
+# Opción Robusta B (Función which - truco de senior):
+# which() devuelve solo los índices que son TRUE, ignorando los NA
+coaster_filtrado <- coaster_db[which(coaster_db$year_introduced > 1985), ]
+
+
+# dplyr
+coaster_filtrado <- coaster_db |> filter(Status %in% c("Closed", "Removed"), year_introduced > 1985)
+
+
+
+```
 
 -   **Base R:**
 
@@ -253,7 +272,21 @@ Vas a aprender estas cinco. No necesitas más para el 90% del ETL.
     df |> select(producto, precio)
     ```
 
-#### C. Crear/Modificar Columnas (Calculated Fields)
+## 3.5.1 Crear-Modificar Columnas
+
+```{r crear modificar columnas}
+
+# R base
+
+coaster_filtrado$calculo <- coaster_filtrado$Length - coaster_filtrado$Height
+
+
+# 
+
+#df |> mutate(margen = precio - coste)
+```
+
+#### Crear/Modificar Columnas (Calculated Fields)
 
 -   **Base R:** Asignación directa vectorial.
 
@@ -330,26 +363,6 @@ Aquí está mi veredicto como Senior, considerando que vienes de Python/Pandas y
     -   **Debugging:** Cuando `dplyr` falla, el error a menudo te devuelve a estructuras básicas.
 
     -   \*\*Indexación `[ , ]` y `$`: \*\* Si no entiendes cómo acceder a un valor específico dentro de una lista o vector usando `$` o `[[ ]]`, te quedarás bloqueado en problemas triviales que `dplyr` no resuelve (como manipular la salida de un modelo estadístico o un JSON complejo).
-
-------------------------------------------------------------------------
-
-### 4. Tu "Examen" de Active Recall
-
-Para validar que no solo estás leyendo, sino asimilando la estructura mental:
-
-R tiene un dataset nativo llamado `mtcars`. Abre tu entorno R (o RStudio).
-
-1.  **Hipótesis:** Quiero que filtres los coches con más de 100 caballos de fuerza (`hp`) y calcules la media de consumo (`mpg`) agrupado por número de cilindros (`cyl`).
-
-2.  **Reto:**
-
-    -   Intenta escribirlo primero en **Base R**. Si te frustras con el `aggregate` o los corchetes, es normal. Analiza *por qué* es frustrante.
-
-    -   Escríbelo en **dplyr**.
-
-3.  **Reflexión:** Compara la legibilidad de ambos scripts.
-
-**¿Quieres que te muestre la solución de este ejercicio o prefieres pegarme tu intento primero para que lo audite?**
 
 # Sesión 1: Fundamentos de R
 
