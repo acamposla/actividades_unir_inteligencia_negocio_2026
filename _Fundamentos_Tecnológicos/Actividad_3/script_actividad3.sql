@@ -107,18 +107,6 @@ con ventas en ciertas regiones y en otras no
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 -- Crear Primera
 WITH TOTAL_SALES AS(
 SELECT
@@ -181,6 +169,48 @@ FROM TOTAL_SALES
 LEFT JOIN SALES_NA ON TOTAL_SALES.OrderDate = SALES_NA.OrderDate
 LEFT JOIN SALES_EUROPE ON TOTAL_SALES.OrderDate = SALES_EUROPE.OrderDate
 LEFT JOIN SALES_PAC ON TOTAL_SALES.OrderDate = SALES_PAC.OrderDate
+
+/* 
+PARTE II: DATASET DE CLIENTES PARA REGRESION LINEAL
+Obtener el gasto acumulado de todos los clientes (personas y no tiendas) 
+y sus diferentes variables demográficas (edad, país, ingresos, educación, etc…). 
+Las tablas que necesitamos son:
+	
+
+- SalesOrderHeader: donde podemos obtener los pedidos de los clientes y su montante total. 
+Así mismo tenemos la clave ajena de CostumerID para poder combinar otras tablas.
+*/
+
+
+SELECT SO.SalesOrderID,
+SO.CustomerID, 
+SO.TotalDue 
+FROM adventureworks.salesorderheader as SO 
+
+
+
+/*
+•	Person: debemos 
+combinar esta tabla para filtrar los clientes individuos (PersonType = IN). 
+La clave primaria de la última tabla es BusinessEntityID 
+la cual engloba a cualquier persona física; combinándola con la clave PersonID de la tabla de SalesOrderHeader.
+*/
+
+SELECT SO.SalesOrderID,
+SO.CustomerID, 
+SO.TotalDue,
+CU.CustomerType 
+FROM adventureworks.salesorderheader as SO 
+LEFT JOIN  adventureworks.customer as CU ON SO.CustomerID  = CU.CustomerID 
+WHERE CU.CustomerType = 'I'
+
+
+
+/*
+SalesTerritory: mediante la clave TerritoryID podemos ver donde compra cada cliente.
+•	vPersonDemographics: contiene toda la información demográfica de los individuos. La clave primaria de la última tabla es BusinessEntityID la cual engloba a cualquier persona física; combinándola con la clave PersonID de la tabla de Person. 
+•	La función DATEDIFF en SQL Server o TIMESTAMPDIFF en MySQL permite calcular las diferencias entre fechas. Os sugiero echarle un vistazo en la página de Microsoft o Oracle. 
+*/
 
 
 
