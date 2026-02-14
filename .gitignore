@@ -1,1 +1,13 @@
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Python (por si acaso)
+__pycache__/
+*.py[cod]
+*.class
+.env
+.venv
+env/
+venv/
