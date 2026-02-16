@@ -1,0 +1,30 @@
+EJERCICIO BEP - NIVEL 1: Lo basico
+"Construye esto en Excel. Rellena las celdas marcadas con ???"
+
+DATOS DE PARTIDA (situacion SIN promocion)
+Concepto,Valor,Notas
+Clientes activos,1000,Clientes que compran habitualmente
+Ticket medio (€),50,Lo que gasta cada cliente de media
+Facturacion total (€),???,= Clientes x Ticket medio
+Coste producto (%),60%,Lo que te cuesta el producto (sobre PVP)
+Margen bruto (%),???,= 1 - Coste producto
+Margen bruto total (€),???,= Facturacion x Margen bruto %
+
+PROMOCION PROPUESTA: 15% de descuento directo
+Concepto,Valor,Notas
+Nuevo precio efectivo (€),???,= Ticket medio x (1 - 15%)
+Nuevo margen por cliente (€),???,= Nuevo precio - Coste producto en € (ojo: el coste NO cambia)
+Margen destruido por cliente (€),???,= Margen original por cliente - Nuevo margen por cliente
+
+PREGUNTA 1: Si la promo se aplica a los 1000 clientes actuales y NINGUNO gasta mas ni viene nadie nuevo...
+Coste total de la promocion (€),???,= Margen destruido x 1000 clientes
+"Esto es lo que PIERDES seguro. Es la destruccion voluntaria de margen."
+
+PREGUNTA 2: Cuantos clientes NUEVOS necesitas para recuperar ese coste?
+Margen por cliente nuevo (al precio promo) (€),???,= Nuevo precio - Coste producto €
+Clientes nuevos necesarios para BEP,???,= Coste total / Margen por cliente nuevo
+"Este es tu BEP expresado en clientes nuevos"
+
+PREGUNTA 3: Que pasa si en vez de clientes nuevos los actuales gastan mas?
+Incremento de ticket necesario para BEP (€),???,Piensalo: necesitas que los 1000 clientes generen X€ extra de margen cada uno
+Incremento de ticket necesario (%),???,= Incremento € / Ticket medio original

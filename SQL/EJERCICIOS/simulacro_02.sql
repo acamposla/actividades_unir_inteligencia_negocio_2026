@@ -22,6 +22,12 @@ USE ExamenUnir;
    Precio de Venta descendente.
    ----------------------------------------------------------- */
 
+SELECT Nombre, Precio_Compra , Precio_Venta 
+FROM ExamenUnir.Tienda_Productos
+WHERE color is NULL
+ORDER BY Precio_Venta DESC; 
+
+
 
 
 /* -----------------------------------------------------------
@@ -32,6 +38,12 @@ USE ExamenUnir;
    de todos los clientes cuyo gasto acumulado supere los
    100.000€. Ordénalos por gasto acumulado de mayor a menor.
    ----------------------------------------------------------- */
+
+
+SELECT IDCliente , Denominacion , Tipo , GastoAcumulado 
+FROM ExamenUnir.Tienda_Clientes
+WHERE GastoAcumulado > 100000
+ORDER BY GastoAcumulado DESC; 
 
 
 
@@ -47,6 +59,13 @@ USE ExamenUnir;
    ----------------------------------------------------------- */
 
 
+SELECT IDFactura , Fecha_Compra , Fecha_Entrega, Denominacion 
+FROM ExamenUnir.Tienda_Facturas
+INNER JOIN ExamenUnir.Tienda_Clientes 
+ON ExamenUnir.Tienda_Facturas.IDCliente = ExamenUnir.Tienda_Clientes.IDCliente 
+WHERE Estado  = 'Entregado' AND Fecha_Compra BETWEEN '2022-01-01' AND '2022-12-31'
+ORDER BY Fecha_Entrega ASC; 
+
 
 /* -----------------------------------------------------------
    PREGUNTA 4 (1 punto) — Dificultad: MEDIA
@@ -55,9 +74,18 @@ USE ExamenUnir;
    empleado, muestra su Nombre, Apellidos, y el Nombre y
    Apellidos de su supervisor directo. Ordena por apellidos
    del empleado.
-   (Pista: la tabla de empleados tiene una columna que
-   referencia a otro empleado de la misma tabla.)
+   
    ----------------------------------------------------------- */
+
+
+SELECT emp.Nombre as nombreempleado ,
+emp.Apellidos as apellidoempleado, 
+jef.Nombre, 
+jef.Apellidos 
+FROM ExamenUnir.Tienda_Empleados as emp 
+INNER JOIN ExamenUnir.Tienda_Empleados as jef 
+ON emp.SupervisorIDEmpleado   = jef.IDEmpleado   
+ORDER BY emp.Apellidos 
 
 
 
@@ -65,11 +93,22 @@ USE ExamenUnir;
    PREGUNTA 5 (1 punto) — Dificultad: MEDIA
 
    Comercial necesita saber cuántas unidades se han vendido
-   en total de cada categoría de producto. Muestra el nombre
+   en total 
+   de cada categoría de producto. Muestra el nombre
    de la categoría y el total de unidades vendidas. Ordena
    por unidades vendidas de mayor a menor.
-   (Necesitarás combinar varias tablas.)
+
    ----------------------------------------------------------- */
+
+
+Select ca.Nombre_Categoria, SUM(de.Cantidad) as Cantidad
+FROM ExamenUnir.Tienda_Detalles_Facturas as de
+LEFT JOIN ExamenUnir.Tienda_Productos as pr
+ON de.IDProducto = pr.IDProducto 
+INNER JOIN ExamenUnir.Tienda_Categoria_Productos as ca
+ON pr.IDCategoria = ca.IDCategoria 
+GROUP BY ca.IDCategoria
+ORDER BY Cantidad DESC; 
 
 
 
@@ -86,6 +125,19 @@ USE ExamenUnir;
    ----------------------------------------------------------- */
 
 
+SELECT emp.Nombre, emp.Apellidos, tie.RazonSocial, ter.Comunidad, SUM(fac.Total_sin_impuestos) as total_sin_impuestos
+FROM ExamenUnir.Tienda_Empleados as emp
+INNER JOIN ExamenUnir.Tienda_Tiendas as tie 
+ON emp.IDTienda = tie.IDTienda 
+INNER JOIN ExamenUnir.Tienda_Territorio as ter
+ON tie.IDTerritorio = ter.IDTerritorio 
+INNER JOIN ExamenUnir.Tienda_Facturas as fac
+ON emp.IDEmpleado = fac.IDEmpleado 
+WHERE fac.Estado <> 'Cancelado'
+GROUP BY emp.IDEmpleado 
+HAVING total_sin_impuestos > 15000
+ORDER BY total_sin_impuestos DESC; 
+
 
 /* -----------------------------------------------------------
    PREGUNTA 7 (2.5 puntos) — Dificultad: ALTA
@@ -94,8 +146,16 @@ USE ExamenUnir;
    NO han gestionado NUNCA una factura que haya acabado
    cancelada. Muestra el IDEmpleado, Nombre y Apellidos
    de dichos empleados.
-   (Piensa primero: ¿qué empleados SÍ tienen facturas
-   canceladas? Luego excluye a esos.)
+  
    ----------------------------------------------------------- */
+
+SELECT emp.IDEmpleado , emp.Nombre , emp.Apellidos 
+FROM ExamenUnir.Tienda_Empleados as emp
+WHERE emp.IDEmpleado NOT IN (
+SELECT fac.IDEmpleado
+FROM ExamenUnir.Tienda_Facturas as fac
+WHERE fac.Estado = 'Cancelado'
+)
+
 
 

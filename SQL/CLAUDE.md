@@ -45,7 +45,11 @@ El foco del proyecto es **preparar el examen práctico de SQL**. Claude actúa c
   - **Actividad 2**: Queries SQL (SELECT, JOIN, GROUP BY, subqueries) — referencia directa del nivel de examen
 - `BASES_DATOS_EXAMEN/` — Script de creación de la BBDD Tienda (esquema retail)
 - `EJERCICIOS/` — Simulacros de examen resueltos (.sql), organizados por sesión
+  - **simulacro_01.sql**: ✅ Completado con correcciones (P4, P5, P7)
+  - **simulacro_02.sql**: ✅ Completado con correcciones (P3, P4, P6, P7)
+  - **simulacro_03.sql**: 🔄 Generado, pendiente de resolver
 - `TRANSCRIPCIONES/` — Transcripciones de clases magistrales (referencia)
+- `CONTEXTO_CONVERSACION.md` — Estado volátil de la sesión actual
 
 ## Esquema ExamenUnir (Tienda retail)
 
@@ -73,9 +77,25 @@ Tienda_Categoria_Productos (IDCategoria PK)
 - **Facturas**: 63 (Estado: Enviado, Entregado, Cancelado)
 - **Detalles**: 98 transacciones
 
+## Gaps de aprendizaje detectados
+
+### Errores recurrentes (alta prioridad):
+1. **Columnas agregables en GROUP BY**: Incluir SUM/COUNT/AVG en el GROUP BY cuando solo debe ir la dimensión (3 ocurrencias en simulacros)
+2. **NOT IN vs WHERE**: Confundir "excluir valor" (WHERE <>) con "nunca hizo X" (NOT IN + subconsulta) (2 ocurrencias)
+
+### Patrón pendiente de dominar:
+- **NOT IN con subconsultas**: El alumno aún no lo resuelve solo sin pistas. Reforzar en próximos simulacros.
+
+### Errores puntuales (monitorizar):
+- Olvidar filtros WHERE explícitos del enunciado
+- Exactitud de valores texto (Cancelada vs Cancelado)
+- Self-join: dirección del ON
+- ORDER BY ASC/DESC
+
 ## Convenciones
 
 - Los scripts SQL usan comentarios `/* */` y `--` para separar ejercicios numerados
 - Nombres de tablas con prefijo Tienda_
 - Alias de tablas cortos (cl, ter, ti, cat, pr, emp, fact, det)
 - Ficheros de ejercicios: `simulacro_XX.sql`
+- **Importante**: Los enunciados NO incluyen pistas entre paréntesis (simular examen real)
