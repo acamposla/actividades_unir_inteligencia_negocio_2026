@@ -1,0 +1,113 @@
+---
+title: "Simulacro_01_Respuestas"
+author: "Alejandro"
+date: "2026-02-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+                      
+```
+
+```{r cargo librerias}
+
+library(readxl)
+library(caret)
+library(dplyr)
+library(glue) # para hacer fstring
+
+getwd()
+
+```
+
+## Análisis de Datos Masivos para el Negocio
+
+**Duración**: 2 horas **Material permitido**: RStudio, apuntes, chuleta impresa o Word **Entrega**: Respuestas escritas + archivo .R adjunto **Datasets**: `diabetes.csv` y `Mall_Customers.csv`
+
+------------------------------------------------------------------------
+
+**INSTRUCCIONES**: Se te proporcionan dos bases de datos. Responde a cada pregunta con el código R necesario y una breve interpretación del resultado. Recuerda que se evalúa el planteamiento y la interpretación, no solo que el código funcione.
+
+------------------------------------------------------------------------
+
+## PARTE 1: DATASET DIABETES (Clasificación)
+
+Trabajarás con el archivo `diabetes.csv` que contiene datos clínicos de pacientes para predecir si desarrollan diabetes (variable `Outcome`: 1 = diabetes, 0 = no diabetes).
+
+**Variables**: Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age, Outcome
+
+------------------------------------------------------------------------
+
+### Pregunta 1 (Carga y exploración) — 0.5 pts
+
+Carga el dataset `diabetes.csv` en R. ¿Cuántas filas y columnas tiene? ¿Qué tipo de dato tiene cada variable?
+
+```{r Pregunta 1}
+
+
+diabetes <- read.csv("/Users/alejandrocamposlamas/Proyectos/ACTIVIDADES_UNIR/Estudiar_R/datasets/diabetes.csv")
+
+# cuántas filas y columnas tienes
+glue("el número de filas es {nrow(diabetes)}")
+glue("el número de columnas es {ncol(diabetes)}")
+
+# Qué tipo de dato tiene cada variable
+glue("Aqui se pueden ver el tipo de variables {str(diabetes)}")
+
+```
+
+### Pregunta 2 (Nulos y anomalías) — 0.5 pts
+
+¿Existen valores nulos (NA) en el dataset? Ejecuta el código necesario para comprobarlo.
+
+```{r Pregunta 2}
+
+glue("Existe {sum(is.na(diabetes))} nulos en el dataset")
+
+```
+
+### Pregunta 3 (Trampa de calidad de datos) — 1 pt
+
+Observa las variables Glucose, BloodPressure, SkinThickness, Insulin y BMI. ¿Tiene sentido que alguna de estas variables tenga valor 0? ¿Qué significan esos ceros en realidad? ¿Cuántos registros con valor 0 hay en cada una de esas variables?
+
+```{r pregunta 3}
+
+# filtramos por los registros que tienen 0 en estas variables
+#datos %>% filter(type == "organic")    
+
+diabetes %>% filter(Glucose == 0 | BloodPressure == 0 | SkinThickness == 0 | Insulin == 0 | BMI == 0)
+
+# intento sumar el número de registros con valor 0 en cada una de las variables. Parece que debería utilizar colsums(), pero solo tengo colSums(is.na(datos)) no me valdría, no sabría hacerlo y no lo tengo en la chuleta.  
+
+
+
+# intento 2
+# colSums(is.zero(diabetes))
+
+# intento 3
+cols_sospechosas <- c("Glucose", "BloodPressure", "SkinThickness", "Insulin" , "BMI")
+
+ 
+
+colSums(diabetes[, cols_sospechosas ] == 0)
+
+
+```
+
+El dataset presenta una trampa. A pesar de no tener nulos, presenta valores 0 en registros faltantes
+
+### Pregunta 4 (Limpieza) — 0.5 pts
+
+Elimina las filas donde Glucose o BMI sean 0 (son valores imposibles clínicamente). ¿Cuántos registros quedan tras la limpieza?
+
+```{r Pregunta 4}
+
+
+#diabetesf <- diabetes %>% filter("Glucose" != 0 | "BMI" != 0)
+
+# nrow(diabetesf)
+
+diabetesf <-diabetes %>% filter(Glucose != 0 & BMI != 0)
+nrow(diabetesf)
+```

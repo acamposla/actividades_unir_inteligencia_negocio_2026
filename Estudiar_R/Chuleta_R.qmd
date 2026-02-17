@@ -73,6 +73,22 @@ colSums(is.na(datos))           # NAs por columna
 any(is.na(datos$columna))       # ¿Hay algún NA en esta columna?
 ```
 
+## Detección de ceros sospechosos (TRAMPA de examen)
+
+```{r}
+#| eval: false
+
+# Mismo patrón que is.na() pero con == 0
+colSums(datos == 0)                            # Ceros por columna (todo el dataset)
+colSums(datos[, c("col1", "col2")] == 0)       # Ceros solo en columnas específicas
+
+# Ejemplo diabetes: ceros que son nulos disfrazados
+cols_sospechosas <- c("Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI")
+colSums(diabetes[, cols_sospechosas] == 0)
+```
+
+**Patrón general colSums**: `colSums(CONDICION_TRUE_FALSE)` cuenta cuántos TRUE hay por columna. Funciona con cualquier condición: `== 0`, `is.na()`, `> 100`, etc.
+
 ## Eliminar NAs
 
 ```{r}
@@ -81,6 +97,10 @@ any(is.na(datos$columna))       # ¿Hay algún NA en esta columna?
 na.omit(datos)                          # Elimina filas con cualquier NA
 datos[complete.cases(datos), ]          # Equivalente
 datos$col[is.na(datos$col)] <- valor    # Reemplazar NA por valor
+
+# Eliminar filas por condición (ceros sospechosos)
+datos <- datos[datos$Glucose != 0, ]              # Una columna
+datos <- datos[datos$Glucose != 0 & datos$BMI != 0, ]  # Varias columnas
 ```
 
 ------------------------------------------------------------------------
@@ -159,6 +179,25 @@ datos %>% filter(type == "organic")                    # Filtrar filas
 datos %>% select(geography, average_price)             # Seleccionar columnas
 datos %>% filter(type == "organic") %>% select(price)  # Encadenar
 ```
+
+## Regla OR vs AND en filtros
+
+```
+ELIMINAR filas (!=) → usa & (AND)   "quiero que NO sea esto Y que NO sea aquello"
+BUSCAR filas (==)   → usa | (OR)    "quiero que sea esto O que sea aquello"
+```
+
+```{r}
+#| eval: false
+
+# ELIMINAR: quiero quitar filas donde Glucose sea 0 o BMI sea 0
+datos %>% filter(Glucose != 0 & BMI != 0)     # & porque AMBAS deben cumplirse
+
+# BUSCAR: quiero filas que sean de Madrid o de Barcelona
+datos %>% filter(ciudad == "Madrid" | ciudad == "Barcelona")  # | porque basta con una
+```
+
+**Nombres de columna en filter() van SIN comillas.** Con comillas R lo interpreta como texto literal y no filtra nada.
 
 ------------------------------------------------------------------------
 

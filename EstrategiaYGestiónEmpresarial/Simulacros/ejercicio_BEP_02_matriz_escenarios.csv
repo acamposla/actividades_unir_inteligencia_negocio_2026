@@ -1,0 +1,104 @@
+NIVEL 2: MATRIZ DE ESCENARIOS - BEP CON DOS OFERTAS
+"Estudia este archivo. Traza cada numero hasta entender de donde sale. Despues replicalo tu."
+
+========================================
+SECCION 1: DATOS BASE DEL SEGMENTO
+========================================
+"Segmento: Clientes B2B Medianos (ya segmentados - periodo sin promo)"
+Concepto,Valor,Notas
+Clientes en el segmento (N),500,Solo este segmento - no toda la base
+Ticket medio mensual,1000,euros - lo que gasta cada cliente al mes
+Coste medio de la cesta,650,euros - lo que nos cuestan los productos
+Margen bruto por cliente,350,= 1000 - 650
+Margen bruto %,35%,= 350 / 1000
+Margen total del segmento,175000,= 500 x 350
+
+========================================
+SECCION 2: LAS DOS OFERTAS A COMPARAR
+========================================
+"Ambas ofertas tienen la misma condicion: pedido superior a 1.000 euros este mes"
+"La diferencia es QUE le das al cliente como incentivo"
+
+,Oferta A,Oferta B
+Descripcion,"Rappel de 7 euros en factura","Lote regalo de productos (coste real 15 euros)"
+Coste por cliente que responde,7,15
+Ventaja,"Barato - BEP bajo","Mas atractivo - puede generar mas respuesta"
+Riesgo,"Poco atractivo - puede generar poca respuesta","Caro - necesita mucho incremento de gasto para ser rentable"
+
+========================================
+SECCION 3: LA FORMULA CLAVE
+========================================
+"Margen Neto de la Accion = N x r x (Margen x g - Coste_oferta)"
+""
+"Donde:"
+"N = 500 (clientes del segmento)"
+"r = % de clientes que RESPONDEN a la promo (cambian su comportamiento)"
+"g = % de INCREMENTO DE GASTO de cada cliente que responde"
+"Margen = 350 euros (margen por cliente)"
+"Coste_oferta = lo que nos cuesta DAR el incentivo a cada cliente que responde"
+""
+"IMPORTANTE: r NO es clientes nuevos. Es el % de los 500 que reacciona a la promo."
+"Si r=3% significa que 15 de los 500 clientes responden (compran mas gastan mas)."
+"Los otros 485 siguen comprando igual que siempre - ni ganan ni pierden."
+""
+"El BEP de cada oferta es cuando: Margen x g = Coste_oferta"
+"Oferta A: 350 x g = 7  ->  g = 7/350 = 2.0%"
+"Oferta B: 350 x g = 15 ->  g = 15/350 = 4.3%"
+
+========================================
+SECCION 4: MATRIZ OFERTA A (Rappel 7 euros)
+========================================
+"BEP de Oferta A = 2% de incremento de gasto"
+"Cada celda = 500 x r x (350 x g - 7)"
+
+MARGEN NETO (euros),g=1%,g=2%,g=3%,g=4%,g=5%
+r=1%,-17.50,0.00,17.50,35.00,52.50
+r=3%,-52.50,0.00,52.50,105.00,157.50
+r=5%,-87.50,0.00,87.50,175.00,262.50
+r=10%,-175.00,0.00,175.00,350.00,525.00
+
+"LECTURA: La columna g=2% es toda CEROS = ahi esta el BEP"
+"A la izquierda del BEP (g=1%): PIERDES dinero - el gasto extra no cubre el rappel"
+"A la derecha del BEP (g=3% en adelante): GANAS dinero"
+"Mas respuesta (r alto) AMPLIFICA tanto las perdidas como las ganancias"
+
+========================================
+SECCION 5: MATRIZ OFERTA B (Lote regalo 15 euros)
+========================================
+"BEP de Oferta B = 4.3% de incremento de gasto"
+"Cada celda = 500 x r x (350 x g - 15)"
+
+MARGEN NETO (euros),g=1%,g=2%,g=3%,g=4%,g=5%
+r=1%,-57.50,-40.00,-22.50,-5.00,12.50
+r=3%,-172.50,-120.00,-67.50,-15.00,37.50
+r=5%,-287.50,-200.00,-112.50,-25.00,62.50
+r=10%,-575.00,-400.00,-225.00,-50.00,125.00
+
+"LECTURA: Casi toda la matriz es ROJA (negativa)"
+"Solo a partir de g=5% empiezas a ganar algo"
+"El lote regalo es mas caro -> necesitas que el cliente gaste MUCHO mas para compensar"
+
+========================================
+SECCION 6: COMPARACION Y DECISION
+========================================
+"Con los mismos r y g la Oferta A SIEMPRE gana porque cuesta menos"
+"Entonces para que comparar?"
+""
+"Porque en la realidad la Oferta B (regalo atractivo) puede generar"
+"MAS respuesta y MAS gasto que la Oferta A (7 euros de rappel es poco sexy)"
+""
+"La pregunta de negocio es:"
+"El lote regalo genera suficiente respuesta y gasto EXTRA como para compensar su mayor coste?"
+""
+"Ejemplo:"
+"Si Oferta A consigue r=3% y g=3%:  Margen = +52.50 euros"
+"Si Oferta B consigue r=10% y g=5%: Margen = +125.00 euros"
+"En ese caso Oferta B gana a pesar de ser mas cara porque atrae mucha mas gente"
+""
+"Pero si Oferta B solo consigue r=5% y g=3%: Margen = -112.50 euros"
+"Mientras Oferta A con r=3% y g=3% da +52.50 euros"
+"En ese caso Oferta B DESTRUYE valor y Oferta A es claramente mejor"
+""
+"CONCLUSION: El BEP te dice el MINIMO que necesitas. La decision depende de"
+"lo que REALISTAMENTE crees que cada oferta puede conseguir en respuesta y gasto."
+"Por eso se testa primero con un grupo pequeno antes de lanzar a todo el segmento."

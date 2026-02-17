@@ -126,7 +126,7 @@ ORDER BY Cantidad DESC;
 
 
 SELECT emp.Nombre, emp.Apellidos, tie.RazonSocial, ter.Comunidad, SUM(fac.Total_sin_impuestos) as total_sin_impuestos
-FROM ExamenUnir.Tienda_Empleados as emp
+FROM Exatanto menUnir.Tienda_Empleados as emp
 INNER JOIN ExamenUnir.Tienda_Tiendas as tie 
 ON emp.IDTienda = tie.IDTienda 
 INNER JOIN ExamenUnir.Tienda_Territorio as ter

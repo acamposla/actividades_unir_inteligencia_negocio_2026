@@ -20,7 +20,12 @@ Skills prioritarios: `modo-estudio`, `active-recall`, `generador-ejercicios`.
 Resumenes/          # Resúmenes de estudio (Markdown)
 Transcripciones/    # Transcripciones de sesiones (.txt) + presentaciones (.pdf)
 Actividades/        # Actividades de evaluación continua (.docx) + datasets
-Simulacros/         # Simulacros de examen (enunciado + respuesta + corrección)
+Simulacros/
+  simulacro_01.md                         # Simulacro 01 (enunciado + respuesta + corrección)
+  ejercicio_BEP_01.csv                    # BEP básico con datos genéricos (completado y corregido)
+  ejercicio_BEP_01.xls                    # Rehecho por el alumno con datos propios (completado)
+  ejercicio_BEP_02_matriz_escenarios.csv  # Matriz de escenarios nivel 2, dos ofertas (en asimilación)
+  Ejercicio_BEP_02_Matrix_escenarios.xlsx # Versión Excel del ejercicio de matriz de escenarios
 explicacion-examen.md  # Formato y logística del examen final
 ```
 
@@ -51,6 +56,53 @@ Referencia para entender el nivel y estilo que espera el profesor:
 2. El usuario redacta su respuesta (sin consultar material).
 3. Claude corrige con criterio del profesor: relación de conceptos, interpretación analítica, síntesis, ortografía.
 4. Se guarda en `Simulacros/` como `simulacro_XX.md` (enunciado + respuesta + corrección + nota orientativa).
+
+## Estado actual del estudio
+
+**Fecha de última actualización**: 2026-02-17
+
+### Simulacros
+- **Simulacro 01**: Parcialmente respondido. Ejercicio 1a y 1b corregidos. Pendiente completar respuesta y corrección del ejercicio 2.
+
+### Laguna identificada y trabajada: BEP de promociones
+Se detectó que el alumno no dominaba el cálculo de BEP en el contexto de promociones. Se trabajó en profundidad con tres ejercicios prácticos:
+
+| Archivo | Descripción | Estado |
+|---------|-------------|--------|
+| `ejercicio_BEP_01.csv` | BEP básico con datos genéricos | Completado y corregido |
+| `ejercicio_BEP_01.xls` | Rehecho por el alumno con datos propios | Completado |
+| `ejercicio_BEP_02_matriz_escenarios.csv` | Matriz de escenarios nivel 2, dos ofertas | Estudiado, en asimilación |
+
+### Lo que el alumno ya domina (BEP)
+- Cálculo de margen destruido por la promoción.
+- BEP en clientes nuevos necesarios para cubrir el coste.
+- BEP en incremento de ticket medio necesario.
+- Fórmula y lógica de la matriz de escenarios.
+
+### Lo que necesita más práctica
+- Construir matrices completas de escenarios en Excel desde cero.
+- Aplicar el análisis BEP a datos reales de negocio.
+- Diferenciar con precisión entre incremento de facturación e incremento de margen.
+
+---
+
+## Conceptos clave trabajados — BEP de promociones
+
+Referencia rápida para el examen. Estos son los principios que hay que poder explicar y aplicar:
+
+1. **Toda promoción es destrucción voluntaria de margen** para compensar con mayor volumen.
+2. **BEP = punto donde `Margen Incremental - Coste Promoción >= 0`**.
+3. **Dos palancas del BEP**:
+   - **Respuesta (r)**: tasa de conversión — cuántos clientes responden a la oferta.
+   - **Gasto (g)**: ticket medio — cuánto más gastan por cliente convertido.
+4. **Fórmula de la matriz de escenarios**: `Margen Neto = N × r × (Margen × g - Coste_oferta)`
+   - Donde N = tamaño del segmento objetivo.
+5. **La exigencia (threshold) minimiza el coste de dilución**: evita regalar descuentos a clientes que habrían comprado igual (respuesta espontánea).
+6. **BEP por oferta** = `Coste_oferta / Margen_por_cliente`
+7. **Más respuesta amplifica en ambos sentidos**: si la oferta es rentable, escala bien; si no lo es, pierde más.
+8. **La segmentación previa es imprescindible**: el BEP es distinto por segmento (distinto margen, distinto comportamiento de compra).
+
+---
 
 ## Cómo ayudar en este proyecto
 
