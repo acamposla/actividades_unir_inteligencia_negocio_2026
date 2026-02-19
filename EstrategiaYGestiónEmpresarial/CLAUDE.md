@@ -57,12 +57,25 @@ Referencia para entender el nivel y estilo que espera el profesor:
 3. Claude corrige con criterio del profesor: relación de conceptos, interpretación analítica, síntesis, ortografía.
 4. Se guarda en `Simulacros/` como `simulacro_XX.md` (enunciado + respuesta + corrección + nota orientativa).
 
+## Aplicación profesional
+
+Lo aprendido en esta asignatura (BEP, customer centricity, ciclo intelligence-action, segmentación, KPIs SMART) se aplica profesionalmente en:
+
+**`~/Proyectos/IMPREX/analitica-comercial/`** — Sistema de inteligencia comercial para Imprex (B2B FMCG). Combina el marco teórico de esta asignatura con la implementación técnica en R de la asignatura hermana (`Estudiar_R`). Los frameworks metodológicos están en `docs/metodologia/`:
+- `framework-bep.md` — BEP, matrices de escenarios, threshold (de esta asignatura)
+- `framework-segmentacion.md` — Clustering + ciclo de vida del cliente
+- `framework-scoring.md` — Árboles, logit, del score a la acción comercial
+
+Cuando el alumno aprende un concepto aquí, puede aplicarlo con datos reales allí.
+
+---
+
 ## Estado actual del estudio
 
-**Fecha de última actualización**: 2026-02-17
+**Fecha de última actualización**: 2026-02-18
 
 ### Simulacros
-- **Simulacro 01**: Parcialmente respondido. Ejercicio 1a y 1b corregidos. Pendiente completar respuesta y corrección del ejercicio 2.
+- **Simulacro 01**: Completado. Todos los apartados respondidos y corregidos (enunciado + respuesta + corrección + respuesta modelo). Nota global: ~5,5/10.
 
 ### Laguna identificada y trabajada: BEP de promociones
 Se detectó que el alumno no dominaba el cálculo de BEP en el contexto de promociones. Se trabajó en profundidad con tres ejercicios prácticos:
@@ -83,6 +96,13 @@ Se detectó que el alumno no dominaba el cálculo de BEP en el contexto de promo
 - Construir matrices completas de escenarios en Excel desde cero.
 - Aplicar el análisis BEP a datos reales de negocio.
 - Diferenciar con precisión entre incremento de facturación e incremento de margen.
+
+### Lagunas identificadas en Simulacro 01 (pendientes de trabajar)
+1. **Árbol de decisión vs Regresión logística**: Confundió árbol con modelo logit. Dominar "engañar al ordenador".
+2. **RGPD**: Solo identificó 1 principio de 4 en un caso. Repasar: limitación finalidad, minimización, transparencia, consentimiento.
+3. **Citar datos numéricos**: Cuando interpreta una tabla, incluir los números concretos como evidencia.
+4. **Respuestas completas**: Si la pregunta tiene 3 partes, responder las 3.
+5. **Ortografía**: grave/grabe, dirigidos/dirijidos, obtenidos/opténidos, asiduidad/asuidad.
 
 ---
 

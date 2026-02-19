@@ -21,7 +21,10 @@ USE ExamenUnir;
    Nombre.
    ----------------------------------------------------------- */
 
-
+SELECT Nombre, Color, Precio_Compra , Precio_Venta 
+FROM ExamenUnir.Tienda_Productos
+WHERE Color IN ("Rojo", "Azul")
+ORDER BY Nombre ASC; 
 
 /* -----------------------------------------------------------
    PREGUNTA 2 (1 punto) — Dificultad: BAJA
@@ -31,6 +34,19 @@ USE ExamenUnir;
    Muestra IDEmpleado, Nombre, Apellidos y Salario Base.
    Ordena por salario de mayor a menor.
    ----------------------------------------------------------- */
+
+-- MI RESPUESTA (falta filtro de jornada):
+SELECT IDEmpleado, Nombre , Apellidos , SalarioBase
+FROM ExamenUnir.Tienda_Empleados
+WHERE SalarioBase > 30000
+ORDER BY SalarioBase DESC;
+
+-- CORRECCION: El enunciado pide DOS condiciones: jornada completa Y salario > 30000.
+-- Leer siempre el enunciado completo antes de escribir el WHERE.
+SELECT IDEmpleado, Nombre, Apellidos, SalarioBase
+FROM Tienda_Empleados
+WHERE Jornada = 'Completa' AND SalarioBase > 30000
+ORDER BY SalarioBase DESC;
 
 
 
@@ -45,7 +61,13 @@ USE ExamenUnir;
    ----------------------------------------------------------- */
 
 
-
+SELECT fac.IDFactura, fac.Fecha_Compra , fac.Total_sin_impuestos, cli.Denominacion 
+FROM ExamenUnir.Tienda_Facturas as fac
+LEFT JOIN ExamenUnir.Tienda_Clientes as cli
+ON fac.IDCliente = cli.IDCliente 
+WHERE fac.Total_sin_impuestos > 1000
+ORDER BY fac.Total_sin_impuestos DESC; 
+ 
 /* -----------------------------------------------------------
    PREGUNTA 4 (1 punto) — Dificultad: MEDIA
 
@@ -54,6 +76,21 @@ USE ExamenUnir;
    que hay productos sin color registrado. Ordena por número
    de productos de mayor a menor.
    ----------------------------------------------------------- */
+
+
+-- MI RESPUESTA (excluye NULLs cuando el enunciado pide incluirlos):
+SELECT pro.Color, COUNT(pro.IDProducto) as N_Productos
+FROM ExamenUnir.Tienda_Productos as pro
+WHERE pro.Color IS NOT NULL
+GROUP BY pro.Color
+ORDER BY N_Productos DESC;
+
+-- CORRECCION: "Ten en cuenta que hay productos sin color" = inclúyelos.
+-- Sin WHERE, GROUP BY agrupa los NULL como un grupo más.
+SELECT Color, COUNT(IDProducto) AS N_Productos
+FROM Tienda_Productos
+GROUP BY Color
+ORDER BY N_Productos DESC;
 
 
 
@@ -67,6 +104,16 @@ USE ExamenUnir;
    descendente.
    ----------------------------------------------------------- */
 
+SELECT emp.Nombre, emp.Apellidos, ter.Ciudad, count(fac.IDFactura ) as N_fac
+FROM ExamenUnir.Tienda_Empleados as emp
+LEFT JOIN ExamenUnir.Tienda_Tiendas as tie
+ON emp.IDTienda = tie.IDTienda 
+LEFT JOIN ExamenUnir.Tienda_Territorio as ter
+ON tie.IDTerritorio = ter.IDTerritorio 
+LEFT JOIN ExamenUnir.Tienda_Facturas as fac
+ON emp.IDEmpleado = fac.IDEmpleado 
+GROUP BY emp.IDEmpleado 
+ORDER BY N_fac DESC;
 
 
 /* -----------------------------------------------------------
@@ -79,7 +126,16 @@ USE ExamenUnir;
    vendidas. Ordena por unidades vendidas de mayor a menor.
    ----------------------------------------------------------- */
 
-
+SELECT pr.Nombre, cat.Nombre_Categoria , SUM(det.Cantidad) as C_Total 
+FROM ExamenUnir.Tienda_Productos as pr
+LEFT JOIN ExamenUnir.Tienda_Categoria_Productos as cat
+ON pr.IDCategoria = cat.IDCategoria 
+LEFT JOIN ExamenUnir.Tienda_Detalles_Facturas as det
+ON pr.IDProducto = det.IDProducto 
+-- WHERE cat.IDCategoria IS NOT NULL (en el caso que no se quiera traer productos sin categoría)
+GROUP BY  Pr.IDProducto 
+HAVING C_Total > 30
+ORDER BY C_Total DESC
 
 /* -----------------------------------------------------------
    PREGUNTA 7 (2.5 puntos) — Dificultad: ALTA
@@ -91,3 +147,24 @@ USE ExamenUnir;
    ----------------------------------------------------------- */
 
 
+-- MI RESPUESTA (error: WHERE <> filtra filas, no entidades):
+-- Devuelve 34 filas con clientes repetidos. Un cliente atendido
+-- por media jornada Y por completa aparece por sus facturas de completa.
+SELECT cli.IDCliente, cli.Denominacion
+FROM ExamenUnir.Tienda_Clientes as cli
+LEFT JOIN ExamenUnir.Tienda_Facturas as fac
+ON cli.IDCliente = fac.IDCliente
+LEFT JOIN ExamenUnir.Tienda_Empleados as emp
+ON fac.IDEmpleado = emp.IDEmpleado
+WHERE emp.Jornada <> "Media Jornada";
+
+-- CORRECCION: "NUNCA" = NOT IN. Buscar quién SÍ fue atendido
+-- por media jornada, y luego excluir ESOS CLIENTES.
+SELECT cli.IDCliente, cli.Denominacion
+FROM Tienda_Clientes cli
+WHERE cli.IDCliente NOT IN (
+    SELECT DISTINCT fac.IDCliente
+    FROM Tienda_Facturas fac
+    INNER JOIN Tienda_Empleados emp ON fac.IDEmpleado = emp.IDEmpleado
+    WHERE emp.Jornada = 'Media Jornada'
+);

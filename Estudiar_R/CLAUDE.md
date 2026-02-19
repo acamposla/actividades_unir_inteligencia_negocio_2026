@@ -68,6 +68,19 @@ Los archivos del examen son `diabetes_dataset.zip` y `clientesmarketing.zip`:
 3. Claude corrige cada respuesta: código + interpretación
 4. Al final: nota estimada + gaps identificados → mejoras a la Chuleta
 
+## Aplicación profesional
+
+Lo aprendido en esta asignatura (EDA, clustering, regresión logística, árboles de decisión) se aplica profesionalmente en:
+
+**`~/Proyectos/IMPREX/analitica-comercial/`** — Sistema de inteligencia comercial para Imprex (B2B FMCG). Combina la implementación técnica de esta asignatura con el marco teórico de la asignatura hermana (`EstrategiaYGestiónEmpresarial`). Los frameworks con código R listo para adaptar están en `docs/metodologia/`:
+- `framework-segmentacion.md` — K-Means + NbClust + perfilado con árboles sobre datos SAP
+- `framework-scoring.md` — glm + rpart + caret + matriz de confusión aplicados a propensión comercial
+- `framework-bep.md` — Función R para calcular BEP y matrices de escenarios
+
+Cuando el alumno aprende una técnica aquí, puede aplicarla con datos reales allí.
+
+---
+
 ## Contexto técnico
 - Stack: R, RStudio
 - Librerías permitidas: readxl, readr, dplyr, ggplot2, caret, rpart, rpart.plot, factoextra, NbClust, forecast

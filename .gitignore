@@ -17,3 +17,5 @@ venv/
 *.mov
 
 *.mov
+.RData
+*.mp4
