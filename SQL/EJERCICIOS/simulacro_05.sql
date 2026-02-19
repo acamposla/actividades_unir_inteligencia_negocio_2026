@@ -32,6 +32,14 @@ USE ExamenUnir;
 -- ESCRIBE AQUI LA SOLUCION CORRECTA:
 
 
+SELECT tie.IDTienda, tie.RazonSocial 
+FROM ExamenUnir.Tienda_Tiendas as tie
+WHERE tie.IDTienda NOT IN (
+	SELECT fac.IDTienda 
+	FROM ExamenUnir.Tienda_Facturas as fac
+	WHERE fac.Estado = "Cancelada"
+	)
+
 
 /* -----------------------------------------------------------
    PREGUNTA 2 (Dificultad: BAJA)
@@ -53,7 +61,18 @@ USE ExamenUnir;
 
 -- ESCRIBE AQUI LA SOLUCION CORRECTA:
 
-
+SELECT cli.IDCliente , cli.Denominacion 
+FROM ExamenUnir.Tienda_Clientes as cli
+WHERE cli.IDCliente NOT IN (
+	SELECT fac.IDCliente
+	FROM ExamenUnir.Tienda_Facturas as fac
+	INNER JOIN ExamenUnir.Tienda_Detalles_Facturas as det
+	ON fac.IDFactura = det.IDFactura 
+	LEFT JOIN ExamenUnir.Tienda_Productos as pro
+	ON det.IDProducto = pro.IDProducto 
+	WHERE pro.Precio_Compra = "Alto"
+)
+	
 
 /* -----------------------------------------------------------
    PREGUNTA 3 (Dificultad: MEDIA)
@@ -73,6 +92,8 @@ USE ExamenUnir;
 --   (por sus facturas de Particular). Pero SÍ atendió a Empresa.
 
 -- ESCRIBE AQUI LA SOLUCION CORRECTA:
+
+
 
 
 

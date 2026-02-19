@@ -17,16 +17,22 @@ Skills prioritarios: `modo-estudio`, `active-recall`, `generador-ejercicios`.
 ## Estructura
 
 ```
-Resumenes/          # Resúmenes de estudio (Markdown)
-Transcripciones/    # Transcripciones de sesiones (.txt) + presentaciones (.pdf)
-Actividades/        # Actividades de evaluación continua (.docx) + datasets
-Simulacros/
-  simulacro_01.md                         # Simulacro 01 (enunciado + respuesta + corrección)
-  ejercicio_BEP_01.csv                    # BEP básico con datos genéricos (completado y corregido)
-  ejercicio_BEP_01.xls                    # Rehecho por el alumno con datos propios (completado)
-  ejercicio_BEP_02_matriz_escenarios.csv  # Matriz de escenarios nivel 2, dos ofertas (en asimilación)
-  Ejercicio_BEP_02_Matrix_escenarios.xlsx # Versión Excel del ejercicio de matriz de escenarios
-explicacion-examen.md  # Formato y logística del examen final
+Temario/                # PDFs oficiales UNIR (Ideas Clave, temas 1-8)
+Transcripciones/        # Transcripciones (.txt) + presentaciones (.pdf) por sesión
+Actividades/            # Actividades de evaluación continua (.docx) + datasets
+Simulacros/             # Simulacros de examen (enunciado + respuesta + corrección)
+  simulacro_01.md/pdf     # Completado. Nota ~5,5/10
+  simulacro_02.md/pdf     # Resuelto como respuesta modelo
+Ejercicios/             # Ejercicios prácticos de refuerzo (BEP, etc.)
+  ejercicio_BEP_01.csv    # BEP básico con datos genéricos (completado)
+  ejercicio_BEP_01.xls    # Rehecho por el alumno con datos propios
+  ejercicio_BEP_02_*.csv/xlsx  # Matriz de escenarios nivel 2 (en asimilación)
+Resumenes/              # Material de estudio y referencia
+  guia_estudio_QA.md      # Guía Q&A completa (41 preguntas, formato active recall)
+  diccionario_examen.md   # ~80 conceptos clave organizados por bloque
+  explicacion-examen.md   # Formato y logística del examen final
+  Resumen_Alejandro.md    # Apuntes propios del alumno
+  Resumen_GoogleLLM.md    # Resumen generado por LLM
 ```
 
 ## Contexto del examen
