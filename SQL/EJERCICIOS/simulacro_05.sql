@@ -37,7 +37,7 @@ FROM ExamenUnir.Tienda_Tiendas as tie
 WHERE tie.IDTienda NOT IN (
 	SELECT fac.IDTienda 
 	FROM ExamenUnir.Tienda_Facturas as fac
-	WHERE fac.Estado = "Cancelada"
+	WHERE fac.Estado = "Cancelado"
 	)
 
 
@@ -70,7 +70,7 @@ WHERE cli.IDCliente NOT IN (
 	ON fac.IDFactura = det.IDFactura 
 	LEFT JOIN ExamenUnir.Tienda_Productos as pro
 	ON det.IDProducto = pro.IDProducto 
-	WHERE pro.Precio_Compra = "Alto"
+	WHERE pro.Intervalo_Precio  = "Alto"
 )
 	
 
