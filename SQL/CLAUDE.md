@@ -47,7 +47,10 @@ El foco del proyecto es **preparar el examen práctico de SQL**. Claude actúa c
 - `EJERCICIOS/` — Simulacros de examen resueltos (.sql), organizados por sesión
   - **simulacro_01.sql**: ✅ Completado con correcciones (P4, P5, P7)
   - **simulacro_02.sql**: ✅ Completado con correcciones (P3, P4, P6, P7)
-  - **simulacro_03.sql**: 🔄 Generado, pendiente de resolver
+  - **simulacro_03.sql**: ✅ Completado con correcciones incluidas en el archivo
+  - **simulacro_04.sql**: ✅ Completado con correcciones (P2, P4, P7)
+  - **simulacro_05.sql**: ✅ Especial NOT IN — P1 y P2 resueltas con errores de detalle corregidos. Resto no necesario.
+  - **simulacro_06.sql**: ✅ Completado con correcciones (P1, P2, P4, P7)
 - `TRANSCRIPCIONES/` — Transcripciones de clases magistrales (referencia)
 - `CONTEXTO_CONVERSACION.md` — Estado volátil de la sesión actual
 
@@ -79,23 +82,28 @@ Tienda_Categoria_Productos (IDCategoria PK)
 
 ## Gaps de aprendizaje detectados
 
-### Errores recurrentes (alta prioridad):
-1. **Columnas agregables en GROUP BY**: Incluir SUM/COUNT/AVG en el GROUP BY cuando solo debe ir la dimensión (3 ocurrencias en simulacros)
-2. **NOT IN vs WHERE**: Confundir "excluir valor" (WHERE <>) con "nunca hizo X" (NOT IN + subconsulta) (2 ocurrencias)
+### Errores SUPERADOS (ya no ocurren):
+1. **Columnas agregables en GROUP BY**: Ocurrió 3 veces en sim1-2, no ha vuelto desde simulacro 3. Superado.
+2. **NOT IN vs WHERE <>**: Confundir "excluir filas" con "NUNCA hizo X". En simulacro 6 P6 se resolvió correctamente. Patrón NOT IN dominado.
+3. **Self-join dirección del ON**: Resuelto desde simulacro 2, en simulacro 6 P6 se hizo perfecto.
 
-### Patrón pendiente de dominar:
-- **NOT IN con subconsultas**: El alumno aún no lo resuelve solo sin pistas. Reforzar en próximos simulacros.
+### Errores que PERSISTEN (alta prioridad — revisar antes del examen):
+1. **Olvidar filtros WHERE del enunciado**: El alumno se salta condiciones explícitas (jornada completa, comision > 0.02, etc.). Ocurrió en sim1-P4, sim4-P2, sim6-P4. Es el error más recurrente.
+2. **Faltar columnas en el SELECT**: El enunciado pide N columnas y el alumno omite alguna. Ocurrió en sim3-P5, sim6-P1.
+3. **ORDER BY ASC vs DESC**: Poner DESC cuando pide ASC o viceversa. Ocurrió en sim2-P6, sim6-P2.
+4. **Columnas cruzadas en ON de JOINs**: Usar la columna equivocada en la condición JOIN (ej: `pro.IDProducto = cat.IDCategoria` en vez de `pro.IDCategoria = cat.IDCategoria`). Ocurrió en sim6-P7.
+5. **Valores de texto exactos**: Escribir 'Cancelada' en vez de 'Cancelado', o usar la columna equivocada (Precio_Compra en vez de Intervalo_Precio). Ocurrió en sim2-P7, sim5-P1, sim5-P2.
 
-### Errores puntuales (monitorizar):
-- Olvidar filtros WHERE explícitos del enunciado
-- Exactitud de valores texto (Cancelada vs Cancelado)
-- Self-join: dirección del ON
-- ORDER BY ASC/DESC
+### Recomendacion para el examen:
+- Antes de escribir cualquier query: leer el enunciado 2 veces y subrayar mentalmente TODAS las condiciones y columnas pedidas.
+- Antes de escribir un ON: preguntarse "¿qué columna de esta tabla es FK de la otra?"
+- Antes de ORDER BY: releer si pide ascendente o descendente.
+- Hacer un `SELECT DISTINCT` rápido para verificar valores exactos de los campos de texto si hay duda.
 
 ## Convenciones
 
 - Los scripts SQL usan comentarios `/* */` y `--` para separar ejercicios numerados
 - Nombres de tablas con prefijo Tienda_
-- Alias de tablas cortos (cl, ter, ti, cat, pr, emp, fact, det)
+- Alias de tablas cortos (cli, ter, tie, cat, pro, emp, fac, det)
 - Ficheros de ejercicios: `simulacro_XX.sql`
 - **Importante**: Los enunciados NO incluyen pistas entre paréntesis (simular examen real)
