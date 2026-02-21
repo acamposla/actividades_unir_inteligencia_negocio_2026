@@ -111,3 +111,16 @@ Elimina las filas donde Glucose o BMI sean 0 (son valores imposibles clínicamen
 diabetesf <-diabetes %>% filter(Glucose != 0 & BMI != 0)
 nrow(diabetesf)
 ```
+
+### Pregunta 5 (Estadística descriptiva) — 0.5 pts
+
+Calcula la media y mediana de Glucose para los pacientes CON diabetes y para los pacientes SIN diabetes. ¿Qué observas? Interpreta la diferencia en lenguaje de negocio (como si se lo explicaras a un médico).
+
+```{r Estadistica descriptiva}
+
+
+fout1glucose <-  diabetesf %>% filter(Outcome == 1) %>% select(Glucose)  
+
+mean(fout1glucose$Glucose)
+
+```

@@ -182,7 +182,7 @@ datos %>% filter(type == "organic") %>% select(price)  # Encadenar
 
 ## Regla OR vs AND en filtros
 
-```
+```         
 ELIMINAR filas (!=) → usa & (AND)   "quiero que NO sea esto Y que NO sea aquello"
 BUSCAR filas (==)   → usa | (OR)    "quiero que sea esto O que sea aquello"
 ```
