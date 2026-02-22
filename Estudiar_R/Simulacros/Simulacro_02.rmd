@@ -1,0 +1,386 @@
+---
+title: "Simulacro_02"
+author: "Alejandro"
+date: "2026-02-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## BASE DE DATOS: diabetes_dataset.xlsx
+
+Contiene datos clínicos de pacientes para determinar si padecen diabetes.
+
+**Descripción de variables**:
+
+-   **Pregnancies**: Número de embarazos
+-   **Glucose**: Concentración de glucosa en sangre (mg/dL)
+-   **BloodPressure**: Presión arterial diastólica (mm Hg)
+-   **SkinThickness**: Grosor del pliegue cutáneo del tríceps (mm)
+-   **Insulin**: Nivel de insulina en sangre (mu U/ml)
+-   **BMI**: Índice de masa corporal (peso en kg / altura en m\^2)
+-   **DiabetesPedigreeFunction**: Función de pedigrí de diabetes (probabilidad hereditaria)
+-   **Age**: Edad en años
+-   **Outcome**: Si el paciente tiene diabetes (Sí/No)
+
+### Pregunta 1 — Carga de datos
+
+Carga el dataset `diabetes_dataset.xlsx` en R. ¿Cuántas filas y columnas tiene? Inspecciona la estructura del dataset.
+
+Hay 768 registros y 9 Columnas
+
+```{r Pregunta1}
+
+library(dplyr)
+library(readxl)
+datos <- read_excel("../datasets/diabetes_dataset.xlsx")
+datos <- datos[, -1]
+# View(datos)
+
+str(datos)
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código correcto. Detectas la columna índice y la eliminas. dim() o str() para ver dimensiones. Bien.
+
+### Pregunta 2 — Detección de anomalías
+
+¿Existen celdas vacías (NA) en la base de datos? Indica cuántas hay por columna. ¿Observas alguna columna que no debería estar? En caso afirmativo, elimínala.
+
+No existe ningún NA. Todas las columnas son correctas.
+
+```{r Pregunta 2}
+
+colSums(is.na(datos))
+
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código correcto. Bien identificado que no hay NAs y que la columna índice ya se eliminó en Q1.
+
+### Pregunta 3 — Valores sospechosos
+
+Las variables Glucose, BloodPressure, SkinThickness, Insulin y BMI representan mediciones clínicas. ¿Tiene sentido clínico que alguna de ellas tenga valor 0? ¿Cuántos ceros hay en cada una? Limpia el dataset eliminando las filas donde Glucose o BMI valgan 0.
+
+No tiene sentido que existen valores 0 en estas columnas. Parece que los valores 0 existen como si fueran NA. Si algún paciente tuviera edad Glucose = 0, significaría que estaría muerto.
+
+```{r Pregunta 3}
+
+# cuantas registros son 0
+colSums(datos == 0)
+
+# limpiar
+
+datosf <- datos[datos$BMI != 0 & datos$Glucose != 0, ]
+#colSums(datosf == 0)
+```
+
+> **CORRECCIÓN: APROBADA.** Código y razonamiento correctos. Buena interpretación clínica: "un paciente con Glucose = 0 estaría muerto". Eso es lo que busca la profesora.
+
+### Pregunta 4 — Frecuencias
+
+¿Cuántos pacientes tienen diabetes y cuántos no? ¿Qué porcentaje de pacientes tiene diabetes?
+
+Hay 265 que tienen diabetes
+
+Hay 488 que NO tienen diabetes
+
+El 35.1% de pacientes SI tienen diabetes
+
+```{r Pregunta 4}
+
+poutcom1 <- datosf %>% filter(datosf$Outcome == "Sí")
+poutcom0 <- datosf %>% filter(datosf$Outcome == "No")
+
+print(nrow(poutcom1))
+print(nrow(poutcom0))
+
+porcdiabe1 = nrow(poutcom1) / nrow(datosf) * 100
+print(porcdiabe1)
+
+# hecho con prop.table
+prop.table(table(datosf$Outcome))
+```
+
+> **CORRECCIÓN: APROBADA con nota.** Resultado y código correctos. Bien que uses prop.table como comprobación. **Detalle de estilo**: dentro de `filter()` de dplyr no necesitas `datosf$`, basta con `filter(Outcome == "Sí")`. Funciona igual pero es más limpio. Esto aplica también a las preguntas 5 y 7.
+
+### Pregunta 5 — Filtrado
+
+¿Cuántos pacientes mayores de 50 años tienen diabetes? ¿Qué porcentaje representan sobre el total de pacientes mayores de 50?
+
+37 pacientes de más de 50 años tienen diabetes
+
+Representan el 46.83% sobre el total de pacientes mayores de 50 años
+
+```{r pregunta50}
+
+pacover50out1 <-datosf %>% filter(datosf$Age > 50 & datosf$Outcome == "Sí")
+nrow(pacover50out1)
+
+pacover50 <-datosf %>% filter(datosf$Age > 50)
+
+propover50 <- nrow(pacover50out1) / nrow(pacover50) * 100
+print(propover50)
+
+
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código y razonamiento correctos. Divides bien: diabéticos \>50 / total \>50.
+
+### Pregunta 6 — Filtrado y estadístico
+
+¿Cuál es el nivel medio de glucosa de los pacientes que NO tienen diabetes? ¿Y el de los que SÍ tienen? Compara e interpreta el resultado.
+
+La media general de la glucosa estaría sesgada a la derecha dado que existe una fuerte desviación. Aquellos que SI tienen diabetes estarían tirando de ella a valores más altos.
+
+Al agrupar por Outcome podemos ver como existen dos grupos totalmente diferentes.
+
+Los que No tienen diabetes con una media significativamente más bajo que los que Si tienen diabetes.
+
+```{r Pregunta 6}
+
+mean0out <- datosf %>% group_by(Outcome) %>% summarize (media =     mean(Glucose))
+
+mean0out
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código impecable con group_by + summarize. Buena interpretación: identificas que los diabéticos tiran de la media hacia arriba y que son dos grupos claramente diferenciados.
+
+### Pregunta 7 — Filtrado combinado
+
+¿Cuántos pacientes con BMI mayor de 30 y Glucose mayor de 140 tienen diabetes?
+
+112 pacientes cumplen con la condición
+
+```{r Pregunta 7}
+
+bmi30glu140out1 <-datosf %>% filter((BMI > 30 & Glucose > 140) & Outcome== "Sí")
+
+nrow(bmi30glu140out1)
+
+
+
+```
+
+> **CORRECCIÓN: APROBADA.** Filtro combinado correcto con &. Bien.
+
+### Pregunta 8 — Correlación
+
+¿Entre qué variables numéricas existe mayor correlación? ¿Consideras dicha correlación fuerte? Razona la respuesta.
+
+la correlación más fuerte es entre Age y Pregnancies que se consideraría como moderada positiva (0.54523847)
+
+Existen otras correlaciones moderadas como Glucose e Insulin, Age y Glucose, SkinThickness y Age, Insulin y SkinThickness.
+
+El resto son correlaciones bajas y generalmente positivas.
+
+```{r Pregunta 8}
+
+
+datos_num <- datosf %>% select_if(is.numeric)
+cor(datos_num)
+```
+
+> **CORRECCIÓN: APROBADA.** Código correcto. Buena interpretación: identificas Age-Pregnancies como la más alta (\~0.54, moderada) y no la exageras. Mejora vs Simulacro 01 donde sobreinterpretaste correlaciones.
+
+### Pregunta 9 — Crear variable
+
+Crea una nueva variable llamada `diabetes_num` que asigne un 1 a los pacientes que SÍ tienen diabetes y un 0 a los que NO. Esta variable la usarás como variable dependiente en los modelos.
+
+```{r Pregunta 9}
+datosf$diabetes_num <-ifelse(datosf$Outcome == "Sí", 1, 0)
+datosf
+
+```
+
+> **CORRECCIÓN: APROBADA.** Perfecto. ifelse convierte Sí/No → 1/0. Punto fácil.
+
+### Pregunta 10 — Regresión logística
+
+Divida el dataset en 80% entrenamiento y 20% testeo. Realice una regresión logística utilizando como variable dependiente `diabetes_num` y como variables independientes Glucose, BloodPressure, BMI, Age y DiabetesPedigreeFunction (NO incluya Pregnancies, SkinThickness ni Insulin). ¿Qué variables son estadísticamente significativas?
+
+Todas las variables son estdisticamente significativas dado que su P-value es \< 0.05
+
+```{r Pregunta 10}
+
+set.seed(123)
+library(caret)
+
+index <- createDataPartition(datosf$diabetes_num, p = 0.8, list = FALSE)
+
+train <- datosf[index, ]
+test <- datosf[-index, ]
+
+regresionlogit <- glm(diabetes_num ~ Glucose + BloodPressure + BMI+ Age + DiabetesPedigreeFunction, data=train, family=binomial)
+
+summary(regresionlogit)
+
+
+```
+
+> **CORRECCIÓN: CÓDIGO APROBADO. INTERPRETACIÓN INCORRECTA.** El código es perfecto: createDataPartition, glm con fórmula manual, family=binomial. Pero la interpretación "todas son significativas" probablemente es incorrecta: **BloodPressure suele NO ser significativa** en este dataset (p \> 0.05, sin asteriscos). Mira el summary() otra vez — solo las variables con asteriscos son significativas. Probablemente Glucose, BMI, Age y DiabetesPedigreeFunction sí, pero BloodPressure no.
+
+### Pregunta 11 — Interpretación del modelo
+
+Según los coeficientes del modelo logístico, ¿cuánto aumentan las odds de tener diabetes si la glucosa aumenta en 10 unidades? Ayuda: use `exp(coef())`.
+
+```{r pregunta 11}
+
+exp(coef(regresionlogit))
+#  por cada unidad más de glucosa, las odds se multiplican *1.0341438361
+
+
+
+
+```
+
+> **CORRECCIÓN: INCOMPLETA.** El código es correcto y la interpretación de 1 unidad está bien. Pero la pregunta pide **10 unidades**, no 1. Falta calcular: `exp(coef(regresionlogit)["Glucose"] * 10)` o bien `1.034^10 ≈ 1.40`. Es decir: si la glucosa sube 10 unidades, las odds de diabetes se multiplican por \~1.40 (aumentan un 40%). Eso es lo que falta para el punto completo.
+
+### Pregunta 12 — Predicción individual
+
+Con el modelo de regresión logística, determine la probabilidad de tener diabetes de un paciente con las siguientes características: Glucose = 150, BloodPressure = 80, BMI = 33, Age = 45, DiabetesPedigreeFunction = 0.5. ¿Le diagnosticarías diabetes?
+
+La probabilidad es de 0.6 por lo que si, al ser mayor de 0.5 le asignariamos un verdadero positivo
+
+```{r Pregunta 12}
+prob_individuo <- predict(
+  regresionlogit,
+  newdata = data.frame(
+    Glucose = 150,
+    BloodPressure = 80,
+    BMI = 33,
+    Age = 45,
+    DiabetesPedigreeFunction = 0.5
+  ),
+  type = "response"
+)
+prob_individuo
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código perfecto. Interpretación correcta: probabilidad \> 0.5 → sí le diagnosticaríamos diabetes. Pequeño matiz de vocabulario: no es "verdadero positivo" (eso es cuando aciertas), es simplemente "el modelo predice positivo". Pero se entiende.
+
+### Pregunta 13 — Matriz de confusión (glm)
+
+Calcule la matriz de confusión del modelo logístico sobre los datos de test. ¿Cuál es el Accuracy? ¿Y la Sensitivity? En un contexto médico, ¿qué es más importante, la Sensitivity o la Specificity? Justifique.
+
+Lo más importante es no equivocarse en los falsos negativos, dado que es mejor estar curado y equivocarse que que te digan que estás sano y en realidad no estarlo.\
+los falsos negativos es la "Sensitivity", en este caso el modelo acierta bastante mejor estos casos que los falsos positivos.
+
+```{r pregunta 13}
+library(caret)
+pred_prob <- predict(regresionlogit, newdata = test, type = "response")
+
+pred_glm <- ifelse(pred_prob >= 0.5, 1, 0)
+
+confusionMatrix(as.factor(pred_glm), as.factor(test$diabetes_num), positive = "1")
+
+
+```
+
+> **CORRECCIÓN: CÓDIGO APROBADO. INTERPRETACIÓN MEJORABLE.** El código es perfecto: predict → ifelse → confusionMatrix con positive="1". La idea general es correcta (Sensitivity importa en medicina). Pero la frase "los falsos negativos es la Sensitivity" no es exacta. Sensitivity = TP / (TP + FN), es decir, "de todos los enfermos reales, ¿qué porcentaje detecta el modelo?". Alta Sensitivity = pocos falsos negativos. Mejor decir: **"En contexto médico, la Sensitivity es más importante porque mide cuántos enfermos reales detectamos. Un falso negativo (decirle a un enfermo que está sano) es más peligroso que un falso positivo (decirle a un sano que está enfermo)."**
+
+### Pregunta 14 — Árbol de decisión
+
+Con las mismas variables del modelo logístico, estime un árbol de decisión. Dibuje el árbol. ¿Cuál es la variable más importante? Describa el perfil del nodo con mayor probabilidad de diabetes.
+
+La variable más importante es GLucose
+
+Descripción del nod con mayor probabilidad:
+
+Si la glucosa está por encima de 128, el BMI estña por encima de 30 y la glucosa está por encima de 157, las probabilidades son del 0.87%
+
+```{r Pregunta 14}
+library(rpart)
+library(rpart.plot)
+
+# Crear modelo — method="class" OBLIGATORIO para clasificación
+modelo_arbol <- rpart(diabetes_num ~ Glucose + BloodPressure + BMI+ Age + DiabetesPedigreeFunction, data = train, method = "class")
+
+# Visualizar
+rpart.plot(modelo_arbol)
+
+# Importancia de variables
+modelo_arbol$variable.importance
+```
+
+> **CORRECCIÓN: APROBADA con detalle.** Código perfecto. Glucose como variable más importante, correcto. La descripción del nodo es correcta en el camino: Glucose \>= 128 → BMI \>= 30 → Glucose \>= 157 → 87% probabilidad de diabetes. **Detalle**: escribes "0.87%" — son un 87%, no un 0.87%. Cuidado con eso en el examen.
+
+### Pregunta 15 — Comparación de modelos
+
+Calcule la matriz de confusión del árbol de decisión. Compare el Accuracy y la Sensitivity de ambos modelos. ¿Cuál recomendaría al hospital? Justifique.
+
+```{r pregunta 15}
+
+pred_arbol <- predict(modelo_arbol, newdata = test, type = "class")
+
+confusionMatrix(as.factor(pred_arbol), as.factor(test$diabetes_num), positive = "1")
+
+
+```
+
+> **CORRECCIÓN: CÓDIGO CORREGIDO. FALTA INTERPRETACIÓN.**
+>
+> Tenías dos problemas:
+>
+> 1.  La línea `ifelse(pred_prob >= 0.5, 1, 0)` es INCORRECTA aquí. Con `type = "class"`, rpart ya devuelve la clase directa (0 o 1), NO probabilidades. El ifelse sobra — comparar una clase con 0.5 no tiene sentido.
+>
+> 2.  **Falta la interpretación completa**: debes comparar Accuracy y Sensitivity de ambos modelos y recomendar uno. Ejemplo: "El modelo logístico tiene Accuracy X% y Sensitivity Y%. El árbol tiene Accuracy A% y Sensitivity B%. Recomiendo el modelo [X] al hospital porque tiene mayor Sensitivity, lo cual es crítico en diagnóstico médico para no dejar enfermos sin detectar."
+>
+> **Recuerda la regla**: glm → `type = "response"` + ifelse. rpart → `type = "class"` directamente.
+
+### Pregunta 16 — Clustering
+
+Seleccione las variables numéricas del dataset. Escale los datos con `scale()`. Determine el número óptimo de clusters usando NbClust (si se cuelga, use el método del codo). Ejecute kmeans con el número óptimo. Muestre los centros de cada grupo e interprete los perfiles en lenguaje de negocio (como si le explicara al director del hospital qué tipo de pacientes tiene).
+
+```{r pregunta 16}
+
+library(NbClust)
+library(factoextra)
+
+datos_cluster <- datos %>% select_if(is.numeric)
+
+datos_scaled <- scale(datos_cluster)
+
+
+resultado_nb <- NbClust(datos_scaled, min.nc = 2, max.nc = 8, method = "kmeans")
+
+modelo_km <- kmeans(datos_scaled, centers = 3, nstart = 25)
+
+
+# 6. Ver centros de cada cluster (para interpretar)
+modelo_km$centers
+
+# 7. Visualizar clusters
+fviz_cluster(modelo_km, data = datos_scaled)
+
+```
+
+> **CORRECCIÓN: CÓDIGO CON ERRORES. FALTA INTERPRETACIÓN.**
+>
+> **Error 1**: Usas `datos` en lugar de `datosf`. Debes usar el dataset limpio (sin ceros en Glucose/BMI).
+>
+> **Error 2**: `datos_cluster` puede incluir `diabetes_num` (que creaste en Q9). Debes excluirla porque es la variable objetivo, no una variable de clustering. Usa: `datos_cluster <- datosf %>% select_if(is.numeric) %>% select(-diabetes_num)`
+>
+> **Error 3**: Falta `set.seed(123)` antes de NbClust y kmeans.
+>
+> **Error 4**: Pones `centers = 3` sin justificarlo. Debes mirar el resultado de NbClust (`resultado_nb$Best.nc`) y usar ese número.
+>
+> **Error 5 (el más grave)**: **FALTA TODA LA INTERPRETACIÓN.** La pregunta pide "interprete los perfiles en lenguaje de negocio". Deberías:
+>
+> ``` r
+> # Tabla de medias reales por cluster
+> datos_cluster$cluster <- modelo_km$cluster
+> aggregate(. ~ cluster, data = datos_cluster, FUN = mean)
+>
+> # Y/o árbol para interpretar
+> library(rpart)
+> arbol_cluster <- rpart(cluster ~ ., data = datos_cluster, method = "class")
+> rpart.plot(arbol_cluster)
+> ```
+>
+> Y después narrar: "El cluster 1 agrupa pacientes con glucosa alta y BMI elevado (perfil de riesgo). El cluster 2 son pacientes jóvenes con valores normales (perfil sano)..." etc.

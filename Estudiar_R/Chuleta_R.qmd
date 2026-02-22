@@ -16,7 +16,7 @@ format:
 1. str(datos)        → Ver tipos de variables
 2. summary(datos)    → Detectar anomalías, rangos, NAs
 3. Convertir factores donde sea necesario
-4. Detectar y tratar NAs
+4. Detectar y tratar NAs / valores imposibles
 5. Filtrar registros inválidos
 6. summary(datos)    → Verificar limpieza
 ```
@@ -37,6 +37,33 @@ format:
 
 ------------------------------------------------------------------------
 
+# Cargar Datos
+
+```{r}
+#| eval: false
+
+# CSV
+datos <- read.csv("archivo.csv")
+
+# XLSX (necesita librería readxl)
+library(readxl)
+datos <- read_excel("archivo.xlsx")
+
+# OJO: read_excel puede crear columna índice basura (tipo ...1)
+# Si ves una columna ...1 con números 0, 1, 2, 3... elimínala:
+datos <- datos[, -1]                          # R base: quitar primera columna
+datos <- datos %>% select(-...1)              # dplyr
+```
+
+## Problemas comunes al cargar
+
+-   **Columna índice basura** (tipo `...1`, `X`, `V1`): eliminarla, no es una variable real
+-   **Variables "Sí"/"No" en texto**: convertir a 0/1 con `ifelse()` o a factor con `as.factor()`
+-   **Ceros que son nulos disfrazados**: hay variables donde 0 no tiene sentido (ej: peso = 0, ingresos = 0 en ciertos contextos). Detectar y tratar como NAs
+-   **Comillas tipográficas**: al copiar de Word, `""` rompe el código. Reescribir manualmente
+
+------------------------------------------------------------------------
+
 # Exploración de Datos
 
 ## Estructura y dimensiones
@@ -46,7 +73,7 @@ format:
 
 str(datos)              # Estructura: tipos de cada columna
 summary(datos)          # Resumen estadístico
-dim(datos)              # c(filas, columnas) - como size() en Python
+dim(datos)              # c(filas, columnas)
 nrow(datos)             # Número de filas
 ncol(datos)             # Número de columnas
 names(datos)            # Nombres de columnas
@@ -73,7 +100,7 @@ colSums(is.na(datos))           # NAs por columna
 any(is.na(datos$columna))       # ¿Hay algún NA en esta columna?
 ```
 
-## Detección de ceros sospechosos (TRAMPA de examen)
+## Detección de ceros sospechosos
 
 ```{r}
 #| eval: false
@@ -81,15 +108,11 @@ any(is.na(datos$columna))       # ¿Hay algún NA en esta columna?
 # Mismo patrón que is.na() pero con == 0
 colSums(datos == 0)                            # Ceros por columna (todo el dataset)
 colSums(datos[, c("col1", "col2")] == 0)       # Ceros solo en columnas específicas
-
-# Ejemplo diabetes: ceros que son nulos disfrazados
-cols_sospechosas <- c("Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI")
-colSums(diabetes[, cols_sospechosas] == 0)
 ```
 
 **Patrón general colSums**: `colSums(CONDICION_TRUE_FALSE)` cuenta cuántos TRUE hay por columna. Funciona con cualquier condición: `== 0`, `is.na()`, `> 100`, etc.
 
-## Eliminar NAs
+## Eliminar NAs y valores inválidos
 
 ```{r}
 #| eval: false
@@ -98,9 +121,9 @@ na.omit(datos)                          # Elimina filas con cualquier NA
 datos[complete.cases(datos), ]          # Equivalente
 datos$col[is.na(datos$col)] <- valor    # Reemplazar NA por valor
 
-# Eliminar filas por condición (ceros sospechosos)
-datos <- datos[datos$Glucose != 0, ]              # Una columna
-datos <- datos[datos$Glucose != 0 & datos$BMI != 0, ]  # Varias columnas
+# Eliminar filas por condición
+datos <- datos[datos$col1 != 0, ]                    # Una columna
+datos <- datos[datos$col1 != 0 & datos$col2 != 0, ]  # Varias columnas
 ```
 
 ------------------------------------------------------------------------
@@ -126,12 +149,42 @@ is.character(datos$columna) # ¿Es texto?
 as.factor(datos$columna)    # Convertir a factor (categórica)
 as.numeric(datos$columna)   # Convertir a numérica
 as.character(datos$columna) # Convertir a texto
-as.Date(datos$columna)      # Convertir a fecha
 ```
 
 **Cuándo usar factor**: Variables categóricas con pocos valores que se repiten (género, tipo, región). NO para identificadores únicos (nombre, ID).
 
 **Checkpoint antisuspenso**: Si una variable como `codigo_postal` es numérica pero representa categorías, conviértela a factor. Si no, R intentará hacer operaciones matemáticas con ella.
+
+## Crear columnas nuevas con ifelse
+
+```{r}
+#| eval: false
+
+# Crear variable binaria 0/1 a partir de una condición
+datos$nueva_col <- ifelse(datos$peso >= 80, 1, 0)
+
+# Convertir texto "Sí"/"No" a numérico 0/1
+datos$respuesta_num <- ifelse(datos$respuesta == "Sí", 1, 0)
+
+# Crear variable con texto
+datos$categoria <- ifelse(datos$edad >= 60, "Senior", "Joven")
+
+# ifelse anidado (varias categorías)
+datos$rango <- ifelse(datos$edad < 30, "Joven",
+               ifelse(datos$edad < 60, "Adulto", "Senior"))
+```
+
+## Seleccionar solo columnas numéricas
+
+```{r}
+#| eval: false
+
+# Con dplyr — útil antes de cor() o kmeans
+datos_num <- datos %>% select_if(is.numeric)
+
+# R base — equivalente
+datos_num <- datos[, sapply(datos, is.numeric)]
+```
 
 ------------------------------------------------------------------------
 
@@ -157,15 +210,15 @@ datos[datos$edad > 30, ]    # Filas donde edad > 30
 # Sintaxis: subset(datos, condición, select = columnas)
 
 # Filtrar filas
-subset(datos, type == "organic")
-subset(datos, type == "organic" & geography == "Albany")  # AND
-subset(datos, type == "organic" | geography == "Albany")  # OR
+subset(datos, tipo == "premium")
+subset(datos, tipo == "premium" & region == "Norte")  # AND
+subset(datos, tipo == "premium" | region == "Norte")  # OR
 
 # Filtrar filas Y seleccionar columnas
-subset(datos, type == "organic", select = c(geography, average_price))
+subset(datos, tipo == "premium", select = c(region, precio))
 
 # Excluir columnas (con -)
-subset(datos, type == "organic", select = -c(columna_a_excluir))
+subset(datos, tipo == "premium", select = -c(columna_a_excluir))
 ```
 
 ## Filtrado con dplyr (librería)
@@ -175,9 +228,9 @@ subset(datos, type == "organic", select = -c(columna_a_excluir))
 
 library(dplyr)
 
-datos %>% filter(type == "organic")                    # Filtrar filas
-datos %>% select(geography, average_price)             # Seleccionar columnas
-datos %>% filter(type == "organic") %>% select(price)  # Encadenar
+datos %>% filter(tipo == "premium")                    # Filtrar filas
+datos %>% select(region, precio)                       # Seleccionar columnas
+datos %>% filter(tipo == "premium") %>% select(precio) # Encadenar
 ```
 
 ## Regla OR vs AND en filtros
@@ -190,8 +243,8 @@ BUSCAR filas (==)   → usa | (OR)    "quiero que sea esto O que sea aquello"
 ```{r}
 #| eval: false
 
-# ELIMINAR: quiero quitar filas donde Glucose sea 0 o BMI sea 0
-datos %>% filter(Glucose != 0 & BMI != 0)     # & porque AMBAS deben cumplirse
+# ELIMINAR: quiero quitar filas donde col1 sea 0 o col2 sea 0
+datos %>% filter(col1 != 0 & col2 != 0)     # & porque AMBAS deben cumplirse
 
 # BUSCAR: quiero filas que sean de Madrid o de Barcelona
 datos %>% filter(ciudad == "Madrid" | ciudad == "Barcelona")  # | porque basta con una
@@ -232,6 +285,9 @@ prop.table(table(datos$col)) * 100      # Porcentaje
 
 # Tabla cruzada (dos variables)
 table(datos$col1, datos$col2)
+
+# Contar cuántos cumplen una condición
+table(datos$ingreso > 3000)             # TRUE/FALSE
 ```
 
 ## Agregaciones por grupo
@@ -243,8 +299,11 @@ table(datos$col1, datos$col2)
 aggregate(precio ~ region, data = datos, FUN = mean)
 aggregate(precio ~ region + tipo, data = datos, FUN = mean)  # Dos grupos
 
-# dplyr
-datos %>% group_by(region) %>% summarize(precio_medio = mean(precio))
+# dplyr — más limpio para varias métricas a la vez
+datos %>% group_by(region) %>% summarize(
+  media = mean(precio),
+  mediana = median(precio)
+)
 ```
 
 ------------------------------------------------------------------------
@@ -257,6 +316,11 @@ datos %>% group_by(region) %>% summarize(precio_medio = mean(precio))
 cor(datos$var1, datos$var2)                 # Correlación entre dos variables
 cor(datos[, c("var1", "var2", "var3")])     # Matriz de correlación
 cov(datos$var1, datos$var2)                 # Covarianza
+
+# Matriz de correlación de TODAS las numéricas
+datos_num <- datos %>% select_if(is.numeric)
+cor(datos_num)
+# Si hay NAs, añadir: cor(datos_num, use = "complete.obs")
 ```
 
 ## Interpretación de correlación
@@ -271,7 +335,7 @@ cov(datos$var1, datos$var2)                 # Covarianza
 | -0.7 a -0.4 | Correlación negativa moderada |
 | -1.0 a -0.7 | Correlación negativa fuerte   |
 
-**Interpretación de negocio**: Una correlación negativa entre precio y volumen significa que a mayor precio, menor cantidad vendida (ley de demanda).
+**Interpretación de negocio**: "La correlación entre X e Y es de 0.45, lo que indica una relación positiva moderada. A medida que X aumenta, Y tiende a aumentar también, pero no de forma determinista."
 
 ------------------------------------------------------------------------
 
@@ -312,9 +376,331 @@ set.seed(123)   # Fijar semilla ANTES de cualquier operación aleatoria
 | `caret`      | Partición train/test, confusionMatrix        |
 | `rpart`      | Árboles de decisión                          |
 | `rpart.plot` | Visualizar árboles                           |
-| `forecast`   | Series temporales, auto.arima                |
 | `NbClust`    | Número óptimo de clusters                    |
 | `factoextra` | Visualizar clustering                        |
+
+------------------------------------------------------------------------
+
+# Modelos de Clasificación
+
+## División Train/Test (createDataPartition)
+
+```{r}
+#| eval: false
+
+library(caret)
+
+# 1. Semilla SIEMPRE antes
+set.seed(123)
+
+# 2. Crear índices — p=0.8 significa 80% para train
+#    Primer argumento = columna OBJETIVO (la Y), no el dataframe
+index <- createDataPartition(datos$var_objetivo, p = 0.8, list = FALSE)
+
+# 3. Dividir con corchetes: index = train, -index = test
+train <- datos[index, ]
+test  <- datos[-index, ]
+
+# 4. Verificar tamaños
+nrow(train)  # ~80% de los datos
+nrow(test)   # ~20% de los datos
+```
+
+**Errores comunes**:
+
+-   Poner el dataframe entero en vez de la columna objetivo → `datos$var_objetivo`, NO `datos`
+-   Olvidar `list = FALSE` → sin esto devuelve una lista y los corchetes no funcionan
+-   Olvidar `set.seed()` → resultados no reproducibles
+-   Si no te piden dividir en train/test, NO lo hagas
+
+## Regresión Logística (glm)
+
+```{r}
+#| eval: false
+
+# Crear modelo — variable dependiente binaria (0/1)
+modelo_glm <- glm(var_objetivo ~ ., data = train, family = binomial)
+summary(modelo_glm)   # Ver variables significativas (asteriscos)
+
+# Predecir — DEVUELVE PROBABILIDADES, hay que convertir a 0/1
+pred_prob <- predict(modelo_glm, newdata = test, type = "response")
+pred_glm <- ifelse(pred_prob >= 0.5, 1, 0)
+
+# Matriz de confusión (necesita factores)
+# positive = "1" para que Sensitivity = detección de la clase que nos importa
+confusionMatrix(as.factor(pred_glm), as.factor(test$var_objetivo), positive = "1")
+```
+
+**Interpretar coeficientes**: Si Estimate de una variable = 0.035 y p \< 0.05 → "Por cada unidad que sube esa variable, la probabilidad del evento aumenta. Es estadísticamente significativo."
+
+## Interpretar odds con exp(coef)
+
+```{r}
+#| eval: false
+
+# Ver cuánto multiplican las odds cada variable
+exp(coef(modelo_glm))
+
+# Ejemplo: si exp(coef) de ingreso = 1.002
+# → por cada unidad más de ingreso, las odds se multiplican x1.002
+# → si el ingreso sube 150 unidades: 1.002^150 → calcular aumento de odds
+```
+
+**Fórmula**: Si piden "cuánto aumenta si X sube en N unidades" → `exp(coef_de_X * N)`
+
+## Predecir para un individuo concreto
+
+```{r}
+#| eval: false
+
+# Crear un data.frame con las características del individuo
+prob_individuo <- predict(
+  modelo_glm,
+  newdata = data.frame(
+    var1 = 50,
+    var2 = "Categoría_A",
+    var3 = 3,
+    var4 = 2200
+  ),
+  type = "response"
+)
+prob_individuo   # Probabilidad entre 0 y 1
+# Si prob >= 0.5 → clasificar como 1
+```
+
+**Errores comunes**: Los nombres de columna en `data.frame()` deben coincidir EXACTAMENTE con los del modelo (mayúsculas, acentos, tildes). Si el modelo tiene `genero`, poner `genero`, no `Genero`.
+
+## Fórmula manual (excluir variables)
+
+```{r}
+#| eval: false
+
+# Si el enunciado dice: "use todas las variables EXCEPTO var3 y var5"
+# NO usar ~ . (eso mete todo). Escribir las variables a mano:
+modelo <- glm(var_objetivo ~ var1 + var2 + var4 + var6,
+              data = train, family = binomial)
+```
+
+## Árbol de Decisión (rpart)
+
+```{r}
+#| eval: false
+
+library(rpart)
+library(rpart.plot)
+
+# Crear modelo — method="class" OBLIGATORIO para clasificación
+modelo_arbol <- rpart(var_objetivo ~ ., data = train, method = "class")
+
+# Visualizar
+rpart.plot(modelo_arbol)
+
+# Importancia de variables
+modelo_arbol$variable.importance
+
+# Predecir — type="class" para que devuelva 0/1 directamente (NO redondear)
+pred_arbol <- predict(modelo_arbol, newdata = test, type = "class")
+
+# Matriz de confusión
+confusionMatrix(as.factor(pred_arbol), as.factor(test$var_objetivo), positive = "1")
+```
+
+## Matriz de confusión — Positive Class (TRAMPA)
+
+### El problema
+
+`confusionMatrix()` toma el PRIMER nivel del factor como "Positive". Si haces `as.factor(c(0, 1))`, los niveles son `"0"` primero y `"1"` después. R decide: **"0" es la clase positiva** → Sensitivity y Specificity se invierten.
+
+### ¿Qué implica si Positive Class = 0?
+
+```         
+Con Positive Class = 0 (por defecto):
+  Sensitivity = cuántos "clase 0" detectas bien    ← probablemente NO es lo que quieres
+  Specificity = cuántos "clase 1" detectas bien    ← esto sería lo importante
+  → Sensitivity y Specificity están INTERCAMBIADAS respecto a lo lógico
+  → El Accuracy NO cambia (es el mismo independientemente de la clase positiva)
+```
+
+### Solución 1: positive = "1"
+
+```{r}
+#| eval: false
+
+confusionMatrix(as.factor(pred), as.factor(test$var_objetivo), positive = "1")
+```
+
+### Solución 2: controlar el orden de levels
+
+```{r}
+#| eval: false
+
+# Poner 1 primero en levels → R lo toma como positivo automáticamente
+confusionMatrix(
+  factor(pred, levels = c(1, 0)),
+  factor(test$var_objetivo, levels = c(1, 0))
+)
+```
+
+### Tabla de la matriz de confusión (con positive = "1")
+
+```         
+                 Real: 1 (evento)      Real: 0 (no evento)
+Pred: 1          Verdadero Positivo    Falso Positivo (alarma falsa)
+Pred: 0          FALSO NEGATIVO        Verdadero Negativo
+```
+
+### Métricas
+
+-   **Accuracy**: aciertos totales / total (NO cambia con positive)
+-   **Sensitivity**: de los que SÍ son 1, ¿cuántos detecté? → TP / (TP + FN)
+-   **Specificity**: de los que NO son 1, ¿cuántos descarté bien? → TN / (TN + FP)
+
+### Interpretar en contexto
+
+En contextos donde el evento es grave (enfermedad, fraude, abandono), un **falso negativo** (no detectar un caso real) es peor que un falso positivo (falsa alarma). Por eso **Sensitivity** es la métrica clave en esos escenarios. El modelo con mayor Sensitivity protege mejor.
+
+## Cómo interpretar el árbol visual
+
+Cada caja (nodo) del árbol tiene **3 valores**:
+
+```         
+        ┌─────────────┐
+        │      0      │  ← Clase dominante (lo que más hay: 0 o 1)
+        │    0.35     │  ← Probabilidad de que sea 1 (35%)
+        │    100%     │  ← % del total de datos que cae en este nodo
+        └──────┬──────┘
+         YES / \ NO
+```
+
+-   **Nodo raíz** (arriba): contiene el 100% de los datos
+-   **Ramas**: cada división pregunta por una variable (ej: variable_X \>= 128)
+    -   Izquierda = YES (cumple la condición)
+    -   Derecha = NO
+    -   **OJO**: a veces se intercambian visualmente. Leer las etiquetas
+-   **Hojas** (abajo): los grupos finales. Sus porcentajes suman 100% del total original
+
+**Cómo narrar**: "El nodo raíz contiene el 100% de los registros. La primera división se hace por \[variable\]: si \[condición\] (\[X\]% de registros), la probabilidad del evento baja a \[Y\]. Si no se cumple (\[Z\]%), sube a \[W\]. La variable más importante es \[la de la raíz\]."
+
+## Importancia de variables (variable.importance)
+
+```{r}
+#| eval: false
+
+modelo_arbol$variable.importance
+# Los valores suman ~100 y representan porcentajes
+# La variable con valor más alto es la más influyente
+```
+
+**Interpretar**: "Las variables más importantes son: var1 (45%), var2 (22%) y var3 (15%). var1 es el factor determinante."
+
+## Diferencia clave: glm vs rpart
+
+```         
+                    glm (logística)         rpart (árbol)
+─────────────────────────────────────────────────────────
+predict devuelve    Probabilidades (0.73)   Clases directas (0 o 1)
+¿Necesita round?    SÍ (ifelse >= 0.5)     NO
+Argumento clave     family = binomial       method = "class"
+Predict argumento   type = "response"       type = "class"
+Interpretación      Coeficientes + p-valor  Nodos del árbol + variable.importance
+Comparar modelos    → El que tenga mayor Accuracy en confusionMatrix gana
+```
+
+------------------------------------------------------------------------
+
+# Clustering (K-Means)
+
+## Flujo completo de clustering
+
+```{r}
+#| eval: false
+
+library(NbClust)
+library(factoextra)
+
+# 1. Seleccionar solo variables numéricas
+datos_cluster <- datos %>% select_if(is.numeric)
+
+# 2. ESCALAR los datos (OBLIGATORIO antes de clustering)
+datos_scaled <- scale(datos_cluster)
+
+# 3. Número óptimo de clusters con NbClust
+set.seed(123)
+resultado_nb <- NbClust(datos_scaled, min.nc = 2, max.nc = 8, method = "kmeans")
+resultado_nb$Best.nc    # número óptimo
+
+# 4. Si NbClust se cuelga → método del codo como alternativa
+fviz_nbclust(datos_scaled, kmeans, method = "wss")  # buscar el "codo"
+
+# 5. Ejecutar kmeans con el número óptimo
+set.seed(123)
+modelo_km <- kmeans(datos_scaled, centers = 3, nstart = 25)
+
+# 6. Ver centros de cada cluster (para interpretar)
+modelo_km$centers
+
+# 7. Visualizar clusters
+fviz_cluster(modelo_km, data = datos_scaled)
+```
+
+**Por qué scale()**: Sin escalar, variables con rangos grandes (ej: ingresos 0-5000) dominan sobre variables con rangos pequeños (ej: edad 18-70). `scale()` estandariza todo a media=0 y sd=1.
+
+**nstart = 25**: Ejecuta kmeans 25 veces con semillas distintas y se queda con el mejor resultado. Siempre ponerlo.
+
+## Interpretar centros de clusters
+
+```r
+# Opción 1: Centros del modelo (valores escalados si usaste scale())
+modelo_km$centers
+
+# Opción 2: Tabla de medias reales por cluster (MÁS FÁCIL DE INTERPRETAR)
+datos_num$cluster <- modelo_km$cluster
+aggregate(. ~ cluster, data = datos_num, FUN = mean)
+# Esto te da la media REAL de cada variable por cluster → interpretas directo
+```
+
+```
+Si usaste scale() antes de kmeans:
+  modelo_km$centers muestra valores escalados:
+    Positivos = por encima de la media general
+    Negativos = por debajo de la media general
+  Usa aggregate() sobre los datos SIN escalar para ver medias reales
+
+Si NO usaste scale():
+  Los centros ya son valores directos
+```
+
+## Interpretar clusters con un árbol de decisión (LA TRAMPA)
+
+El clustering es una "caja negra": sabes QUÉ grupos hay pero no POR QUÉ. Para entenderlo, haces un segundo modelo: un árbol que clasifique los clusters.
+
+```r
+# 1. Guardar el cluster asignado como columna
+datos$cluster <- modelo_km$cluster
+
+# 2. Árbol de decisión sobre los clusters
+library(rpart)
+library(rpart.plot)
+
+arbol_cluster <- rpart(cluster ~ col1 + col2 + col3 + col4,
+                       data = datos,
+                       method = "class")   # OBLIGATORIO: sin esto da decimales (2.4)
+
+# 3. Dibujar el árbol
+rpart.plot(arbol_cluster)
+```
+
+```
+REGLAS CLAVE:
+- method = "class" → OBLIGATORIO (1, 2, 3 son categorías, NO números)
+- NO hacer train/test → no evalúas el modelo, solo quieres entender
+- Usar las MISMAS variables que usaste en kmeans
+- Si hay 3+ clusters → solo rpart (glm solo acepta 2 categorías)
+```
+
+**Cómo leer el árbol**: Cada rama te dice la regla que define el cluster. Ejemplo: "Si col1 < 2.5 → Cluster 1. Si col1 >= 2.5 y col2 < 5 → Cluster 2. El resto → Cluster 3."
+
+**Cómo narrar**: "El cluster 1 agrupa individuos con variable_A alta (por encima de la media) y variable_B baja. El cluster 2 presenta valores medios en todo. El cluster 3 destaca por variable_C muy elevada. Recomendamos dirigir la acción \[X\] al cluster \[N\] porque \[justificación de negocio\]."
 
 ------------------------------------------------------------------------
 
@@ -333,13 +719,15 @@ set.seed(123)   # Fijar semilla ANTES de cualquier operación aleatoria
 -   **P-valor**: Probabilidad de obtener ese resultado por azar
     -   p \< 0.05 → Rechazamos hipótesis nula, el efecto es significativo
 
-## Traducir para el CEO
+## Traducir a lenguaje de negocio
 
-| Técnico | Para el CEO |
+| Técnico | Para el responsable |
 |----|----|
-| "R² = 0.8" | "Nuestro modelo explica el 80% de la variabilidad, es fiable para tomar decisiones" |
+| "R² = 0.8" | "El modelo explica el 80% de la variabilidad, es fiable para tomar decisiones" |
 | "Coeficiente = -2.5, p \< 0.001" | "Por cada unidad que sube X, Y baja 2.5 unidades, y esto no es casualidad" |
 | "Correlación = -0.6" | "Hay una relación inversa moderada: cuando uno sube, el otro baja" |
+| "Accuracy = 0.85" | "El modelo acierta el 85% de las veces" |
+| "Sensitivity = 0.72" | "De los casos reales, detectamos el 72%" |
 
 ------------------------------------------------------------------------
 
@@ -349,5 +737,9 @@ set.seed(123)   # Fijar semilla ANTES de cualquier operación aleatoria
 2.  **Factores**: ¿Convertiste las categóricas a factor?
 3.  **Semilla**: ¿Pusiste set.seed() antes de particionar?
 4.  **NAs**: ¿Revisaste y trataste los valores faltantes?
-5.  **Interpretación**: ¿Cada gráfico tiene explicación debajo?
+5.  **Interpretación**: ¿Cada resultado tiene explicación de negocio debajo?
 6.  **Código postal trampa**: ¿Es numérico pero debería ser factor?
+7.  **Positive Class**: ¿Pusiste positive = "1" en confusionMatrix?
+8.  **glm vs rpart**: ¿Redondeaste las probabilidades de glm? ¿NO redondeaste las de rpart?
+9.  **Fórmula manual**: Si piden "excepto variable X", ¿escribiste las variables a mano?
+10. **scale()**: ¿Escalaste los datos antes de clustering?

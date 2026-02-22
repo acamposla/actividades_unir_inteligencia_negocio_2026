@@ -57,6 +57,14 @@ glue("Aqui se pueden ver el tipo de variables {str(diabetes)}")
 
 ```
 
+> **CORRECCIÓN: APROBADA con matiz.** Código correcto. Pero `glue()` con `str()` no funciona bien porque `str()` imprime directo a consola, no devuelve un string. Usa `str(diabetes)` solo, sin glue. Mejor así:
+
+```{r Pregunta 1 - Corrección, eval=FALSE}
+diabetes <- read.csv("diabetes.csv")
+dim(diabetes)       # filas y columnas de golpe
+str(diabetes)       # tipos de cada variable (sin glue)
+```
+
 ### Pregunta 2 (Nulos y anomalías) — 0.5 pts
 
 ¿Existen valores nulos (NA) en el dataset? Ejecuta el código necesario para comprobarlo.
@@ -66,6 +74,8 @@ glue("Aqui se pueden ver el tipo de variables {str(diabetes)}")
 glue("Existe {sum(is.na(diabetes))} nulos en el dataset")
 
 ```
+
+> **CORRECCIÓN: APROBADA.** Código correcto. También podrías añadir `colSums(is.na(diabetes))` para ver nulos por columna. En el examen, mostrar ambos demuestra más dominio.
 
 ### Pregunta 3 (Trampa de calidad de datos) — 1 pt
 
@@ -97,6 +107,8 @@ colSums(diabetes[, cols_sospechosas ] == 0)
 
 El dataset presenta una trampa. A pesar de no tener nulos, presenta valores 0 en registros faltantes
 
+> **CORRECCIÓN: APROBADA.** El código final (`colSums(diabetes[, cols_sospechosas] == 0)`) es correcto. La interpretación es buena: los ceros son nulos disfrazados. Le faltaría decir: "Es biológicamente imposible tener Glucosa, Presión Arterial, Grosor de Piel, Insulina o BMI igual a 0. Estos valores representan mediciones que no se realizaron." Recuerda el patrón: `colSums(CONDICION)` cuenta TRUEs por columna.
+
 ### Pregunta 4 (Limpieza) — 0.5 pts
 
 Elimina las filas donde Glucose o BMI sean 0 (son valores imposibles clínicamente). ¿Cuántos registros quedan tras la limpieza?
@@ -112,6 +124,8 @@ diabetesf <-diabetes %>% filter(Glucose != 0 & BMI != 0)
 nrow(diabetesf)
 ```
 
+> **CORRECCIÓN: APROBADA.** Código correcto. Errores previos corregidos: 1) comillas en nombres de columna, 2) OR en vez de AND. Recuerda: eliminar con `!=` usa `&`, buscar con `==` usa `|`.
+
 ### Pregunta 5 (Estadística descriptiva) — 0.5 pts
 
 Calcula la media y mediana de Glucose para los pacientes CON diabetes y para los pacientes SIN diabetes. ¿Qué observas? Interpreta la diferencia en lenguaje de negocio (como si se lo explicaras a un médico).
@@ -122,5 +136,244 @@ Calcula la media y mediana de Glucose para los pacientes CON diabetes y para los
 fout1glucose <-  diabetesf %>% filter(Outcome == 1) %>% select(Glucose)  
 
 mean(fout1glucose$Glucose)
+median(fout1glucose$Glucose)
+
+fout0glucose <-  diabetesf %>% filter(Outcome == 0) %>% select(Glucose)  
+
+
+mean(fout0glucose$Glucose)
+median(fout0glucose$Glucose)
 
 ```
+
+Explicación:
+
+Existe una distribución normal de la glucosa en pacientes que tienen diabetes dado que la media y la mediana son parecidas, y es bastante superior a los pacientes que no tienen diabetes, que también tienen una distribución normal.
+
+> **CORRECCIÓN: APROBADA con mejoras.** Código funciona pero es verboso. Forma más limpia:
+>
+> ``` r
+> diabetesf %>% group_by(Outcome) %>% summarize(media = mean(Glucose), mediana = median(Glucose))
+> ```
+>
+> Interpretación buena (media \~ mediana = distribución simétrica). Falta el remate de negocio con cifras: "Doctor, los pacientes con diabetes presentan niveles de glucosa significativamente superiores (\~140) frente a los no diabéticos (\~110). La glucosa es un indicador claro para el diagnóstico temprano."
+
+------------------------------------------------------------------------
+
+### Pregunta 6 (Filtro y conteo) — 0.5 pts
+
+¿Cuántas mujeres mayores de 40 años tienen diabetes (Outcome = 1)? ¿Qué porcentaje representan del total de mujeres mayores de 40?
+
+```{r}
+womanab40Di1 <-  diabetesf %>% filter(Age > 40 & Outcome==1)
+
+nrow(womanab40Di1)
+womanab40<-  diabetesf %>% filter(Age > 40)
+
+# la segunda pregunta no sé como resolverla creo que es así. 
+
+
+nrow(womanab40Di1) / nrow(womanab40) * 100
+
+```
+
+100 mujeres
+
+El 52 %
+
+> **CORRECCIÓN: APROBADA.** Código correcto. El cálculo del porcentaje `nrow(sub1) / nrow(sub2) * 100` es perfecto. Interpretación: "De las mujeres mayores de 40 años, el 52% tiene diabetes. Esto sugiere que la edad es un factor de riesgo relevante, ya que en el dataset global la proporción de diabetes es solo del 35%."
+
+### Pregunta 7 (Tablas de frecuencia) — 0.5 pts
+
+Crea una tabla de frecuencias y una tabla de proporciones de la variable Outcome. ¿Cuál es la probabilidad (proporción) de tener diabetes en este dataset?
+
+```{r}
+
+# tabla de frecuencias
+table(diabetesf$Outcome)  
+
+# tabla de proporciones
+prop.table(table(diabetesf$Outcome))  * 100
+
+```
+
+La probabilidad es del 35.1%
+
+> **CORRECCIÓN: APROBADA.** Código y respuesta correctos. `table()` + `prop.table()` es exactamente lo que la profesora espera.
+
+### Pregunta 8 (Crear variable binaria) — 0.5 pts
+
+Crea una nueva columna llamada `Obesidad` que valga 1 si BMI \>= 30 y 0 en caso contrario. ¿Cuántos pacientes son obesos?
+
+```{r pregunta 8}
+
+# creo que esto no está en chuleta, estaría bien crearlo  en chuleta
+
+diabetesf$Obesidad <- ifelse(diabetesf$BMI >= 30, 1, 0)
+
+
+
+table(diabetesf$Obesidad)
+
+```
+
+Hay 469 obesos
+
+> **CORRECCIÓN: APROBADA.** `ifelse()` bien usado. Ya se añadió a la chuleta.
+
+### Pregunta 9 (Correlación) — 0.5 pts
+
+Calcula la matriz de correlación entre todas las variables numéricas. ¿Qué variable tiene la correlación más alta con Outcome? ¿Es fuerte o débil? Interpreta el resultado.
+
+```{r pregunta 9}
+
+# estaría bien agregar a la chuleta el elegir sobre variables numércias 
+
+datos_num <- diabetesf %>% select_if(is.numeric)
+
+cor(datos_num) 
+# glocosa, BMI
+```
+
+Hay una fuerte correlación positiva entre tener diabetes y las varaibles Glucosa y BMI.
+
+> **CORRECCIÓN: Código APROBADO, interpretación INCORRECTA.** Las correlaciones de Glucose (\~0.47) y BMI (\~0.29) con Outcome NO son "fuertes". Según la tabla de interpretación: Glucose tiene correlación **moderada** (0.4-0.7) y BMI correlación **débil** (\<0.4). En el examen, sobreinterpretar te resta puntos. Respuesta correcta: "La variable con mayor correlación con Outcome es Glucose (\~0.47), una correlación positiva moderada. BMI tiene correlación débil (\~0.29). Ninguna variable tiene correlación fuerte (\>0.7) con Outcome por sí sola."
+
+### Pregunta 10 (Preparación del modelo — Conversión a factor) — 0.5 pts
+
+Convierte la variable Outcome a factor. ¿Por qué es necesario este paso antes de crear un modelo de clasificación?
+
+Outcome es 1 o 0, hay que pasarlo a factor pero no sé por qué. En realidad creía que un modelo de clasificación es aquel que predice cuando la variable Y toma el valor 0 o 1. Outcome es númerica y toma 0 o 1, asi que considero que con que estuviera numérica estaría bien. Al final, la profesora dijo que un tipo factor actua por debajo como si fuera un número. Quizás tenga que ser tipo factor porque así 0 y 1 no son número si no clasificadores.
+
+```{r }
+
+diabetesf$Outcome <- as.factor(diabetesf$Outcome)
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código correcto. Tu razonamiento es bueno: al convertir a factor, R entiende que 0 y 1 son categorías (etiquetas), no cantidades. Sin esto, `confusionMatrix()` puede dar error.
+
+### Pregunta 11 (División train/test) — 0.5 pts
+
+Divide el dataset en conjunto de entrenamiento (80%) y testeo (20%) usando `createDataPartition`. Recuerda fijar la semilla. ¿Cuántas filas tiene cada conjunto?
+
+```{r}
+set.seed(123)
+
+index <- createDataPartition(diabetesf$Outcome, p = 0.8, list = FALSE)
+
+# 3. Dividir con corchetes: index = train, -index = test
+train <- diabetesf[index, ]
+test  <- diabetesf[-index, ]
+
+# 4. Verificar tamaños
+nrow(train)  # ~80% de los datos
+nrow(test)   # ~20% de los datos
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código correcto (corregido tras revisión). Errores iniciales: 1) pasaste el dataframe en vez de la columna objetivo, 2) pasaste dos proporciones en vez de una, 3) faltaba `list = FALSE`. Todo corregido.
+
+### Pregunta 12 (Regresión logística) — 1 pt
+
+Crea un modelo de regresión logística para predecir Outcome usando todas las demás variables. ¿Qué variables son significativas (p-valor \< 0.05)? Interpreta el coeficiente de Glucose: si la glucosa aumenta en 1 unidad, ¿qué ocurre con la probabilidad de diabetes?
+
+```{r 12}
+
+modelo_glm <- glm(Outcome ~ ., data = train, family = binomial)
+summary(modelo_glm)   # Ver variables significativas (asteriscos)
+
+```
+
+Por cada unidad que sube la glucosa la probabilidad aumenta en un 3.5 % o en un 0.03 %? dado que el p-value es infierior a 0.05
+
+> **CORRECCIÓN: Código APROBADO, interpretación MEJORABLE.** El coeficiente de glm está en "log-odds", no en porcentaje directo. No necesitas hacer la conversión para el examen. Respuesta correcta: "El coeficiente de Glucose es positivo (0.035) y estadísticamente significativo (p \< 0.05). Esto significa que a mayor nivel de glucosa, mayor probabilidad de diabetes. La relación no es por azar." Nota: `Outcome ~ .` incluye la columna `Obesidad` que creaste en P8 (derivada de BMI = información redundante). En el examen real, no la habrías creado antes del modelo.
+
+### Pregunta 13 (Predicción con regresión logística) — 1 pt
+
+Usa el modelo logístico para predecir sobre los datos de test. Recuerda que la regresión logística da probabilidades: convierte las probabilidades a 0/1 usando un umbral de 0.5. Calcula la matriz de confusión. ¿Cuál es el Accuracy del modelo?
+
+```{r 13}
+
+library(caret)
+pred_prob <- predict(modelo_glm, newdata = test, type = "response")
+pred_glm <- ifelse(pred_prob >= 0.5, 1, 0)  
+
+# Matriz de confusión (necesita factores)
+#confusionMatrix(as.factor(pred_glm), as.factor(test$Outcome))
+pred_glm <- ifelse(pred_prob >= 0.5, 1, 0)  
+
+confusionMatrix(as.factor(pred_glm), as.factor(test$Outcome))
+
+
+```
+
+Me lía un poco lo de Possitive class: 0
+
+Entonces donde pone en la predicción es relaidad significa que SI tiene diabetes?
+
+No entiendo del todo esto.
+
+por que entonces los 0-0 en realdiad es si tiene pero no acertó y si tiene y si acertó.
+
+Tiene un accuracy del 80%
+
+> **CORRECCIÓN: Código APROBADO. Accuracy correcto.** La confusión con `Positive Class: 0` se resuelve añadiendo `positive = "1"` a confusionMatrix:
+>
+> ``` r
+> confusionMatrix(as.factor(pred_glm), as.factor(test$Outcome), positive = "1")
+> ```
+>
+> Sin esto, R toma "0" como clase positiva (porque es el primer nivel del factor), lo que invierte Sensitivity y Specificity. Con `positive = "1"`: Sensitivity = cuántos diabéticos detectas, Specificity = cuántos sanos descartas bien. Línea 268 duplicada (no afecta pero limpiar).
+
+### Pregunta 14 (Árbol de decisión) — 1 pt
+
+Crea un árbol de decisión con `rpart` para predecir Outcome. Dibuja el árbol con `rpart.plot`. ¿Cuál es la variable más importante según el árbol (la que está en la raíz)?
+
+```{r 14}
+
+
+library(rpart)
+library(rpart.plot)
+
+# Crear modelo — method="class" OBLIGATORIO para clasificación
+modelo_arbol <- rpart(Outcome ~ ., data = train, method = "class")
+
+# Visualizar
+rpart.plot(modelo_arbol, tweak=1.6)
+
+# Importancia de variables
+modelo_arbol$variable.importance
+
+
+```
+
+La variable que mejor predice es GLUCOSA.
+
+Podriamos decir que
+
+SI la Glucosa es mayor que 143 y menor 167 y has tenenido menos de 7 embarazos y tienes un pedigreeFunction de menos del 32% entonces tienes un 30% de proabilidades de tener diabetes?
+
+Esto es lo que interpreto.
+
+> **CORRECCIÓN: Código APROBADO. Interpretación MEJORABLE.** Glucose como variable más importante es correcto. Tu lectura del árbol va por buen camino pero necesita más estructura. Narra de arriba a abajo: "El nodo raíz contiene el 100% de los pacientes. La primera variable de división es Glucose: si Glucose \< 128, la probabilidad de diabetes es baja (\~21%, 62% de pacientes). Si Glucose \>= 128, la probabilidad sube (\~61%, 38% de pacientes). Dentro de este segundo grupo, la siguiente división se hace por BMI/Age..." Lee siempre: clase dominante, probabilidad de 1, porcentaje del total.
+
+### Pregunta 15 (Comparación de modelos) — 1 pt
+
+Calcula la matriz de confusión del árbol de decisión sobre los datos de test. Compara el Accuracy de la regresión logística y del árbol de decisión. ¿Qué modelo recomendarías al hospital y por qué? Comenta también la Sensibilidad: en un contexto médico, ¿qué es más grave, un falso positivo o un falso negativo?
+
+```{r 15}
+
+pred_arbol <- predict(modelo_arbol, newdata = test, type = "class")
+
+
+confusionMatrix(as.factor(pred_arbol), as.factor(test$Outcome))
+
+
+```
+
+El accuracy es mayor en la regresión Logit.
+
+Sin embargo, en medicina es mucho más grave un falso negativo, esto es la Sensibilidad, por lo que a igual de condiciones, prefiero el modelo logit.
+
+> **CORRECCIÓN: APROBADA con matices.** Bien identificado que Accuracy mayor = mejor modelo como regla general. Excelente la reflexión sobre falsos negativos en medicina. Respuesta modelo completa: "La regresión logística tiene un Accuracy del \~80% vs \~75% del árbol de decisión. Recomendaría la regresión logística al hospital. Además, en contexto médico un falso negativo (decirle a un diabético que está sano) es más grave que un falso positivo (hacer una prueba extra a un sano). Por eso la Sensitivity es la métrica clave: el modelo con mayor Sensitivity protege mejor a los pacientes." Nota: añadir `positive = "1"` a ambas confusionMatrix para que Sensitivity mida realmente la detección de diabéticos.
