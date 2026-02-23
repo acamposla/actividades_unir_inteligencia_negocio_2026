@@ -26,7 +26,7 @@ VALUES (1,	'Espana',	'ES',	'Europa',	'EU'),
 (2,	'Portugal'	,'PO',	'Europa',	'EU'),
 (3,	'Alemania',	'AL',	'Europa',	'EU'),
 (4,	'Inglaterra',	'IN',	'Europa',	'EU'),
-(5,	'EEUU'	,'NA'	,'América',	'AM'),
+(5,	'EEUU'	,'NA'	,'AmÃ©rica',	'AM'),
 (6,	'Rusia'	,'RU',	'Europa Oriental',	'EUO'),
 (7,	'Japon',	'JA',	'Asia',	'AS');
 
