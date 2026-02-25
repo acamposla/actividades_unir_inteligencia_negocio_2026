@@ -1,0 +1,317 @@
+---
+title: "Simulacro_03"
+author: "Alejandro"
+date: "2026-02-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Pregunta 1 — Train/Test split
+
+Divide el dataset en 80% entrenamiento y 20% testeo usando `createDataPartition` sobre `respondio_num`. Usa `set.seed(123)`. ¿Cuántas filas tiene cada conjunto?
+
+```{r}
+set.seed(123)
+library(caret)
+library(dplyr)
+library(readxl)
+
+library(dplyr)
+library(caret)
+library(rpart)
+library(rpart.plot)
+
+datos <- read.csv("../datasets/clientes_marketing.csv")
+
+# Variable objetivo: convertir respondio_campaña a numérica
+datos$respondio_num <- ifelse(datos$respondio_campaña == "Sí", 1, 0)
+
+
+index <- createDataPartition(datos$respondio_num, p=0.8, list=FALSE)
+
+train <- datos[index, ]
+test <- datos[-index, ]
+
+nrow(train)
+nrow(test)
+
+
+
+```
+
+> **CORRECCIÓN: APROBADA.** Código perfecto. set.seed, createDataPartition, p=0.8, list=FALSE. Nota de estilo: tienes library(dplyr) y library(caret) duplicados, no da error pero quítalo para el examen.
+
+### Pregunta 2 — Regresión logística
+
+Realiza una regresión logística con `respondio_num` como variable dependiente. Usa como variables independientes: `ingreso_mensual`, `usa_tarjeta_credito`, `visitas_web` y `compras_previas` (NO incluyas edad, genero ni educacion). ¿Qué variables son estadísticamente significativas? Indica el nivel de significancia de cada una.
+
+Todas las variables son significativas dado que su p-value es \< 0.05
+
+Esta es su significancia:
+
+```         
+ingreso_mensual        0.0012047
+usa_tarjeta_creditoSí  2.3173622
+visitas_web            0.2034470
+compras_previas        1.2036712
+```
+
+```{r}
+
+modelo_glm <- glm(respondio_num ~ ingreso_mensual + usa_tarjeta_credito +visitas_web +  compras_previas, data = train, family = binomial)
+
+summary(modelo_glm)
+
+
+```
+
+> **CORRECCIÓN: CÓDIGO APROBADO. INTERPRETACIÓN INCORRECTA.** El código del glm es perfecto. Pero los números que listas (0.0012, 2.317, 0.203, 1.203) son los **COEFICIENTES (Estimate)**, NO la significancia. La significancia se mira en:
+>
+> -   La columna **Pr(\>\|z\|)** → es el p-valor
+> -   Los **asteriscos** al lado: `***` muy significativo, `**` significativo, `*` significativo, `.` marginal, (vacío) NO significativo
+>
+> Para responder bien: "La variable X es significativa (p \< 0.001, \*\*\*). La variable Y no es significativa (p = 0.42, sin asteriscos)." Revisa el summary() y fíjate en la columna derecha, no en Estimate.
+
+### Pregunta 3 — Odds ratio (exp(coef))
+
+Según el modelo logístico: a) ¿Cuánto se multiplican las odds de responder a la campaña si el ingreso mensual aumenta en 100 dólares? b) ¿Cuánto se multiplican las odds si el cliente usa tarjeta de crédito frente a no usarla?
+
+Interpreta ambos resultados en lenguaje de negocio.
+
+-   Cada vez que se visita la web, se aumenta en \*7.17 puntos la probabilidad de respondio de odds ratio
+
+-   Por cada punto de ingreso_mensual entiendo que el ods ratio aumenta \*1
+
+-   Si se usa tarjeta aumenta \*1.01
+
+-   Si ha tenido compras_previaas \*3.33
+
+```{r}
+
+exp(coef(modelo_glm)) * 100
+
+
+
+```
+
+> **CORRECCIÓN: CÓDIGO INCORRECTO. INTERPRETACIÓN INCORRECTA.**
+>
+> **Error grave**: `exp(coef()) * 100` no tiene sentido. El `* 100` te infla todos los valores y da números sin significado. `exp(coef())` YA da el odds ratio directamente, sin multiplicar por nada.
+>
+> **Código correcto**:
+>
+> ``` r
+> # Odds ratio por cada 1 unidad
+> exp(coef(modelo_glm))
+>
+> # a) Odds ratio por 100 dólares más de ingreso:
+> exp(coef(modelo_glm)["ingreso_mensual"] * 100)
+>
+> # b) Odds ratio de usar tarjeta vs no usar:
+> exp(coef(modelo_glm)["usa_tarjeta_creditoSí"])  # ya es directo (variable binaria)
+> ```
+>
+> **Cómo interpretar**: - Si `exp(coef) = 1.22` para tarjeta → "Usar tarjeta multiplica las odds por 1.22, es decir, aumenta un 22% la probabilidad de responder" - Si `exp(coef) = 1.001` para ingreso_mensual → por 1 dólar es casi nada. Por 100 dólares: `exp(0.001 * 100) = exp(0.1) ≈ 1.10` → "100 dólares más de ingreso aumenta un 10% las odds"
+>
+> **REGLA**: `exp(coef * N)` para N unidades. NO `exp(coef) * N`.
+
+### Pregunta 4 — Predicción individual
+
+Con el modelo logístico, determina la probabilidad de responder a la campaña de un cliente con: ingreso_mensual = 2500, usa_tarjeta_credito = "Sí", visitas_web = 6, compras_previas = 4. ¿Le incluirías en la campaña?
+
+```{r}
+
+
+# Crear un data.frame con las características del individuo
+prob_individuo <- predict(
+  modelo_glm,
+  newdata = data.frame(
+    ingreso_mensual = 2500,
+    usa_tarjeta_credito = "Sí",
+    visitas_web = 6,
+    compras_previas = 4
+  ),
+  type = "response"
+)
+prob_individuo   # Probabilidad entre 0 y 1
+# Si prob >= 0.5 → clasificar como 1
+
+```
+
+Si, porque la probabilidad es de 0.86 que se acerca más a 1. Por lo que si.
+
+> **CORRECCIÓN: APROBADA.** Código y razonamiento correctos. Probabilidad 0.86 \> 0.5 → incluir en campaña. Bien.
+
+### Pregunta 5 — Matriz de confusión (glm)
+
+Calcula la matriz de confusión del modelo logístico sobre los datos de test. Reporta: - Accuracy - Sensitivity - Specificity
+
+En este contexto de marketing, ¿qué es más importante, la Sensitivity o la Specificity? Justifica (piensa en el coste de cada tipo de error).
+
+```{r }
+
+
+pred_prob <- predict(modelo_glm, newdata = test, type = "response")
+pred_glm <- ifelse(pred_prob >= 0.5, 1, 0)
+
+confusionMatrix(as.factor(pred_glm), as.factor(test$respondio_num), positive = "1")
+
+
+
+```
+
+Tiene muchos falsos positivos, que corresponde a la Sensitivity de casi un 50%. Es más importante la Sensitivity porque no le estaría mandando la oferta la mitad de las personas que debería. Si a alguna persona que no debería mandarle la oferta se la mando (falsos negativos), no pasaría nada.
+
+> **CORRECCIÓN: CÓDIGO APROBADO. INTERPRETACIÓN CON TERMINOLOGÍA CRUZADA.**
+>
+> El código es perfecto. El razonamiento de negocio es CORRECTO: es peor NO enviar la oferta a alguien que sí compraría (perder ventas) que enviarla a alguien que no comprará (coste bajo de un email).
+>
+> Pero tienes los términos cruzados: - **Falso Positivo** = le envías la oferta pero NO responde (molestia menor, coste bajo) - **Falso Negativo** = NO le envías la oferta pero SÍ habría respondido (ventas perdidas, coste alto) - **Sensitivity** = TP/(TP+FN) = "de los que SÍ responderían, ¿cuántos detectamos?" → mide los **falsos negativos**, no los falsos positivos
+>
+> Frase correcta para el examen: "La Sensitivity es más importante porque mide cuántos clientes receptivos detectamos. Una Sensitivity del 50% significa que estamos dejando sin campaña a la mitad de los clientes que SÍ comprarían (falsos negativos), lo cual es una pérdida directa de ingresos."
+
+### Pregunta 6 — Árbol de decisión
+
+Con las mismas variables independientes, estima un árbol de decisión. Dibuja el árbol. ¿Cuál es la variable más importante según `variable.importance`? Describe el perfil del nodo con mayor probabilidad de responder a la campaña.
+
+```{r}
+
+
+
+library(rpart)
+library(rpart.plot)
+
+# Crear modelo — method="class" OBLIGATORIO para clasificación
+modelo_arbol <- rpart(respondio_num ~ ingreso_mensual + usa_tarjeta_credito +visitas_web +  compras_previas, data = train, method = "class")
+
+rpart.plot(modelo_arbol)
+
+modelo_arbol$variable.importance
+# aqui hay algo que no entiendo en el primer no, dice que 0.20 es la probabilidad de que sea 0, pero compras previas podría ir del 1 al 10
+```
+
+El nodo principal sería
+
+Cuando las compras son mayor a 3, Cuando Si usa tarjeta de crédito .... me pierdo necesito entender mejor lo del arbol para explicarlo...no se interpretarlo del todo bien.
+
+Es decir, en el nodo padre la afirmación es compras_previas \< 3
+
+y la caja pone un 0, que entiendo que no se a qué se rifere.
+
+en la chuleta leo que 0 es "Clase dominante (lo que más hay)", pero no creo que lo que mas haya sean 0 compras previas porque el valor puede ser 1 o 0 creo.
+
+el 0.20 es probabilidad de que sea 1 o verdadero? segun culeta, osea la probabilidad de que compras_previas sea menor 3 es del 20%?\
+Luego 100% sería que ahí estan metidos el 100% de datos?\
+Entonces si sigo a la derecha seria los que si tienen compras mayores de 3 y entiendo que sería el 80% de datos de probabilidad??? no estoy seguro...no lo entiendo bien
+
+a ver otra vez.
+
+El 20% SI compro menos de 3 y el 80 mas?\
+Entiendo que para las compras previas superiores a 3 que Si usarn tarjeta, que visitaron la web mas de 6 veces la probabilidad de que nos compren es un 6%???\
+que significa el 0.86?\
+
+Necesito mas explicacion de esto. ¿Como se resolvería? ¿Por qué?\
+¿ME lo puedes explicar?\
+
+> **CORRECCIÓN: CÓDIGO APROBADO. FALTA INTERPRETACIÓN. EXPLICACIÓN DEL ÁRBOL ABAJO.**
+>
+> El código es perfecto (rpart, method="class", rpart.plot, variable.importance).
+>
+> **CÓMO LEER CADA NODO de rpart.plot**: Cada caja tiene 3 líneas:
+>
+> ```         
+> ┌─────────────┐
+> │      0       │  ← CLASE PREDICHA (la que gana en este nodo: 0=no responde, 1=sí responde)
+> │    0.20      │  ← PROBABILIDAD de ser clase 1 (20% responderían)
+> │    100%      │  ← % DE DATOS que caen en este nodo
+> └─────────────┘
+> ```
+>
+> **Recorrido del árbol (ejemplo)**:
+>
+> **Nodo raíz** → clase 0, prob 0.20, 100% Significa: "De todos los clientes, solo el 20% respondió. La clase dominante es 0 (no responde)."
+>
+> La condición del nodo raíz es `compras_previas < 3`: - **Izquierda (YES, se cumple)**: clientes con menos de 3 compras previas - **Derecha (NO, no se cumple)**: clientes con 3 o más compras previas
+>
+> Si seguimos a la derecha (compras \>= 3), y luego la condición es `usa_tarjeta = Sí`: - Izquierda (YES): sí usa tarjeta - Derecha (NO): no usa tarjeta
+>
+> Y si llegamos a un nodo final que dice: clase 1, prob 0.86, 6% Significa: "Este grupo es el 6% del total, y el 86% de ellos respondió a la campaña."
+>
+> **TU CONFUSIÓN PRINCIPAL**: El número del medio (0.20, 0.86, etc.) NO es "la probabilidad de que se cumpla la condición". Es la **probabilidad de ser clase 1 (responder)** dentro de ese grupo de clientes.
+>
+> **Para responder en el examen**: "La variable más importante es [la del nodo raíz]. El perfil con mayor probabilidad de responder es: clientes con compras_previas \>= 3, que SÍ usan tarjeta y visitan la web \>= 6 veces (probabilidad del 86%)."
+
+### Pregunta 7 — Matriz de confusión (rpart)
+
+Calcula la matriz de confusión del árbol sobre los datos de test. Compara Accuracy y Sensitivity con el modelo logístico. ¿Cuál recomendarías al director de marketing? Justifica.
+
+**Recuerda**: rpart con `type = "class"` → NO necesita ifelse.
+
+```{r}
+
+
+pred_prob <- predict(modelo_arbol, newdata = test, type = "class")
+
+
+
+confusionMatrix(as.factor(pred_prob), as.factor(test$respondio_num), positive = "1")
+
+```
+
+Recomendaria el arbol porque tiene una mucho mejor Sensitivity y mejor accuracy
+
+> **CORRECCIÓN: CÓDIGO APROBADO. INTERPRETACIÓN CORRECTA PERO INCOMPLETA.** El código es perfecto (type="class", sin ifelse). La conclusión es correcta si los números lo respaldan. Pero falta dar los números concretos: "El árbol tiene Accuracy X% vs Y% del logit, y Sensitivity X% vs Y%. Recomiendo el árbol porque detecta más clientes receptivos (mayor Sensitivity), que es lo que más impacta en ingresos."
+
+### Pregunta 8 — Clustering (preparación)
+
+Selecciona solo las variables numéricas del dataset (sin `respondio_num`). Escala los datos con `scale()`. Determina el número óptimo de clusters con NbClust (si se cuelga, usa el método del codo). ¿Cuántos clusters recomienda?
+
+------------------------------------------------------------------------
+
+```{r}
+library(NbClust)
+datos_cluster <- datos %>% select_if(is.numeric)
+
+datos_scaled <- scale(datos_cluster)
+set.seed(123)
+resultado_nb <- NbClust(datos_scaled, min.nc = 2, max.nc = 8, method = "kmeans")
+
+```
+
+> **CORRECCIÓN: CÓDIGO CON ERROR.** `datos_cluster` incluye `respondio_num` (la variable objetivo que creaste al principio). El clustering solo debe usar variables explicativas, no la que intentas predecir. Corrige con:
+>
+> ``` r
+> datos_cluster <- datos %>% select_if(is.numeric) %>% select(-respondio_num)
+> ```
+>
+> También falta indicar cuántos clusters recomienda NbClust: `resultado_nb$Best.nc`
+
+### Pregunta 9 — Clustering (ejecución e interpretación)
+
+Ejecuta kmeans con el número óptimo de clusters. Interpreta los resultados usando UNA de estas técnicas (o ambas):
+
+a)  **Tabla de medias**: `aggregate(. ~ cluster, data = datos_num, FUN = mean)` — ¿qué caracteriza a cada grupo?
+
+b)  **Árbol interpretativo**: Usa rpart con el cluster como variable dependiente (`method = "class"`, SIN train/test). ¿Qué reglas definen cada cluster?
+
+Narra los perfiles como si se lo explicaras al director de marketing: "El grupo 1 son clientes que... por lo tanto deberíamos..."
+
+> **CORRECCIÓN: NO CONTESTADA.** Aquí falta todo. El código sería:
+>
+> ``` r
+> set.seed(123)
+> modelo_km <- kmeans(datos_scaled, centers = X, nstart = 25)  # X = lo que diga NbClust
+>
+> # Tabla de medias reales (sobre datos SIN escalar)
+> datos_cluster$cluster <- modelo_km$cluster
+> aggregate(. ~ cluster, data = datos_cluster, FUN = mean)
+>
+> # Árbol interpretativo
+> arbol_cluster <- rpart(cluster ~ ., data = datos_cluster, method = "class")
+> rpart.plot(arbol_cluster)
+> ```
+>
+> Y narrar: "El grupo 1 son clientes con ingreso alto y muchas compras previas → clientes premium. El grupo 2 son clientes jóvenes con pocas visitas web → clientes nuevos. Recomendamos fidelización para el grupo 1 y captación digital para el grupo 2."

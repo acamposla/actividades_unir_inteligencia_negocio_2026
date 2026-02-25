@@ -2,10 +2,10 @@
 title: "Chuleta R - Análisis de Datos Masivos"
 author: "Alejandro Campos"
 format:
-  html:
+  docx:
     toc: true
-    toc-depth: 3
     number-sections: true
+    highlight-style: github
 ---
 
 # Flujos de Trabajo Típicos
@@ -428,7 +428,7 @@ pred_glm <- ifelse(pred_prob >= 0.5, 1, 0)
 
 # Matriz de confusión (necesita factores)
 # positive = "1" para que Sensitivity = detección de la clase que nos importa
-confusionMatrix(as.factor(pred_glm), as.factor(test$var_objetivo), positive = "1")
+
 ```
 
 **Interpretar coeficientes**: Si Estimate de una variable = 0.035 y p \< 0.05 → "Por cada unidad que sube esa variable, la probabilidad del evento aumenta. Es estadísticamente significativo."
@@ -649,7 +649,7 @@ fviz_cluster(modelo_km, data = datos_scaled)
 
 ## Interpretar centros de clusters
 
-```r
+``` r
 # Opción 1: Centros del modelo (valores escalados si usaste scale())
 modelo_km$centers
 
@@ -659,7 +659,7 @@ aggregate(. ~ cluster, data = datos_num, FUN = mean)
 # Esto te da la media REAL de cada variable por cluster → interpretas directo
 ```
 
-```
+```         
 Si usaste scale() antes de kmeans:
   modelo_km$centers muestra valores escalados:
     Positivos = por encima de la media general
@@ -674,7 +674,7 @@ Si NO usaste scale():
 
 El clustering es una "caja negra": sabes QUÉ grupos hay pero no POR QUÉ. Para entenderlo, haces un segundo modelo: un árbol que clasifique los clusters.
 
-```r
+``` r
 # 1. Guardar el cluster asignado como columna
 datos$cluster <- modelo_km$cluster
 
@@ -690,7 +690,7 @@ arbol_cluster <- rpart(cluster ~ col1 + col2 + col3 + col4,
 rpart.plot(arbol_cluster)
 ```
 
-```
+```         
 REGLAS CLAVE:
 - method = "class" → OBLIGATORIO (1, 2, 3 son categorías, NO números)
 - NO hacer train/test → no evalúas el modelo, solo quieres entender
@@ -698,7 +698,7 @@ REGLAS CLAVE:
 - Si hay 3+ clusters → solo rpart (glm solo acepta 2 categorías)
 ```
 
-**Cómo leer el árbol**: Cada rama te dice la regla que define el cluster. Ejemplo: "Si col1 < 2.5 → Cluster 1. Si col1 >= 2.5 y col2 < 5 → Cluster 2. El resto → Cluster 3."
+**Cómo leer el árbol**: Cada rama te dice la regla que define el cluster. Ejemplo: "Si col1 \< 2.5 → Cluster 1. Si col1 \>= 2.5 y col2 \< 5 → Cluster 2. El resto → Cluster 3."
 
 **Cómo narrar**: "El cluster 1 agrupa individuos con variable_A alta (por encima de la media) y variable_B baja. El cluster 2 presenta valores medios en todo. El cluster 3 destaca por variable_C muy elevada. Recomendamos dirigir la acción \[X\] al cluster \[N\] porque \[justificación de negocio\]."
 
