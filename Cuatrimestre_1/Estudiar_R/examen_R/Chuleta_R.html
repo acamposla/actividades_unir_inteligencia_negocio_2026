@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Alejandro Campos">
+
+<title>Chuleta R - Análisis de Datos Masivos</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Chuleta_R_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Chuleta_R_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Chuleta_R_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Chuleta_R_files/libs/quarto-html/popper.min.js"></script>
+<script src="Chuleta_R_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Chuleta_R_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Chuleta_R_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Chuleta_R_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Chuleta_R_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Chuleta_R_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Chuleta_R_files/libs/bootstrap/bootstrap-81267100e462c21b3d6c0d5bf76a3417.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#flujos-de-trabajo-típicos" id="toc-flujos-de-trabajo-típicos" class="nav-link active" data-scroll-target="#flujos-de-trabajo-típicos"><span class="header-section-number">1</span> Flujos de Trabajo Típicos</a>
+  <ul class="collapse">
+  <li><a href="#flujo-de-exploración-inicial-iterativo" id="toc-flujo-de-exploración-inicial-iterativo" class="nav-link" data-scroll-target="#flujo-de-exploración-inicial-iterativo"><span class="header-section-number">1.1</span> Flujo de Exploración Inicial (Iterativo)</a></li>
+  <li><a href="#flujo-de-modelado-traintest" id="toc-flujo-de-modelado-traintest" class="nav-link" data-scroll-target="#flujo-de-modelado-traintest"><span class="header-section-number">1.2</span> Flujo de Modelado (Train/Test)</a></li>
+  </ul></li>
+  <li><a href="#cargar-datos" id="toc-cargar-datos" class="nav-link" data-scroll-target="#cargar-datos"><span class="header-section-number">2</span> Cargar Datos</a>
+  <ul class="collapse">
+  <li><a href="#problemas-comunes-al-cargar" id="toc-problemas-comunes-al-cargar" class="nav-link" data-scroll-target="#problemas-comunes-al-cargar"><span class="header-section-number">2.1</span> Problemas comunes al cargar</a></li>
+  </ul></li>
+  <li><a href="#exploración-de-datos" id="toc-exploración-de-datos" class="nav-link" data-scroll-target="#exploración-de-datos"><span class="header-section-number">3</span> Exploración de Datos</a>
+  <ul class="collapse">
+  <li><a href="#estructura-y-dimensiones" id="toc-estructura-y-dimensiones" class="nav-link" data-scroll-target="#estructura-y-dimensiones"><span class="header-section-number">3.1</span> Estructura y dimensiones</a></li>
+  <li><a href="#explorar-valores-únicos" id="toc-explorar-valores-únicos" class="nav-link" data-scroll-target="#explorar-valores-únicos"><span class="header-section-number">3.2</span> Explorar valores únicos</a></li>
+  <li><a href="#detección-de-nas" id="toc-detección-de-nas" class="nav-link" data-scroll-target="#detección-de-nas"><span class="header-section-number">3.3</span> Detección de NAs</a></li>
+  <li><a href="#detección-de-ceros-sospechosos" id="toc-detección-de-ceros-sospechosos" class="nav-link" data-scroll-target="#detección-de-ceros-sospechosos"><span class="header-section-number">3.4</span> Detección de ceros sospechosos</a></li>
+  <li><a href="#eliminar-nas-y-valores-inválidos" id="toc-eliminar-nas-y-valores-inválidos" class="nav-link" data-scroll-target="#eliminar-nas-y-valores-inválidos"><span class="header-section-number">3.5</span> Eliminar NAs y valores inválidos</a></li>
+  </ul></li>
+  <li><a href="#tipos-de-datos-y-conversiones" id="toc-tipos-de-datos-y-conversiones" class="nav-link" data-scroll-target="#tipos-de-datos-y-conversiones"><span class="header-section-number">4</span> Tipos de Datos y Conversiones</a>
+  <ul class="collapse">
+  <li><a href="#verificar-tipo" id="toc-verificar-tipo" class="nav-link" data-scroll-target="#verificar-tipo"><span class="header-section-number">4.1</span> Verificar tipo</a></li>
+  <li><a href="#conversiones" id="toc-conversiones" class="nav-link" data-scroll-target="#conversiones"><span class="header-section-number">4.2</span> Conversiones</a></li>
+  <li><a href="#crear-columnas-nuevas-con-ifelse" id="toc-crear-columnas-nuevas-con-ifelse" class="nav-link" data-scroll-target="#crear-columnas-nuevas-con-ifelse"><span class="header-section-number">4.3</span> Crear columnas nuevas con ifelse</a></li>
+  <li><a href="#seleccionar-solo-columnas-numéricas" id="toc-seleccionar-solo-columnas-numéricas" class="nav-link" data-scroll-target="#seleccionar-solo-columnas-numéricas"><span class="header-section-number">4.4</span> Seleccionar solo columnas numéricas</a></li>
+  </ul></li>
+  <li><a href="#acceso-y-filtrado-de-datos" id="toc-acceso-y-filtrado-de-datos" class="nav-link" data-scroll-target="#acceso-y-filtrado-de-datos"><span class="header-section-number">5</span> Acceso y Filtrado de Datos</a>
+  <ul class="collapse">
+  <li><a href="#acceso-a-columnas-r-base" id="toc-acceso-a-columnas-r-base" class="nav-link" data-scroll-target="#acceso-a-columnas-r-base"><span class="header-section-number">5.1</span> Acceso a columnas (R base)</a></li>
+  <li><a href="#filtrado-con-subset---r-base" id="toc-filtrado-con-subset---r-base" class="nav-link" data-scroll-target="#filtrado-con-subset---r-base"><span class="header-section-number">5.2</span> Filtrado con subset() - R base</a></li>
+  <li><a href="#filtrado-con-dplyr-librería" id="toc-filtrado-con-dplyr-librería" class="nav-link" data-scroll-target="#filtrado-con-dplyr-librería"><span class="header-section-number">5.3</span> Filtrado con dplyr (librería)</a></li>
+  <li><a href="#regla-or-vs-and-en-filtros" id="toc-regla-or-vs-and-en-filtros" class="nav-link" data-scroll-target="#regla-or-vs-and-en-filtros"><span class="header-section-number">5.4</span> Regla OR vs AND en filtros</a></li>
+  </ul></li>
+  <li><a href="#estadísticos-descriptivos" id="toc-estadísticos-descriptivos" class="nav-link" data-scroll-target="#estadísticos-descriptivos"><span class="header-section-number">6</span> Estadísticos Descriptivos</a>
+  <ul class="collapse">
+  <li><a href="#medidas-de-tendencia-central-y-dispersión" id="toc-medidas-de-tendencia-central-y-dispersión" class="nav-link" data-scroll-target="#medidas-de-tendencia-central-y-dispersión"><span class="header-section-number">6.1</span> Medidas de tendencia central y dispersión</a></li>
+  <li><a href="#tablas-de-frecuencia" id="toc-tablas-de-frecuencia" class="nav-link" data-scroll-target="#tablas-de-frecuencia"><span class="header-section-number">6.2</span> Tablas de frecuencia</a></li>
+  <li><a href="#agregaciones-por-grupo" id="toc-agregaciones-por-grupo" class="nav-link" data-scroll-target="#agregaciones-por-grupo"><span class="header-section-number">6.3</span> Agregaciones por grupo</a></li>
+  </ul></li>
+  <li><a href="#correlación-y-covarianza" id="toc-correlación-y-covarianza" class="nav-link" data-scroll-target="#correlación-y-covarianza"><span class="header-section-number">7</span> Correlación y Covarianza</a>
+  <ul class="collapse">
+  <li><a href="#interpretación-de-correlación" id="toc-interpretación-de-correlación" class="nav-link" data-scroll-target="#interpretación-de-correlación"><span class="header-section-number">7.1</span> Interpretación de correlación</a></li>
+  </ul></li>
+  <li><a href="#visualización-básica-r-base" id="toc-visualización-básica-r-base" class="nav-link" data-scroll-target="#visualización-básica-r-base"><span class="header-section-number">8</span> Visualización Básica (R base)</a></li>
+  <li><a href="#semilla-y-reproducibilidad" id="toc-semilla-y-reproducibilidad" class="nav-link" data-scroll-target="#semilla-y-reproducibilidad"><span class="header-section-number">9</span> Semilla y Reproducibilidad</a></li>
+  <li><a href="#librerías-clave-del-curso" id="toc-librerías-clave-del-curso" class="nav-link" data-scroll-target="#librerías-clave-del-curso"><span class="header-section-number">10</span> Librerías Clave del Curso</a></li>
+  <li><a href="#modelos-de-clasificación" id="toc-modelos-de-clasificación" class="nav-link" data-scroll-target="#modelos-de-clasificación"><span class="header-section-number">11</span> Modelos de Clasificación</a>
+  <ul class="collapse">
+  <li><a href="#división-traintest-createdatapartition" id="toc-división-traintest-createdatapartition" class="nav-link" data-scroll-target="#división-traintest-createdatapartition"><span class="header-section-number">11.1</span> División Train/Test (createDataPartition)</a></li>
+  <li><a href="#regresión-logística-glm" id="toc-regresión-logística-glm" class="nav-link" data-scroll-target="#regresión-logística-glm"><span class="header-section-number">11.2</span> Regresión Logística (glm)</a></li>
+  <li><a href="#interpretar-odds-con-expcoef" id="toc-interpretar-odds-con-expcoef" class="nav-link" data-scroll-target="#interpretar-odds-con-expcoef"><span class="header-section-number">11.3</span> Interpretar odds con exp(coef)</a></li>
+  <li><a href="#predecir-para-un-individuo-concreto" id="toc-predecir-para-un-individuo-concreto" class="nav-link" data-scroll-target="#predecir-para-un-individuo-concreto"><span class="header-section-number">11.4</span> Predecir para un individuo concreto</a></li>
+  <li><a href="#fórmula-manual-excluir-variables" id="toc-fórmula-manual-excluir-variables" class="nav-link" data-scroll-target="#fórmula-manual-excluir-variables"><span class="header-section-number">11.5</span> Fórmula manual (excluir variables)</a></li>
+  <li><a href="#árbol-de-decisión-rpart" id="toc-árbol-de-decisión-rpart" class="nav-link" data-scroll-target="#árbol-de-decisión-rpart"><span class="header-section-number">11.6</span> Árbol de Decisión (rpart)</a></li>
+  <li><a href="#matriz-de-confusión-positive-class-trampa" id="toc-matriz-de-confusión-positive-class-trampa" class="nav-link" data-scroll-target="#matriz-de-confusión-positive-class-trampa"><span class="header-section-number">11.7</span> Matriz de confusión — Positive Class (TRAMPA)</a>
+  <ul class="collapse">
+  <li><a href="#el-problema" id="toc-el-problema" class="nav-link" data-scroll-target="#el-problema"><span class="header-section-number">11.7.1</span> El problema</a></li>
+  <li><a href="#qué-implica-si-positive-class-0" id="toc-qué-implica-si-positive-class-0" class="nav-link" data-scroll-target="#qué-implica-si-positive-class-0"><span class="header-section-number">11.7.2</span> ¿Qué implica si Positive Class = 0?</a></li>
+  <li><a href="#solución-1-positive-1" id="toc-solución-1-positive-1" class="nav-link" data-scroll-target="#solución-1-positive-1"><span class="header-section-number">11.7.3</span> Solución 1: positive = “1”</a></li>
+  <li><a href="#solución-2-controlar-el-orden-de-levels" id="toc-solución-2-controlar-el-orden-de-levels" class="nav-link" data-scroll-target="#solución-2-controlar-el-orden-de-levels"><span class="header-section-number">11.7.4</span> Solución 2: controlar el orden de levels</a></li>
+  <li><a href="#tabla-de-la-matriz-de-confusión-con-positive-1" id="toc-tabla-de-la-matriz-de-confusión-con-positive-1" class="nav-link" data-scroll-target="#tabla-de-la-matriz-de-confusión-con-positive-1"><span class="header-section-number">11.7.5</span> Tabla de la matriz de confusión (con positive = “1”)</a></li>
+  <li><a href="#métricas" id="toc-métricas" class="nav-link" data-scroll-target="#métricas"><span class="header-section-number">11.7.6</span> Métricas</a></li>
+  <li><a href="#interpretar-en-contexto" id="toc-interpretar-en-contexto" class="nav-link" data-scroll-target="#interpretar-en-contexto"><span class="header-section-number">11.7.7</span> Interpretar en contexto</a></li>
+  </ul></li>
+  <li><a href="#cómo-interpretar-el-árbol-visual" id="toc-cómo-interpretar-el-árbol-visual" class="nav-link" data-scroll-target="#cómo-interpretar-el-árbol-visual"><span class="header-section-number">11.8</span> Cómo interpretar el árbol visual</a></li>
+  <li><a href="#importancia-de-variables-variable.importance" id="toc-importancia-de-variables-variable.importance" class="nav-link" data-scroll-target="#importancia-de-variables-variable.importance"><span class="header-section-number">11.9</span> Importancia de variables (variable.importance)</a></li>
+  <li><a href="#diferencia-clave-glm-vs-rpart" id="toc-diferencia-clave-glm-vs-rpart" class="nav-link" data-scroll-target="#diferencia-clave-glm-vs-rpart"><span class="header-section-number">11.10</span> Diferencia clave: glm vs rpart</a></li>
+  </ul></li>
+  <li><a href="#clustering-k-means" id="toc-clustering-k-means" class="nav-link" data-scroll-target="#clustering-k-means"><span class="header-section-number">12</span> Clustering (K-Means)</a>
+  <ul class="collapse">
+  <li><a href="#flujo-completo-de-clustering" id="toc-flujo-completo-de-clustering" class="nav-link" data-scroll-target="#flujo-completo-de-clustering"><span class="header-section-number">12.1</span> Flujo completo de clustering</a></li>
+  <li><a href="#interpretar-centros-de-clusters" id="toc-interpretar-centros-de-clusters" class="nav-link" data-scroll-target="#interpretar-centros-de-clusters"><span class="header-section-number">12.2</span> Interpretar centros de clusters</a></li>
+  <li><a href="#interpretar-clusters-con-un-árbol-de-decisión-la-trampa" id="toc-interpretar-clusters-con-un-árbol-de-decisión-la-trampa" class="nav-link" data-scroll-target="#interpretar-clusters-con-un-árbol-de-decisión-la-trampa"><span class="header-section-number">12.3</span> Interpretar clusters con un árbol de decisión (LA TRAMPA)</a></li>
+  </ul></li>
+  <li><a href="#notas-de-interpretación-50-del-examen" id="toc-notas-de-interpretación-50-del-examen" class="nav-link" data-scroll-target="#notas-de-interpretación-50-del-examen"><span class="header-section-number">13</span> Notas de Interpretación (50% del examen)</a>
+  <ul class="collapse">
+  <li><a href="#cómo-interpretar-summary-de-un-modelo" id="toc-cómo-interpretar-summary-de-un-modelo" class="nav-link" data-scroll-target="#cómo-interpretar-summary-de-un-modelo"><span class="header-section-number">13.1</span> Cómo interpretar summary() de un modelo</a></li>
+  <li><a href="#traducir-a-lenguaje-de-negocio" id="toc-traducir-a-lenguaje-de-negocio" class="nav-link" data-scroll-target="#traducir-a-lenguaje-de-negocio"><span class="header-section-number">13.2</span> Traducir a lenguaje de negocio</a></li>
+  </ul></li>
+  <li><a href="#checkpoints-antisuspenso" id="toc-checkpoints-antisuspenso" class="nav-link" data-scroll-target="#checkpoints-antisuspenso"><span class="header-section-number">14</span> Checkpoints Antisuspenso</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chuleta R - Análisis de Datos Masivos</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Alejandro Campos </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="flujos-de-trabajo-típicos" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Flujos de Trabajo Típicos</h1>
+<section id="flujo-de-exploración-inicial-iterativo" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="flujo-de-exploración-inicial-iterativo"><span class="header-section-number">1.1</span> Flujo de Exploración Inicial (Iterativo)</h2>
+<pre><code>1. str(datos)        → Ver tipos de variables
+2. summary(datos)    → Detectar anomalías, rangos, NAs
+3. Convertir factores donde sea necesario
+4. Detectar y tratar NAs / valores imposibles
+5. Filtrar registros inválidos
+6. summary(datos)    → Verificar limpieza</code></pre>
+<p><strong>Regla de oro</strong>: <code>summary()</code> es iterativo. Se ejecuta, se detectan problemas, se corrigen, se vuelve a ejecutar.</p>
+</section>
+<section id="flujo-de-modelado-traintest" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="flujo-de-modelado-traintest"><span class="header-section-number">1.2</span> Flujo de Modelado (Train/Test)</h2>
+<pre><code>1. set.seed(123)                    → Reproducibilidad
+2. Dividir en Train/Test (80/20)    → createDataPartition()
+3. Entrenar modelo con Train
+4. Predecir con Test
+5. Evaluar con confusionMatrix()</code></pre>
+<p><strong>Checkpoint antisuspenso</strong>: NUNCA validar con los mismos datos de entrenamiento.</p>
+<hr>
+</section>
+</section>
+<section id="cargar-datos" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Cargar Datos</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CSV</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"archivo.csv"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># XLSX (necesita librería readxl)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"archivo.xlsx"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># OJO: read_excel puede crear columna índice basura (tipo ...1)</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Si ves una columna ...1 con números 0, 1, 2, 3... elimínala:</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos[, <span class="sc">-</span><span class="dv">1</span>]                          <span class="co"># R base: quitar primera columna</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>...<span class="dv">1</span>)              <span class="co"># dplyr</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="problemas-comunes-al-cargar" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="problemas-comunes-al-cargar"><span class="header-section-number">2.1</span> Problemas comunes al cargar</h2>
+<ul>
+<li><strong>Columna índice basura</strong> (tipo <code>...1</code>, <code>X</code>, <code>V1</code>): eliminarla, no es una variable real</li>
+<li><strong>Variables “Sí”/“No” en texto</strong>: convertir a 0/1 con <code>ifelse()</code> o a factor con <code>as.factor()</code></li>
+<li><strong>Ceros que son nulos disfrazados</strong>: hay variables donde 0 no tiene sentido (ej: peso = 0, ingresos = 0 en ciertos contextos). Detectar y tratar como NAs</li>
+<li><strong>Comillas tipográficas</strong>: al copiar de Word, <code>""</code> rompe el código. Reescribir manualmente</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="exploración-de-datos" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Exploración de Datos</h1>
+<section id="estructura-y-dimensiones" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="estructura-y-dimensiones"><span class="header-section-number">3.1</span> Estructura y dimensiones</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(datos)              <span class="co"># Estructura: tipos de cada columna</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datos)          <span class="co"># Resumen estadístico</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(datos)              <span class="co"># c(filas, columnas)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(datos)             <span class="co"># Número de filas</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(datos)             <span class="co"># Número de columnas</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(datos)            <span class="co"># Nombres de columnas</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos, <span class="dv">10</span>)         <span class="co"># Primeras 10 filas</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(datos, <span class="dv">10</span>)         <span class="co"># Últimas 10 filas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="explorar-valores-únicos" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="explorar-valores-únicos"><span class="header-section-number">3.2</span> Explorar valores únicos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(datos<span class="sc">$</span>columna)           <span class="co"># Valores únicos</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(datos<span class="sc">$</span>columna))   <span class="co"># Cuántos valores únicos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="detección-de-nas" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="detección-de-nas"><span class="header-section-number">3.3</span> Detección de NAs</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(datos))               <span class="co"># Total NAs en todo el dataset</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(datos))           <span class="co"># NAs por columna</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">is.na</span>(datos<span class="sc">$</span>columna))       <span class="co"># ¿Hay algún NA en esta columna?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="detección-de-ceros-sospechosos" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="detección-de-ceros-sospechosos"><span class="header-section-number">3.4</span> Detección de ceros sospechosos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mismo patrón que is.na() pero con == 0</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(datos <span class="sc">==</span> <span class="dv">0</span>)                            <span class="co"># Ceros por columna (todo el dataset)</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(datos[, <span class="fu">c</span>(<span class="st">"col1"</span>, <span class="st">"col2"</span>)] <span class="sc">==</span> <span class="dv">0</span>)       <span class="co"># Ceros solo en columnas específicas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Patrón general colSums</strong>: <code>colSums(CONDICION_TRUE_FALSE)</code> cuenta cuántos TRUE hay por columna. Funciona con cualquier condición: <code>== 0</code>, <code>is.na()</code>, <code>&gt; 100</code>, etc.</p>
+</section>
+<section id="eliminar-nas-y-valores-inválidos" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="eliminar-nas-y-valores-inválidos"><span class="header-section-number">3.5</span> Eliminar NAs y valores inválidos</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">na.omit</span>(datos)                          <span class="co"># Elimina filas con cualquier NA</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>datos[<span class="fu">complete.cases</span>(datos), ]          <span class="co"># Equivalente</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>col[<span class="fu">is.na</span>(datos<span class="sc">$</span>col)] <span class="ot">&lt;-</span> valor    <span class="co"># Reemplazar NA por valor</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminar filas por condición</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos[datos<span class="sc">$</span>col1 <span class="sc">!=</span> <span class="dv">0</span>, ]                    <span class="co"># Una columna</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> datos[datos<span class="sc">$</span>col1 <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> datos<span class="sc">$</span>col2 <span class="sc">!=</span> <span class="dv">0</span>, ]  <span class="co"># Varias columnas</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="tipos-de-datos-y-conversiones" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Tipos de Datos y Conversiones</h1>
+<section id="verificar-tipo" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="verificar-tipo"><span class="header-section-number">4.1</span> Verificar tipo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(datos<span class="sc">$</span>columna)        <span class="co"># Tipo de la columna</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(datos<span class="sc">$</span>columna)   <span class="co"># ¿Es numérica?</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">is.factor</span>(datos<span class="sc">$</span>columna)    <span class="co"># ¿Es factor?</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">is.character</span>(datos<span class="sc">$</span>columna) <span class="co"># ¿Es texto?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="conversiones" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="conversiones"><span class="header-section-number">4.2</span> Conversiones</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.factor</span>(datos<span class="sc">$</span>columna)    <span class="co"># Convertir a factor (categórica)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(datos<span class="sc">$</span>columna)   <span class="co"># Convertir a numérica</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as.character</span>(datos<span class="sc">$</span>columna) <span class="co"># Convertir a texto</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Cuándo usar factor</strong>: Variables categóricas con pocos valores que se repiten (género, tipo, región). NO para identificadores únicos (nombre, ID).</p>
+<p><strong>Checkpoint antisuspenso</strong>: Si una variable como <code>codigo_postal</code> es numérica pero representa categorías, conviértela a factor. Si no, R intentará hacer operaciones matemáticas con ella.</p>
+</section>
+<section id="crear-columnas-nuevas-con-ifelse" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="crear-columnas-nuevas-con-ifelse"><span class="header-section-number">4.3</span> Crear columnas nuevas con ifelse</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear variable binaria 0/1 a partir de una condición</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>nueva_col <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(datos<span class="sc">$</span>peso <span class="sc">&gt;=</span> <span class="dv">80</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir texto "Sí"/"No" a numérico 0/1</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>respuesta_num <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(datos<span class="sc">$</span>respuesta <span class="sc">==</span> <span class="st">"Sí"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear variable con texto</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>categoria <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(datos<span class="sc">$</span>edad <span class="sc">&gt;=</span> <span class="dv">60</span>, <span class="st">"Senior"</span>, <span class="st">"Joven"</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ifelse anidado (varias categorías)</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>rango <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(datos<span class="sc">$</span>edad <span class="sc">&lt;</span> <span class="dv">30</span>, <span class="st">"Joven"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>               <span class="fu">ifelse</span>(datos<span class="sc">$</span>edad <span class="sc">&lt;</span> <span class="dv">60</span>, <span class="st">"Adulto"</span>, <span class="st">"Senior"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="seleccionar-solo-columnas-numéricas" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="seleccionar-solo-columnas-numéricas"><span class="header-section-number">4.4</span> Seleccionar solo columnas numéricas</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Con dplyr — útil antes de cor() o kmeans</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> <span class="fu">select_if</span>(is.numeric)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># R base — equivalente</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> datos[, <span class="fu">sapply</span>(datos, is.numeric)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="acceso-y-filtrado-de-datos" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Acceso y Filtrado de Datos</h1>
+<section id="acceso-a-columnas-r-base" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="acceso-a-columnas-r-base"><span class="header-section-number">5.1</span> Acceso a columnas (R base)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>columna               <span class="co"># Acceso con $</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>datos[, <span class="st">"columna"</span>]          <span class="co"># Acceso con corchetes</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>datos[, <span class="fu">c</span>(<span class="st">"col1"</span>, <span class="st">"col2"</span>)]  <span class="co"># Varias columnas</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>datos[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, ]               <span class="co"># Primeras 10 filas</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>datos[datos<span class="sc">$</span>edad <span class="sc">&gt;</span> <span class="dv">30</span>, ]    <span class="co"># Filas donde edad &gt; 30</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtrado-con-subset---r-base" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="filtrado-con-subset---r-base"><span class="header-section-number">5.2</span> Filtrado con subset() - R base</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sintaxis: subset(datos, condición, select = columnas)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtrar filas</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(datos, tipo <span class="sc">==</span> <span class="st">"premium"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(datos, tipo <span class="sc">==</span> <span class="st">"premium"</span> <span class="sc">&amp;</span> region <span class="sc">==</span> <span class="st">"Norte"</span>)  <span class="co"># AND</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(datos, tipo <span class="sc">==</span> <span class="st">"premium"</span> <span class="sc">|</span> region <span class="sc">==</span> <span class="st">"Norte"</span>)  <span class="co"># OR</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtrar filas Y seleccionar columnas</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(datos, tipo <span class="sc">==</span> <span class="st">"premium"</span>, <span class="at">select =</span> <span class="fu">c</span>(region, precio))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Excluir columnas (con -)</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(datos, tipo <span class="sc">==</span> <span class="st">"premium"</span>, <span class="at">select =</span> <span class="sc">-</span><span class="fu">c</span>(columna_a_excluir))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtrado-con-dplyr-librería" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="filtrado-con-dplyr-librería"><span class="header-section-number">5.3</span> Filtrado con dplyr (librería)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">filter</span>(tipo <span class="sc">==</span> <span class="st">"premium"</span>)                    <span class="co"># Filtrar filas</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">select</span>(region, precio)                       <span class="co"># Seleccionar columnas</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">filter</span>(tipo <span class="sc">==</span> <span class="st">"premium"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(precio) <span class="co"># Encadenar</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="regla-or-vs-and-en-filtros" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="regla-or-vs-and-en-filtros"><span class="header-section-number">5.4</span> Regla OR vs AND en filtros</h2>
+<pre><code>ELIMINAR filas (!=) → usa &amp; (AND)   "quiero que NO sea esto Y que NO sea aquello"
+BUSCAR filas (==)   → usa | (OR)    "quiero que sea esto O que sea aquello"</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ELIMINAR: quiero quitar filas donde col1 sea 0 o col2 sea 0</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">filter</span>(col1 <span class="sc">!=</span> <span class="dv">0</span> <span class="sc">&amp;</span> col2 <span class="sc">!=</span> <span class="dv">0</span>)     <span class="co"># &amp; porque AMBAS deben cumplirse</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># BUSCAR: quiero filas que sean de Madrid o de Barcelona</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ciudad <span class="sc">==</span> <span class="st">"Madrid"</span> <span class="sc">|</span> ciudad <span class="sc">==</span> <span class="st">"Barcelona"</span>)  <span class="co"># | porque basta con una</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Nombres de columna en filter() van SIN comillas.</strong> Con comillas R lo interpreta como texto literal y no filtra nada.</p>
+<hr>
+</section>
+</section>
+<section id="estadísticos-descriptivos" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Estadísticos Descriptivos</h1>
+<section id="medidas-de-tendencia-central-y-dispersión" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="medidas-de-tendencia-central-y-dispersión"><span class="header-section-number">6.1</span> Medidas de tendencia central y dispersión</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(datos<span class="sc">$</span>col)             <span class="co"># Media</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(datos<span class="sc">$</span>col)           <span class="co"># Mediana</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(datos<span class="sc">$</span>col)               <span class="co"># Desviación estándar</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(datos<span class="sc">$</span>col)              <span class="co"># Varianza</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(datos<span class="sc">$</span>col)              <span class="co"># Mínimo</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(datos<span class="sc">$</span>col)              <span class="co"># Máximo</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(datos<span class="sc">$</span>col)            <span class="co"># c(min, max)</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(datos<span class="sc">$</span>col, <span class="fl">0.25</span>)   <span class="co"># Percentil 25 (Q1)</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">IQR</span>(datos<span class="sc">$</span>col)              <span class="co"># Rango intercuartílico (Q3 - Q1)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Nota</strong>: Si hay NAs, añadir <code>na.rm = TRUE</code>: <code>mean(datos$col, na.rm = TRUE)</code></p>
+</section>
+<section id="tablas-de-frecuencia" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="tablas-de-frecuencia"><span class="header-section-number">6.2</span> Tablas de frecuencia</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(datos<span class="sc">$</span>col)                        <span class="co"># Frecuencia absoluta (conteo)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(datos<span class="sc">$</span>col))            <span class="co"># Frecuencia relativa (0-1)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(datos<span class="sc">$</span>col)) <span class="sc">*</span> <span class="dv">100</span>      <span class="co"># Porcentaje</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabla cruzada (dos variables)</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(datos<span class="sc">$</span>col1, datos<span class="sc">$</span>col2)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Contar cuántos cumplen una condición</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(datos<span class="sc">$</span>ingreso <span class="sc">&gt;</span> <span class="dv">3000</span>)             <span class="co"># TRUE/FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="agregaciones-por-grupo" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="agregaciones-por-grupo"><span class="header-section-number">6.3</span> Agregaciones por grupo</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R base - aggregate()</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(precio <span class="sc">~</span> region, <span class="at">data =</span> datos, <span class="at">FUN =</span> mean)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(precio <span class="sc">~</span> region <span class="sc">+</span> tipo, <span class="at">data =</span> datos, <span class="at">FUN =</span> mean)  <span class="co"># Dos grupos</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dplyr — más limpio para varias métricas a la vez</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>datos <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">media =</span> <span class="fu">mean</span>(precio),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">mediana =</span> <span class="fu">median</span>(precio)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+</section>
+<section id="correlación-y-covarianza" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Correlación y Covarianza</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(datos<span class="sc">$</span>var1, datos<span class="sc">$</span>var2)                 <span class="co"># Correlación entre dos variables</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(datos[, <span class="fu">c</span>(<span class="st">"var1"</span>, <span class="st">"var2"</span>, <span class="st">"var3"</span>)])     <span class="co"># Matriz de correlación</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cov</span>(datos<span class="sc">$</span>var1, datos<span class="sc">$</span>var2)                 <span class="co"># Covarianza</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de correlación de TODAS las numéricas</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>datos_num <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> <span class="fu">select_if</span>(is.numeric)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(datos_num)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Si hay NAs, añadir: cor(datos_num, use = "complete.obs")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="interpretación-de-correlación" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="interpretación-de-correlación"><span class="header-section-number">7.1</span> Interpretación de correlación</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Valor</th>
+<th>Interpretación</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.7 a 1.0</td>
+<td>Correlación positiva fuerte</td>
+</tr>
+<tr class="even">
+<td>0.4 a 0.7</td>
+<td>Correlación positiva moderada</td>
+</tr>
+<tr class="odd">
+<td>0.0 a 0.4</td>
+<td>Correlación positiva débil</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>Sin correlación lineal</td>
+</tr>
+<tr class="odd">
+<td>-0.4 a 0</td>
+<td>Correlación negativa débil</td>
+</tr>
+<tr class="even">
+<td>-0.7 a -0.4</td>
+<td>Correlación negativa moderada</td>
+</tr>
+<tr class="odd">
+<td>-1.0 a -0.7</td>
+<td>Correlación negativa fuerte</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretación de negocio</strong>: “La correlación entre X e Y es de 0.45, lo que indica una relación positiva moderada. A medida que X aumenta, Y tiende a aumentar también, pero no de forma determinista.”</p>
+<hr>
+</section>
+</section>
+<section id="visualización-básica-r-base" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Visualización Básica (R base)</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(datos<span class="sc">$</span>col)                     <span class="co"># Histograma</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(datos<span class="sc">$</span>col)                  <span class="co"># Diagrama de caja</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(precio <span class="sc">~</span> tipo, <span class="at">data=</span>datos)  <span class="co"># Boxplot por grupos</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(datos<span class="sc">$</span>x, datos<span class="sc">$</span>y)              <span class="co"># Dispersión</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">table</span>(datos<span class="sc">$</span>col))           <span class="co"># Barras</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="semilla-y-reproducibilidad" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Semilla y Reproducibilidad</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)   <span class="co"># Fijar semilla ANTES de cualquier operación aleatoria</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Por qué es crítico</strong>: Operaciones como <code>sample()</code>, <code>createDataPartition()</code>, o entrenar modelos usan números aleatorios. Sin semilla, cada ejecución da resultados diferentes. Con semilla, el resultado es reproducible en cualquier equipo.</p>
+<hr>
+</section>
+<section id="librerías-clave-del-curso" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Librerías Clave del Curso</h1>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Librería</th>
+<th>Uso principal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>readxl</code></td>
+<td>Leer Excel (.xlsx)</td>
+</tr>
+<tr class="even">
+<td><code>readr</code></td>
+<td>Leer CSV</td>
+</tr>
+<tr class="odd">
+<td><code>dplyr</code></td>
+<td>Manipulación de datos (filter, select, %&gt;%)</td>
+</tr>
+<tr class="even">
+<td><code>ggplot2</code></td>
+<td>Gráficos avanzados</td>
+</tr>
+<tr class="odd">
+<td><code>caret</code></td>
+<td>Partición train/test, confusionMatrix</td>
+</tr>
+<tr class="even">
+<td><code>rpart</code></td>
+<td>Árboles de decisión</td>
+</tr>
+<tr class="odd">
+<td><code>rpart.plot</code></td>
+<td>Visualizar árboles</td>
+</tr>
+<tr class="even">
+<td><code>NbClust</code></td>
+<td>Número óptimo de clusters</td>
+</tr>
+<tr class="odd">
+<td><code>factoextra</code></td>
+<td>Visualizar clustering</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="modelos-de-clasificación" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Modelos de Clasificación</h1>
+<section id="división-traintest-createdatapartition" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="división-traintest-createdatapartition"><span class="header-section-number">11.1</span> División Train/Test (createDataPartition)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Semilla SIEMPRE antes</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Crear índices — p=0.8 significa 80% para train</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#    Primer argumento = columna OBJETIVO (la Y), no el dataframe</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(datos<span class="sc">$</span>var_objetivo, <span class="at">p =</span> <span class="fl">0.8</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Dividir con corchetes: index = train, -index = test</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> datos[index, ]</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>test  <span class="ot">&lt;-</span> datos[<span class="sc">-</span>index, ]</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Verificar tamaños</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(train)  <span class="co"># ~80% de los datos</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(test)   <span class="co"># ~20% de los datos</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Errores comunes</strong>:</p>
+<ul>
+<li>Poner el dataframe entero en vez de la columna objetivo → <code>datos$var_objetivo</code>, NO <code>datos</code></li>
+<li>Olvidar <code>list = FALSE</code> → sin esto devuelve una lista y los corchetes no funcionan</li>
+<li>Olvidar <code>set.seed()</code> → resultados no reproducibles</li>
+<li>Si no te piden dividir en train/test, NO lo hagas</li>
+</ul>
+</section>
+<section id="regresión-logística-glm" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="regresión-logística-glm"><span class="header-section-number">11.2</span> Regresión Logística (glm)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear modelo — variable dependiente binaria (0/1)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>modelo_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(var_objetivo <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">family =</span> binomial)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo_glm)   <span class="co"># Ver variables significativas (asteriscos)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Predecir — DEVUELVE PROBABILIDADES, hay que convertir a 0/1</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>pred_prob <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_glm, <span class="at">newdata =</span> test, <span class="at">type =</span> <span class="st">"response"</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>pred_glm <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(pred_prob <span class="sc">&gt;=</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusión (necesita factores)</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># positive = "1" para que Sensitivity = detección de la clase que nos importa</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred_glm), <span class="fu">as.factor</span>(test<span class="sc">$</span>var_objetivo), <span class="at">positive =</span> <span class="st">"1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Interpretar coeficientes</strong>: Si Estimate de una variable = 0.035 y p &lt; 0.05 → “Por cada unidad que sube esa variable, la probabilidad del evento aumenta. Es estadísticamente significativo.”</p>
+</section>
+<section id="interpretar-odds-con-expcoef" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="interpretar-odds-con-expcoef"><span class="header-section-number">11.3</span> Interpretar odds con exp(coef)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver cuánto multiplican las odds cada variable</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(modelo_glm))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ejemplo: si exp(coef) de ingreso = 1.002</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># → por cada unidad más de ingreso, las odds se multiplican x1.002</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># → si el ingreso sube 150 unidades: 1.002^150 → calcular aumento de odds</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Fórmula</strong>: Si piden “cuánto aumenta si X sube en N unidades” → <code>exp(coef_de_X * N)</code></p>
+</section>
+<section id="predecir-para-un-individuo-concreto" class="level2" data-number="11.4">
+<h2 data-number="11.4" class="anchored" data-anchor-id="predecir-para-un-individuo-concreto"><span class="header-section-number">11.4</span> Predecir para un individuo concreto</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear un data.frame con las características del individuo</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>prob_individuo <span class="ot">&lt;-</span> <span class="fu">predict</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  modelo_glm,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata =</span> <span class="fu">data.frame</span>(</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var1 =</span> <span class="dv">50</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var2 =</span> <span class="st">"Categoría_A"</span>,</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">var3 =</span> <span class="dv">3</span>,</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">var4 =</span> <span class="dv">2200</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">"response"</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>prob_individuo   <span class="co"># Probabilidad entre 0 y 1</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Si prob &gt;= 0.5 → clasificar como 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Errores comunes</strong>: Los nombres de columna en <code>data.frame()</code> deben coincidir EXACTAMENTE con los del modelo (mayúsculas, acentos, tildes). Si el modelo tiene <code>genero</code>, poner <code>genero</code>, no <code>Genero</code>.</p>
+</section>
+<section id="fórmula-manual-excluir-variables" class="level2" data-number="11.5">
+<h2 data-number="11.5" class="anchored" data-anchor-id="fórmula-manual-excluir-variables"><span class="header-section-number">11.5</span> Fórmula manual (excluir variables)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Si el enunciado dice: "use todas las variables EXCEPTO var3 y var5"</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># NO usar ~ . (eso mete todo). Escribir las variables a mano:</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">glm</span>(var_objetivo <span class="sc">~</span> var1 <span class="sc">+</span> var2 <span class="sc">+</span> var4 <span class="sc">+</span> var6,</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> train, <span class="at">family =</span> binomial)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="árbol-de-decisión-rpart" class="level2" data-number="11.6">
+<h2 data-number="11.6" class="anchored" data-anchor-id="árbol-de-decisión-rpart"><span class="header-section-number">11.6</span> Árbol de Decisión (rpart)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear modelo — method="class" OBLIGATORIO para clasificación</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>modelo_arbol <span class="ot">&lt;-</span> <span class="fu">rpart</span>(var_objetivo <span class="sc">~</span> ., <span class="at">data =</span> train, <span class="at">method =</span> <span class="st">"class"</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualizar</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(modelo_arbol)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Importancia de variables</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>modelo_arbol<span class="sc">$</span>variable.importance</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Predecir — type="class" para que devuelva 0/1 directamente (NO redondear)</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>pred_arbol <span class="ot">&lt;-</span> <span class="fu">predict</span>(modelo_arbol, <span class="at">newdata =</span> test, <span class="at">type =</span> <span class="st">"class"</span>)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Matriz de confusión</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred_arbol), <span class="fu">as.factor</span>(test<span class="sc">$</span>var_objetivo), <span class="at">positive =</span> <span class="st">"1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="matriz-de-confusión-positive-class-trampa" class="level2" data-number="11.7">
+<h2 data-number="11.7" class="anchored" data-anchor-id="matriz-de-confusión-positive-class-trampa"><span class="header-section-number">11.7</span> Matriz de confusión — Positive Class (TRAMPA)</h2>
+<section id="el-problema" class="level3" data-number="11.7.1">
+<h3 data-number="11.7.1" class="anchored" data-anchor-id="el-problema"><span class="header-section-number">11.7.1</span> El problema</h3>
+<p><code>confusionMatrix()</code> toma el PRIMER nivel del factor como “Positive”. Si haces <code>as.factor(c(0, 1))</code>, los niveles son <code>"0"</code> primero y <code>"1"</code> después. R decide: <strong>“0” es la clase positiva</strong> → Sensitivity y Specificity se invierten.</p>
+</section>
+<section id="qué-implica-si-positive-class-0" class="level3" data-number="11.7.2">
+<h3 data-number="11.7.2" class="anchored" data-anchor-id="qué-implica-si-positive-class-0"><span class="header-section-number">11.7.2</span> ¿Qué implica si Positive Class = 0?</h3>
+<pre><code>Con Positive Class = 0 (por defecto):
+  Sensitivity = cuántos "clase 0" detectas bien    ← probablemente NO es lo que quieres
+  Specificity = cuántos "clase 1" detectas bien    ← esto sería lo importante
+  → Sensitivity y Specificity están INTERCAMBIADAS respecto a lo lógico
+  → El Accuracy NO cambia (es el mismo independientemente de la clase positiva)</code></pre>
+</section>
+<section id="solución-1-positive-1" class="level3" data-number="11.7.3">
+<h3 data-number="11.7.3" class="anchored" data-anchor-id="solución-1-positive-1"><span class="header-section-number">11.7.3</span> Solución 1: positive = “1”</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(<span class="fu">as.factor</span>(pred), <span class="fu">as.factor</span>(test<span class="sc">$</span>var_objetivo), <span class="at">positive =</span> <span class="st">"1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="solución-2-controlar-el-orden-de-levels" class="level3" data-number="11.7.4">
+<h3 data-number="11.7.4" class="anchored" data-anchor-id="solución-2-controlar-el-orden-de-levels"><span class="header-section-number">11.7.4</span> Solución 2: controlar el orden de levels</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Poner 1 primero en levels → R lo toma como positivo automáticamente</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(pred, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>)),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(test<span class="sc">$</span>var_objetivo, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tabla-de-la-matriz-de-confusión-con-positive-1" class="level3" data-number="11.7.5">
+<h3 data-number="11.7.5" class="anchored" data-anchor-id="tabla-de-la-matriz-de-confusión-con-positive-1"><span class="header-section-number">11.7.5</span> Tabla de la matriz de confusión (con positive = “1”)</h3>
+<pre><code>                 Real: 1 (evento)      Real: 0 (no evento)
+Pred: 1          Verdadero Positivo    Falso Positivo (alarma falsa)
+Pred: 0          FALSO NEGATIVO        Verdadero Negativo</code></pre>
+</section>
+<section id="métricas" class="level3" data-number="11.7.6">
+<h3 data-number="11.7.6" class="anchored" data-anchor-id="métricas"><span class="header-section-number">11.7.6</span> Métricas</h3>
+<ul>
+<li><strong>Accuracy</strong>: aciertos totales / total (NO cambia con positive)</li>
+<li><strong>Sensitivity</strong>: de los que SÍ son 1, ¿cuántos detecté? → TP / (TP + FN)</li>
+<li><strong>Specificity</strong>: de los que NO son 1, ¿cuántos descarté bien? → TN / (TN + FP)</li>
+</ul>
+</section>
+<section id="interpretar-en-contexto" class="level3" data-number="11.7.7">
+<h3 data-number="11.7.7" class="anchored" data-anchor-id="interpretar-en-contexto"><span class="header-section-number">11.7.7</span> Interpretar en contexto</h3>
+<p>En contextos donde el evento es grave (enfermedad, fraude, abandono), un <strong>falso negativo</strong> (no detectar un caso real) es peor que un falso positivo (falsa alarma). Por eso <strong>Sensitivity</strong> es la métrica clave en esos escenarios. El modelo con mayor Sensitivity protege mejor.</p>
+</section>
+</section>
+<section id="cómo-interpretar-el-árbol-visual" class="level2" data-number="11.8">
+<h2 data-number="11.8" class="anchored" data-anchor-id="cómo-interpretar-el-árbol-visual"><span class="header-section-number">11.8</span> Cómo interpretar el árbol visual</h2>
+<p>Cada caja (nodo) del árbol tiene <strong>3 valores</strong>:</p>
+<pre><code>        ┌─────────────┐
+        │      0      │  ← Clase dominante (lo que más hay: 0 o 1)
+        │    0.35     │  ← Probabilidad de que sea 1 (35%)
+        │    100%     │  ← % del total de datos que cae en este nodo
+        └──────┬──────┘
+         YES / \ NO</code></pre>
+<ul>
+<li><strong>Nodo raíz</strong> (arriba): contiene el 100% de los datos</li>
+<li><strong>Ramas</strong>: cada división pregunta por una variable (ej: variable_X &gt;= 128)
+<ul>
+<li>Izquierda = YES (cumple la condición)</li>
+<li>Derecha = NO</li>
+<li><strong>OJO</strong>: a veces se intercambian visualmente. Leer las etiquetas</li>
+</ul></li>
+<li><strong>Hojas</strong> (abajo): los grupos finales. Sus porcentajes suman 100% del total original</li>
+</ul>
+<p><strong>Cómo narrar</strong>: “El nodo raíz contiene el 100% de los registros. La primera división se hace por [variable]: si [condición] ([X]% de registros), la probabilidad del evento baja a [Y]. Si no se cumple ([Z]%), sube a [W]. La variable más importante es [la de la raíz].”</p>
+</section>
+<section id="importancia-de-variables-variable.importance" class="level2" data-number="11.9">
+<h2 data-number="11.9" class="anchored" data-anchor-id="importancia-de-variables-variable.importance"><span class="header-section-number">11.9</span> Importancia de variables (variable.importance)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>modelo_arbol<span class="sc">$</span>variable.importance</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Los valores suman ~100 y representan porcentajes</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co"># La variable con valor más alto es la más influyente</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Interpretar</strong>: “Las variables más importantes son: var1 (45%), var2 (22%) y var3 (15%). var1 es el factor determinante.”</p>
+</section>
+<section id="diferencia-clave-glm-vs-rpart" class="level2" data-number="11.10">
+<h2 data-number="11.10" class="anchored" data-anchor-id="diferencia-clave-glm-vs-rpart"><span class="header-section-number">11.10</span> Diferencia clave: glm vs rpart</h2>
+<pre><code>                    glm (logística)         rpart (árbol)
+─────────────────────────────────────────────────────────
+predict devuelve    Probabilidades (0.73)   Clases directas (0 o 1)
+¿Necesita round?    SÍ (ifelse &gt;= 0.5)     NO
+Argumento clave     family = binomial       method = "class"
+Predict argumento   type = "response"       type = "class"
+Interpretación      Coeficientes + p-valor  Nodos del árbol + variable.importance
+Comparar modelos    → El que tenga mayor Accuracy en confusionMatrix gana</code></pre>
+<hr>
+</section>
+</section>
+<section id="clustering-k-means" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Clustering (K-Means)</h1>
+<section id="flujo-completo-de-clustering" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="flujo-completo-de-clustering"><span class="header-section-number">12.1</span> Flujo completo de clustering</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(NbClust)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Seleccionar solo variables numéricas</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>datos_cluster <span class="ot">&lt;-</span> datos <span class="sc">%&gt;%</span> <span class="fu">select_if</span>(is.numeric)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. ESCALAR los datos (OBLIGATORIO antes de clustering)</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>datos_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(datos_cluster)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Número óptimo de clusters con NbClust</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>resultado_nb <span class="ot">&lt;-</span> <span class="fu">NbClust</span>(datos_scaled, <span class="at">min.nc =</span> <span class="dv">2</span>, <span class="at">max.nc =</span> <span class="dv">8</span>, <span class="at">method =</span> <span class="st">"kmeans"</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>resultado_nb<span class="sc">$</span>Best.nc    <span class="co"># número óptimo</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Si NbClust se cuelga → método del codo como alternativa</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_nbclust</span>(datos_scaled, kmeans, <span class="at">method =</span> <span class="st">"wss"</span>)  <span class="co"># buscar el "codo"</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. Ejecutar kmeans con el número óptimo</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>modelo_km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(datos_scaled, <span class="at">centers =</span> <span class="dv">3</span>, <span class="at">nstart =</span> <span class="dv">25</span>)</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. Ver centros de cada cluster (para interpretar)</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>modelo_km<span class="sc">$</span>centers</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. Visualizar clusters</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_cluster</span>(modelo_km, <span class="at">data =</span> datos_scaled)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Por qué scale()</strong>: Sin escalar, variables con rangos grandes (ej: ingresos 0-5000) dominan sobre variables con rangos pequeños (ej: edad 18-70). <code>scale()</code> estandariza todo a media=0 y sd=1.</p>
+<p><strong>nstart = 25</strong>: Ejecuta kmeans 25 veces con semillas distintas y se queda con el mejor resultado. Siempre ponerlo.</p>
+</section>
+<section id="interpretar-centros-de-clusters" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="interpretar-centros-de-clusters"><span class="header-section-number">12.2</span> Interpretar centros de clusters</h2>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Opción 1: Centros del modelo (valores escalados si usaste scale())</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>modelo_km<span class="sc">$</span>centers</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Opción 2: Tabla de medias reales por cluster (MÁS FÁCIL DE INTERPRETAR)</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>datos_num<span class="sc">$</span>cluster <span class="ot">&lt;-</span> modelo_km<span class="sc">$</span>cluster</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="fu">aggregate</span>(. <span class="sc">~</span> cluster, <span class="at">data =</span> datos_num, <span class="at">FUN =</span> mean)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Esto te da la media REAL de cada variable por cluster → interpretas directo</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>Si usaste scale() antes de kmeans:
+  modelo_km$centers muestra valores escalados:
+    Positivos = por encima de la media general
+    Negativos = por debajo de la media general
+  Usa aggregate() sobre los datos SIN escalar para ver medias reales
+
+Si NO usaste scale():
+  Los centros ya son valores directos</code></pre>
+</section>
+<section id="interpretar-clusters-con-un-árbol-de-decisión-la-trampa" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="interpretar-clusters-con-un-árbol-de-decisión-la-trampa"><span class="header-section-number">12.3</span> Interpretar clusters con un árbol de decisión (LA TRAMPA)</h2>
+<p>El clustering es una “caja negra”: sabes QUÉ grupos hay pero no POR QUÉ. Para entenderlo, haces un segundo modelo: un árbol que clasifique los clusters.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Guardar el cluster asignado como columna</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>datos<span class="sc">$</span>cluster <span class="ot">&lt;-</span> modelo_km<span class="sc">$</span>cluster</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Árbol de decisión sobre los clusters</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rpart.plot)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>arbol_cluster <span class="ot">&lt;-</span> <span class="fu">rpart</span>(cluster <span class="sc">~</span> col1 <span class="sc">+</span> col2 <span class="sc">+</span> col3 <span class="sc">+</span> col4,</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">data =</span> datos,</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> <span class="st">"class"</span>)   <span class="co"># OBLIGATORIO: sin esto da decimales (2.4)</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Dibujar el árbol</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rpart.plot</span>(arbol_cluster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>REGLAS CLAVE:
+- method = "class" → OBLIGATORIO (1, 2, 3 son categorías, NO números)
+- NO hacer train/test → no evalúas el modelo, solo quieres entender
+- Usar las MISMAS variables que usaste en kmeans
+- Si hay 3+ clusters → solo rpart (glm solo acepta 2 categorías)</code></pre>
+<p><strong>Cómo leer el árbol</strong>: Cada rama te dice la regla que define el cluster. Ejemplo: “Si col1 &lt; 2.5 → Cluster 1. Si col1 &gt;= 2.5 y col2 &lt; 5 → Cluster 2. El resto → Cluster 3.”</p>
+<p><strong>Cómo narrar</strong>: “El cluster 1 agrupa individuos con variable_A alta (por encima de la media) y variable_B baja. El cluster 2 presenta valores medios en todo. El cluster 3 destaca por variable_C muy elevada. Recomendamos dirigir la acción [X] al cluster [N] porque [justificación de negocio].”</p>
+<hr>
+</section>
+</section>
+<section id="notas-de-interpretación-50-del-examen" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Notas de Interpretación (50% del examen)</h1>
+<section id="cómo-interpretar-summary-de-un-modelo" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="cómo-interpretar-summary-de-un-modelo"><span class="header-section-number">13.1</span> Cómo interpretar summary() de un modelo</h2>
+<ul>
+<li><strong>Asteriscos (<em>, ,</em></strong> ): Indican significancia estadística
+<ul>
+<li><code>***</code> = p &lt; 0.001 (muy significativo)</li>
+<li><code>**</code> = p &lt; 0.01</li>
+<li><code>*</code> = p &lt; 0.05</li>
+<li><code>.</code> = p &lt; 0.1 (marginal)</li>
+<li>(vacío) = no significativo</li>
+</ul></li>
+<li><strong>R²</strong>: Proporción de variabilidad explicada
+<ul>
+<li>R² = 0.80 → “El modelo explica el 80% de la variabilidad”</li>
+</ul></li>
+<li><strong>P-valor</strong>: Probabilidad de obtener ese resultado por azar
+<ul>
+<li>p &lt; 0.05 → Rechazamos hipótesis nula, el efecto es significativo</li>
+</ul></li>
+</ul>
+</section>
+<section id="traducir-a-lenguaje-de-negocio" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="traducir-a-lenguaje-de-negocio"><span class="header-section-number">13.2</span> Traducir a lenguaje de negocio</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Técnico</th>
+<th>Para el responsable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>“R² = 0.8”</td>
+<td>“El modelo explica el 80% de la variabilidad, es fiable para tomar decisiones”</td>
+</tr>
+<tr class="even">
+<td>“Coeficiente = -2.5, p &lt; 0.001”</td>
+<td>“Por cada unidad que sube X, Y baja 2.5 unidades, y esto no es casualidad”</td>
+</tr>
+<tr class="odd">
+<td>“Correlación = -0.6”</td>
+<td>“Hay una relación inversa moderada: cuando uno sube, el otro baja”</td>
+</tr>
+<tr class="even">
+<td>“Accuracy = 0.85”</td>
+<td>“El modelo acierta el 85% de las veces”</td>
+</tr>
+<tr class="odd">
+<td>“Sensitivity = 0.72”</td>
+<td>“De los casos reales, detectamos el 72%”</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="checkpoints-antisuspenso" class="level1" data-number="14">
+<h1 data-number="14"><span class="header-section-number">14</span> Checkpoints Antisuspenso</h1>
+<ol type="1">
+<li><strong>Overfitting</strong>: ¿Estás validando con datos de test separados?</li>
+<li><strong>Factores</strong>: ¿Convertiste las categóricas a factor?</li>
+<li><strong>Semilla</strong>: ¿Pusiste set.seed() antes de particionar?</li>
+<li><strong>NAs</strong>: ¿Revisaste y trataste los valores faltantes?</li>
+<li><strong>Interpretación</strong>: ¿Cada resultado tiene explicación de negocio debajo?</li>
+<li><strong>Código postal trampa</strong>: ¿Es numérico pero debería ser factor?</li>
+<li><strong>Positive Class</strong>: ¿Pusiste positive = “1” en confusionMatrix?</li>
+<li><strong>glm vs rpart</strong>: ¿Redondeaste las probabilidades de glm? ¿NO redondeaste las de rpart?</li>
+<li><strong>Fórmula manual</strong>: Si piden “excepto variable X”, ¿escribiste las variables a mano?</li>
+<li><strong>scale()</strong>: ¿Escalaste los datos antes de clustering?</li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
