@@ -1,0 +1,376 @@
+---
+  title: "entrega-examen"
+author: "Alejandro"
+date: "2026-02-24"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1.  **¿Existen celdas vacías en la base de datos?**
+  
+  Si, existen un total de 100 celdas vacías.
+
+Las 100 se encuentran en la variable edad.
+
+```{r 1}
+
+# dejo el seed arriba creado por reproducibilidad
+set.seed(123)
+library(dplyr)
+getwd()
+# cargamos en
+datos <- read.csv("clientes_marketing2.csv")
+
+
+sum(is.na(datos))
+colSums(is.na(datos))         
+```
+
+2.  **¿Cuántas personas tienen género femenino y cuánto suponen sobre el total?**
+  
+  Hay 474 registros que son del género femenino.
+
+Estos supone el 47.4 % del total.
+
+```{r 2}
+
+# unique(datos$genero)
+genfem <- datos %>% filter(genero == "Femenino")
+
+nrow(genfem)
+nrow(datos)
+
+perctotal <- nrow(genfem) / nrow(datos) * 100
+
+perctotal
+
+```
+
+3.  **¿Cuántos clientes hicieron más de 7 visitas web?**
+  
+  Un total de 141 clientes hicieron más de 7 visitas a la web.
+
+```{r 3}
+
+filtro7 <- datos %>% filter(visitas_web > 7)
+nrow(filtro7)
+
+```
+
+4.  **¿Cuántas personas que NO usan tarjeta de crédito respondieron a la campaña?**
+  
+  30 personas que no usaron la tarjeta si respondieron a la campaña.
+
+```{r 4}
+
+notarjeta <-  datos %>% filter(usa_tarjeta_credito == "No" & respondio_campaña == "Sí" )
+
+nrow(notarjeta)
+
+```
+
+5.  **¿Cuál es el ingreso medio mensual de los hombres y mujeres con educación universitaria?**
+  
+  El ingreso medio mensual de las personas con educación universitaria es de 2031.143
+
+```{r 5}
+
+#unique(datos$educacion)
+eduuni <- datos %>% filter(educacion == "Universitaria")
+
+mean(eduuni$ingreso_mensual)
+
+
+
+```
+
+6.  **¿Cuántos clientes respondieron afirmativamente a la campaña con educación universitaria?**
+  
+  82 clientes respondieron afirmativamente a la campaña y tenían educación universitaria.
+
+```{r 6}
+
+
+eduunisi <- datos %>% filter(educacion == "Universitaria" & respondio_campaña == "Sí")
+
+nrow(eduunisi)
+```
+
+7.  **¿Cuál es la edad media de las mujeres?**
+  
+  La media de edad es 44.44836 años para las mujeres.
+
+```{r 7}
+
+# uso la variable genfen creada anteriormente
+# elimino los nulos.
+# guardo en variable
+genfemnaomit <- na.omit(genfem)
+
+
+# hago la media de edad
+mean(genfemnaomit$edad)
+
+# también se puede añadir na.rm = TRUE
+# mean(genfem$edad,  na.rm = TRUE)
+
+
+```
+
+8.  **¿Entre qué variables existe más correlación? ¿Consideras dicha correlación grande?**
+  
+  Todas las correlaciones entre las variables numéricas son débiles dado que se encuentra entre -0.4 y 0.4
+
+Las correlaciones más notables son:
+  
+  -   visitas_web y edad: correlación débil positiva de 0.027
+
+-   compras_previas y visitas_web: correlación débil positiva de 0.022
+
+-   
+  
+  ```{r 8}
+
+# selecciono solo variables numéricas
+datos_num <- datos %>% select_if(is.numeric)
+
+
+# utilizamos "complete.obs" porque hay valores nulos. 
+cor(datos_num, use = "complete.obs")
+
+```
+
+9.  **Qué porcentaje de personas NO respondió afirmativamente?**
+  
+  El 80% no respondió afirmativamente.
+
+```{r 9}
+
+prop.table(table(datos$respondio_campaña))   * 100         
+
+
+```
+
+10. **Cree una variable que asigne un 0 a los individuos que no respondieron a la campaña y un 1 al resto**
+  
+  Creo la columna condicional llamada respondio_campaña_bol y guardo la columna en la variable del dataframe datos.
+
+```{r 10}
+datos$respondio_campaña_bol <- ifelse(datos$respondio_campaña == "Sí", 1, 0)
+# datos
+```
+
+11. **Realice una regresión logística utilizando como variable dependiente si el individuo respondió (o no) a la campaña, y como variables independientes el resto (excepto la variable edad) ¿Qué variables son significativas?**
+  
+  Las variables más significativa son aquellas que tienen un P-value \< 0.05
+
+En este caso, las variables más significativas son:
+  
+  -   Ingreso mensual
+
+-   usa_tarjeta_credito
+
+-   visitas_web
+
+-   compras_previstas
+
+```{r 11}
+
+library(caret)
+
+# train-test-split
+# No estoy seguro de si necesito hacer la regresión con datos de entranamiento o no porque no se especifíca en la pregunta. Sin embargo en posteriores preguntas se me preguntará por la matriz de confusión, procedo a train test split
+# Uso names() para comprobar los nombres de las columnas
+# names(datos)
+
+# creamos el índice de los datos de entrenamiento
+index <- createDataPartition(datos$respondio_campaña_bol, p = 0.8, list = FALSE)
+
+# creamos el dataset de train y test
+train <- datos[index, ]
+test  <- datos[-index, ]
+
+modelo_glm <- glm(respondio_campaña_bol ~ genero + educacion + ingreso_mensual + usa_tarjeta_credito + visitas_web + compras_previas , data = train, family = binomial)
+
+summary(modelo_glm)
+
+
+
+```
+
+12. **Determine la probabilidad de responder afirmativamente de un individuo que usa tarjeta de crédito frente al que no la usa.**
+  
+  La probabilidad de que alguien SI use la tarjeta de crédito aumenta \*1.35 la odds probabilidad de que SI responda a la campaña.
+
+```{r 12}
+exp(coef(modelo_glm))
+
+
+```
+
+13. **¿Cuánto aumenta la probabilidad de responder afirmativamente si el ingreso mensual aumenta en 200 dólares?**
+  
+  Por cada unidad de ingreso las odds de que si responda afirmativamente se multiplican por 1.0011
+
+Por lo que al ser 200 sería \*1.25
+
+```{r 13}
+exp(coef(modelo_glm))
+1.001121^200 
+
+
+```
+
+14. **Calcule la matriz de confusión y determine la métrica de exactitud.**
+  
+  La métrica de exactitud, conocida como Accuracy, es del 0.86. Es decir, nuestro modelo acierta en el 86% de las veces.
+
+```{r 14}
+
+pred_prob <- predict(modelo_glm, newdata = test, type = "response")
+pred_glm <- ifelse(pred_prob >= 0.5, 1, 0)
+
+confusionMatrix(as.factor(pred_glm), as.factor(test$respondio_campaña_bol), positive = "1")
+```
+
+15. **Con el modelo de regresión logística, determine la probabilidad de haber respondido la campaña de un individuo de género masculino, que usa tarjeta de crédito, con 4 compras previas y 6 visitas web y con un ingreso mensual igual a 2500 dólares**
+  
+  He agregado que la educación fuera también = "Universitaria", dado que si no incluyo todas las varaibles en el data.frame existe un error.
+
+La probabilidad sería del 87%
+
+```{r 15}
+
+
+prob_individuo <- predict(
+  modelo_glm,
+  newdata = data.frame(
+    genero = "Masculino",
+    usa_tarjeta_credito = "Sí",
+    compras_previas = 4, 
+    visitas_web = 6,
+    ingreso_mensual = 2500,
+    educacion= "Universitaria"
+  ),
+  type = "response"
+)
+
+prob_individuo
+names(datos)
+
+
+```
+
+16. **Con las mismas variables que en el modelo de regresión logística, estime un árbol de decisión. Determine el porcentaje (sobre el total) de aquellos individuos que hicieron compras mayores de 4, que no usaron tarjeta de crédito y que tuvieron un ingreso mayor de 2500 dólares (dibuje el árbol resultante para ayudarse).**
+  
+  El porcentaje sobre el total sería del 9%,
+
+Aunque en el nodo de nivel 3, se afirma ingreso_mensual \< 2513, que se aproxima a la regla de \> 2500, en ese caso, de un porcentaje sobre el total del 3%
+
+```{r 16}
+
+library(rpart)
+library(rpart.plot)
+
+# Crear modelo — method="class" OBLIGATORIO para clasificación
+modelo_arbol <- rpart(respondio_campaña_bol ~ genero + educacion + ingreso_mensual + usa_tarjeta_credito + visitas_web + compras_previas , data = train, method = "class")
+
+# Visualizar
+rpart.plot(modelo_arbol)
+
+
+
+```
+
+17. **Calcule la matriz de confusión y determine la métrica de exactitud.**
+  
+  El Accuracy es del 0.9, es decir del 90%.
+
+En el 90% de los casos, el modelo acierta.
+
+```{r 17}
+
+
+pred_arbol <- predict(modelo_arbol, newdata = test, type = "class")
+
+confusionMatrix(as.factor(pred_arbol), as.factor(test$respondio_campaña_bol), positive = "1")
+
+```
+
+18. **Con el modelo de árbol, determine la probabilidad de haber respondido la campaña de un individuo de género femenino, que usa tarjeta de crédito, con 3 compras previas y 5 visitas web y con un ingreso mensual igual a 2200 dólares**
+  
+  La probabilidad sería del 86%
+
+```{r 18}
+rpart.plot(modelo_arbol)
+
+
+```
+
+19. **Mediante el análisis clúster determine el número óptimo de clústeres en el que se puede dividir la base de datos. ¿Cómo podría interpretar cada clúster obtenido? Razone la respuesta.**
+  
+  Utilizando NbClust nos calcula que el número optimo serían 3 clústeres.
+
+```{r 19}
+library(NbClust)
+library(factoextra)
+
+
+datos_cluster <- datos %>% select_if(is.numeric)
+# omitimos los nans
+datos_cluster <- na.omit(datos_cluster)                          
+datos_scaled <- scale(datos_cluster)
+
+resultado_nb <- NbClust(datos_scaled, min.nc = 2, max.nc = 8, method = "kmeans")
+
+
+
+
+```
+
+Dado que el lengiaje no supervisado supone una "Caja Negra" de lógica, esta, se podría descrigrar de dos formas de interpretación.
+
+-   La primera es agregar las medias de cada cluster de los datos. Las variables numéricas resultantes de cada cluster deberían ser parecidas entre sí, sin demasiada desviación.
+
+-   La segunda es utilizar un árbol de regresión logística.
+
+```{r}
+
+
+```
+
+```{r 19-2}
+
+# ejecutamos el número óptimo
+modelo_km <- kmeans(datos_scaled, centers = 3, nstart = 25)
+
+
+
+
+```
+
+En esta primera interpreatación, tendríamos 3 grupos diferentes.
+
+```{r Interpreatación 1}
+
+datos_cluster$cluster <- modelo_km$cluster
+
+aggregate(. ~ cluster, data = datos_cluster, FUN = mean)
+```
+
+```{r Interpretación 2}
+arbol_cluster <- rpart(cluster ~ edad + ingreso_mensual + compras_previas + respondio_campaña_bol,
+                       data = datos_cluster,
+                       method = "class") 
+
+rpart.plot(arbol_cluster)
+```
+
+El cluster 3 son sobre todo personas mayores de 43 años
+
+El custer 2 son aquellas que más respondieron a la campaña
+
+El cluster 1 son sobre todo aquellos que no respondieron.
