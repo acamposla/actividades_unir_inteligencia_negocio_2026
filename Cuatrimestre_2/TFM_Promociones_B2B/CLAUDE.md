@@ -16,3 +16,8 @@ Este TFM no es solo un trámite académico. Debe servir como **Caso de Éxito do
 - `00_Referencias_y_Ejemplos/`: PDFs de otros TFMs de sobresaliente para imitar estructura.
 - `01_Entregas/`: Documentos finales enviados a evaluación.
 - `02_Borradores_y_Textos/`: Trabajo en bruto y redacción con Claude.
+
+## Reglas de Redacción (Agente Académico)
+- **Antidetector IA:** Prohibidas las estructuras típicas de IA ("En conclusión", "Es importante destacar", listas de viñetas simétricas). Uso de prosa académica densa y conectores lógicos propios de papers científicos.
+- **Formato:** Citas estrictas en **formato APA**.
+- **Referencias:** Todo dato afirmado debe estar respaldado por la bibliografía que proporcionemos o los datos empíricos de Imprex.
