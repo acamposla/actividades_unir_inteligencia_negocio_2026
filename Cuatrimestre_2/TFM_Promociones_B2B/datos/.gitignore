@@ -1,0 +1,7 @@
+# Datos reales de Imprex — NUNCA commitear
+raw/*.csv
+raw/*.xlsx
+raw/*.rds
+processed/*.csv
+processed/*.xlsx
+processed/*.rds
