@@ -39,15 +39,16 @@ Imprex diseña promociones por RAMO (canal SAP) con descuento uniforme, sin segm
 
 ## Metodología (del Cuatrimestre 1 a la práctica real)
 
-El TFM aplica conocimiento adquirido en dos asignaturas del Máster BI:
-- **Estrategia y Gestión Empresarial** → BEP, customer centricity, KPIs SMART, ciclo intelligence-action
-- **Análisis de Datos con R** → EDA, clustering K-Means, regresión logística, árboles de decisión
+El TFM aplica conocimiento adquirido en asignaturas del Máster BI:
+- **Estrategia y Gestión Empresarial** (C1) → BEP, customer centricity, KPIs SMART, ciclo intelligence-action
+- **Análisis de Datos con R** (C1) → fundamentos de EDA, clustering K-Means, regresión logística, árboles de decisión
+- **Machine Learning con Python** (C2, en curso) → implementación en Python con scikit-learn, pandas
 
 ### Ciclo Intelligence-Action
 ```
 1. Extracción de datos (SAP → Oracle/REPORTING)
-2. EDA + limpieza en R
-3. Segmentación K-Means (selección óptima de k con NbClust + elbow)
+2. EDA + limpieza en Python (pandas)
+3. Segmentación K-Means (selección óptima de k con elbow + silhouette)
 4. Perfilado de segmentos (descriptivo + árboles de decisión)
 5. Diseño de oferta por segmento (BEP + matrices de escenarios)
 6. Ejecución de campaña piloto real
@@ -68,17 +69,17 @@ El TFM aplica conocimiento adquirido en dos asignaturas del Máster BI:
 | Capa | Herramienta | Uso |
 |------|-------------|-----|
 | Datos | Oracle (esquema REPORTING, réplica SAP) | Fuente de verdad |
-| Extracción | SQL | Queries sobre Oracle |
-| Análisis | R (dplyr, caret, rpart, factoextra, NbClust) | EDA, modelos, clustering |
-| BEP / Escenarios | R + Excel | Matrices de escenarios, simulación |
-| Visualización | ggplot2 / PowerBI | Dashboards |
-| Documentación | Markdown + Word (plantilla UNIR) | TFM + docs internas |
+| ETL | Python (oracledb, pandas) + SQL | Extracción y limpieza |
+| Análisis | Python (pandas, scikit-learn, scipy) | EDA, modelos, clustering |
+| BEP / Escenarios | Python (numpy, pandas) | Matrices de escenarios, simulación |
+| Visualización | matplotlib / seaborn / PowerBI | Dashboards y gráficos |
+| Documentación | Quarto + Word (plantilla UNIR) | TFM + docs internas |
 
 ## Fases del Proyecto
 - [ ] **Fase 0**: Definir alcance y datos necesarios → pedir extracción a IT
 - [ ] **Fase 1**: Extraer datos SAP (clientes, pedidos, facturación últimos 12-24 meses) para segmento piloto
-- [ ] **Fase 2**: EDA en R — distribuciones, correlaciones, anomalías, calidad de datos
-- [ ] **Fase 3**: Segmentación K-Means — perfilar segmentos con árboles de decisión
+- [ ] **Fase 2**: EDA en Python — distribuciones, correlaciones, anomalías, calidad de datos
+- [ ] **Fase 3**: Segmentación K-Means (scikit-learn) — perfilar segmentos con árboles de decisión
 - [ ] **Fase 4**: BEP por segmento — matrices de escenarios (r × g)
 - [ ] **Fase 5**: Diseñar y ejecutar promoción piloto real en Imprex
 - [ ] **Fase 6**: Medir resultados, documentar como caso de éxito
@@ -105,9 +106,10 @@ referencias/        # TFMs de sobresaliente para estudiar estructura y nivel
 sesiones/           # Notas de reuniones con Eduardo y tutorías
 
 # === CAPA TÉCNICA (output: sistema real para Imprex) ===
-R/
-  eda/              # Análisis exploratorio de datos SAP
-  segmentacion/     # Clustering K-Means, perfilado de segmentos
+src/
+  etl/              # Conexión Oracle, extracción y limpieza de datos SAP
+  eda/              # Análisis exploratorio (pandas, seaborn)
+  segmentacion/     # Clustering K-Means, perfilado de segmentos (scikit-learn)
   scoring/          # Modelos predictivos (logit, árboles)
   promociones/      # Cálculo BEP, matrices de escenarios, simulación
 sql/                # Queries Oracle (exploración + producción)
@@ -123,14 +125,16 @@ docs/
     framework-scoring.md
 ```
 
-**Regla de oro**: lo que está en `R/`, `sql/` y `datos/` es trabajo real de Imprex. Lo que está en `entregas/` es la versión académica del mismo trabajo. `docs/metodologia/` alimenta a ambos.
+**Regla de oro**: lo que está en `src/`, `sql/` y `datos/` es trabajo real de Imprex. Lo que está en `entregas/` es la versión académica del mismo trabajo. `docs/metodologia/` alimenta a ambos.
 
 ### Frameworks metodológicos (`docs/metodologia/`)
 Estos documentos son la columna vertebral técnica del TFM. Conectan la teoría del Máster (profesor Herranz, asignaturas de Estrategia y R) con la implementación real:
 
-- **framework-segmentacion.md**: Pipeline completo de clustering B2B. Variables propuestas, código R para K-Means + NbClust, perfilado con árboles ("engañar al ordenador"), y conexión segmento → acción comercial (captación/desarrollo/retención).
-- **framework-bep.md**: Fórmula BEP, matrices de escenarios (r × g), regla del threshold para minimizar dilución. Cada segmento tiene su propio BEP porque tiene distinto margen/ticket/frecuencia.
-- **framework-scoring.md**: Scoring de propensión (logit) y reglas de negocio (árboles). Del score a la acción: solo ofrecer promo a clientes con P(respuesta) × Margen > Coste_oferta.
+- **framework-segmentacion.md**: Pipeline completo de clustering B2B. Variables propuestas, perfilado con árboles ("engañar al ordenador"), y conexión segmento → acción comercial (captación/desarrollo/retención). Código de referencia en R, se implementará en Python (scikit-learn).
+- **framework-bep.md**: Fórmula BEP, matrices de escenarios (r × g), regla del threshold para minimizar dilución. Cada segmento tiene su propio BEP porque tiene distinto margen/ticket/frecuencia. Código de referencia en R, se implementará en Python (numpy/pandas).
+- **framework-scoring.md**: Scoring de propensión (logit) y reglas de negocio (árboles). Del score a la acción: solo ofrecer promo a clientes con P(respuesta) × Margen > Coste_oferta. Código de referencia en R, se implementará en Python (scikit-learn).
+
+> **Nota**: Los frameworks contienen snippets en R (del Cuatrimestre 1). La metodología es agnóstica al lenguaje; la implementación real será en Python.
 
 ## Restricciones de Originalidad e IA (CRITICO)
 
@@ -147,7 +151,7 @@ Claude puede ayudar con:
 - Buscar y sugerir fuentes bibliográficas.
 - Revisar y dar feedback sobre borradores escritos por el alumno.
 - Discutir ideas, enfoques metodológicos y arquitectura de datos.
-- Preparar las queries SQL y el código R (que el alumno ejecutará y adaptará).
+- Preparar las queries SQL y el código Python (que el alumno ejecutará y adaptará).
 
 Claude NO genera:
 - Texto final para incluir en el TFM.
@@ -165,7 +169,8 @@ Claude NO genera:
 |----------|------------|--------|
 | `~/Proyectos/IMPREX/analitica-comercial/` | Diseño original del sistema. Frameworks ya copiados aquí. | Archivo — no se trabaja ahí |
 | `~/Proyectos/ACTIVIDADES_UNIR/Cuatrimestre_1/EstrategiaYGestiónEmpresarial/` | Teoría: BEP, customer centricity, KPIs, ciclo intelligence-action | Consulta puntual |
-| `~/Proyectos/ACTIVIDADES_UNIR/Cuatrimestre_1/Estudiar_R/` | Técnica: clustering, scoring, EDA, matrices de confusión en R | Consulta puntual |
+| `~/Proyectos/ACTIVIDADES_UNIR/Cuatrimestre_1/Estudiar_R/` | Fundamentos técnicos: clustering, scoring, EDA (conceptos, no código) | Consulta puntual |
+| `~/Proyectos/optimizacion-promociones/` | Primer intento del proyecto (solo scaffold). Sin código real. | Archivo — no aporta |
 
 ## Modo de Trabajo
 **Modo productivo** por defecto. El foco es avanzar rápido dentro de los límites permitidos.
