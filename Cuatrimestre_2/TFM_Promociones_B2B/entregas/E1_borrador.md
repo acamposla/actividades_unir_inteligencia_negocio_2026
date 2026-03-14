@@ -131,6 +131,23 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 
 ---
 
+## Nota: Atribución de campañas en SAP (no es objetivo, pero sí mención)
+
+**Contexto:** Para cerrar el ciclo intelligence-action (medir ROI real de una campaña), los pedidos deben registrar QUÉ campaña se aplicó. Hoy SAP no lo hace — el descuento se aplica pero no queda trazado qué promoción lo originó.
+
+**Propuesta de diseño (para mencionar en metodología, paso 6):**
+- Tabla de promociones con ID único (ej: `SEMANALUZ2026FERRETERIA`)
+- Asignación en tablet por el vendedor, o automática cuando la línea de pedido cumple condiciones
+- SAP registra el ID de campaña en cada línea de pedido → permite medir respuesta y ROI real
+
+**Dónde incluir en el TFM:**
+- En sección de metodología (ciclo intelligence-action, paso 6: medición)
+- En "Limitaciones y prospectiva" como trabajo futuro pendiente de implementación IT
+
+**No es un objetivo específico (OE)** — depende de IT y no lo controlamos. Pero mencionarlo muestra visión de implementación real.
+
+---
+
 ## Bibliografía a buscar
 
 - [ ] Segmentación de mercado: Dolnicar, S., Grün, B., & Leisch, F. (2018). Market Segmentation Analysis. (Ya usado por Intriago)
