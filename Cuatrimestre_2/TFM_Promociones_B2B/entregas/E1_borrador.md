@@ -18,13 +18,18 @@
 
 > Apartado obligatorio antes de la Introducción (por ser TFM grupal).
 
-**Puntos a cubrir:**
+**Modelo de trabajo:** No se reparte con una separación estricta de funciones. Ambos miembros ejecutan todas las partes del proyecto y se revisan mutuamente en un proceso iterativo de mejora continua. Las diferencias de rol son por acceso y perfil:
+- **Alejandro**: acceso directo a los datos de la empresa (SAP/Oracle), responsable de la extracción, ETL y modelado técnico.
+- **Leticia**: mayor peso en la revisión bibliográfica, redacción descriptiva y búsqueda de fuentes académicas.
+- **Ambos**: participan en el análisis, la interpretación de resultados y la redacción de todas las secciones.
 
-- División de tareas entre Alejandro y Leticia
-- Mecanismos de coordinación (herramientas, frecuencia de reuniones)
-- Objetivos de cada parte del trabajo
+**Mecanismos de coordinación:**
+- Reuniones semanales donde cada uno trae una propuesta de integración sobre el trabajo revisado del otro, que se valida conjuntamente.
+- Antes de cada reunión, ambos han revisado lo que produjo el otro.
+- Repositorio privado en GitHub para control de versiones del código y documentación.
+- Google Colab para borradores de código colaborativos, que después se transforman en scripts modulares en VSCode.
 
-**Estado:** Pendiente de hablar con Leticia.
+**Nota para redactar:** Adaptar a prosa académica. Evitar formato de lista — debe leerse como párrafo continuo.
 
 ---
 
