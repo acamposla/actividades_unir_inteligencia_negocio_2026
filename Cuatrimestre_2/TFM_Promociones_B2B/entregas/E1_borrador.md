@@ -169,16 +169,28 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 
 ---
 
-## Bibliografía a buscar
+## Bibliografía
 
-- [ ] Segmentación de mercado: Dolnicar, S., Grün, B., & Leisch, F. (2018). Market Segmentation Analysis. (Ya usado por Intriago)
-- [ ] Customer centricity / customer lifetime value: fuente académica
-- [ ] HIPPO (Highest Paid Person's Opinion): buscar origen en Avinash Kaushik o similar
-- [ ] BEP de promociones: buscar fuente académica (Blattberg, Neslin?)
-- [ ] K-Means: fuente clásica (MacQueen, 1967 o similar)
-- [ ] Árboles de decisión para perfilado de segmentos: buscar fuente
-- [ ] Distribución FMCG en España: informe sectorial (AECOC, Nielsen, Kantar)
-- [ ] B2B segmentation: Bonoma & Shapiro (1984) o Wind & Cardozo (1974)
+### Ya encontrada (en temario UNIR o referencia Intriago)
+- [x] Luhn, H.P. (1958). A business intelligence system. *IBM Journal of Research and Development*, 2(4), 314-319. ← paper fundacional de BI (Estrategia Tema 2)
+- [x] Kaplan, R. y Norton, D. (1992). The Balanced Scorecard – Measures that Drive Performance. *Harvard Business Review*, 70(1), 47-54. (Estrategia Tema 6)
+- [x] Dolnicar, S., Grün, B. y Leisch, F. (2018). *Market Segmentation Analysis*. Springer. (Usado por Intriago)
+- [x] Caseiro, N. y Coelho, A. (2018). Business Intelligence and competitiveness. *Competitiveness Review*, 28(2), 213-226. (Estrategia Tema 1)
+
+### Pendiente buscar (Perplexity Pro modo Académico + Biblioteca UNIR)
+- [ ] **HIPPO**: El temario UNIR lo define pero no cita fuente. Buscar: Avinash Kaushik (2006) *Web Analytics: An Hour a Day* o McAfee & Brynjolfsson (2012) en HBR.
+- [ ] **BEP de promociones**: No aparece en el temario. Buscar: Blattberg, R. y Neslin, S. (1990) *Sales Promotion*; o Kotler/Armstrong sobre análisis de punto de equilibrio promocional.
+- [ ] **K-Means**: El temario no cita el paper original. Buscar: MacQueen, J. (1967). "Some methods for classification and analysis of multivariate observations." *Proceedings of the 5th Berkeley Symposium*.
+- [ ] **Árboles de decisión**: Buscar: Breiman, L. et al. (1984). *Classification and Regression Trees*. Quinlan, J.R. (1986). Induction of decision trees.
+- [ ] **B2B segmentation**: Buscar: Bonoma, T.V. y Shapiro, B.P. (1984). "Evaluating Market Segmentation Approaches." *Industrial Marketing Management*. Wind, Y. y Cardozo, R. (1974).
+- [ ] **RFM**: Buscar: Hughes, A.M. (1994). *Strategic Database Marketing*; Fader, P. et al. (2005) sobre CLV/RFM.
+- [ ] **Distribución FMCG en España**: Buscar informes AECOC, Nielsen, Kantar sobre distribución comercial y canales en España.
+- [ ] **Customer centricity**: Buscar: Fader, P. (2012). *Customer Centricity*. Wharton Press.
+
+### Dónde buscar
+- **Perplexity Pro** (modo "Academic"): para papers y libros
+- **Biblioteca virtual UNIR**: revistas académicas con acceso institucional (¿tienes apuntado en algún sitio el acceso a las revistas? Buscar en plataforma UNIR)
+- **Google Scholar**: backup para confirmar citas APA correctas
 
 ---
 
