@@ -1,0 +1,102 @@
+---
+title: "03_analisisdatosmasivos"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(readxl)
+library(dplyr)
+
+
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+datos <- read_excel("/Users/alejandrocamposlamas/Proyectos/ACTIVIDADES_UNIR/Cuatrimestre_2/Analisis_Datos_Masivos_2/datos/cpatrones_starbucks.xlsx")
+```
+
+```{r}
+#dim(datos)
+
+colnames(datos)
+str(datos)
+colSums(is.na(datos))
+summary(datos)
+
+
+
+```
+
+```{r }
+# queremos predecir cuanto se van a gastar
+library(dplyr)
+
+datos_regresion <- datos%>%select("day_of_week", "order_channel", "store_location_type" , "region", "customer_age_group", "customer_gender","customer_gender","is_rewards_member","cart_size","num_customizations" ,"total_spend","fulfillment_time_min","drink_category","has_food_item" ,"order_ahead","customer_satisfaction" )
+
+datos_regresion$day_of_week<- as.factor(datos_regresion$day_of_week)
+
+datos_regresion$order_channel<- as.factor(datos_regresion$order_channel)
+
+datos_regresion$store_location_type<- as.factor(datos_regresion$store_location_type)
+
+datos_regresion$region<- as.factor(datos_regresion$region)
+
+datos_regresion$customer_age_group<- as.factor(datos_regresion$customer_age_group)
+
+datos_regresion$customer_gender<- as.factor(datos_regresion$customer_gender)
+
+datos_regresion$is_rewards_member<- as.factor(datos_regresion$is_rewards_member)
+
+datos_regresion$drink_category<- as.factor(datos_regresion$drink_category)
+
+datos_regresion$has_food_item<- as.factor(datos_regresion$has_food_item)
+
+datos_regresion$order_ahead<- as.factor(datos_regresion$order_ahead)
+
+
+
+```
+
+```{r reproducibilidad}
+set.seed(123)
+
+indice <- sample(1:nrow(datos_regresion), size=0.8*nrow(datos_regresion))
+
+train <- datos_regresion[indice, ]
+test <- datos_regresion[-indice, ]
+
+
+modelo_reg_lineal <- lm(total_spend~day_of_week+customer_age_group+num_customizations+has_food_item+order_channel+customer_gender +order_ahead+store_location_type+is_rewards_member+fulfillment_time_min+customer_satisfaction+region+cart_size+drink_category, data=train)
+
+
+
+```
+
+```{r}
+summary(modelo_reg_lineal)
+```
+
+```{r}
+
+predicciones <- predict(modelo_reg_lineal, newdata=test)
+
+```
+
+```{r}
+mse <- mean((test$total_spend-predicciones)^2)
+rmse <- sqrt(mse)
+
+mse
+rmse
+```
