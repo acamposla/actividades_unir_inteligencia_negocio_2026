@@ -20,11 +20,13 @@
 > Apartado obligatorio antes de la Introducción (por ser TFM grupal).
 
 **Modelo de trabajo:** No se reparte con una separación estricta de funciones. Ambos miembros ejecutan todas las partes del proyecto y se revisan mutuamente en un proceso iterativo de mejora continua. Las diferencias de rol son por acceso y perfil:
+
 - **Alejandro**: acceso directo a los datos de la empresa (SAP/Oracle), responsable de la extracción, ETL y modelado técnico.
 - **Leticia**: mayor peso en la revisión bibliográfica, redacción descriptiva y búsqueda de fuentes académicas.
 - **Ambos**: participan en el análisis, la interpretación de resultados y la redacción de todas las secciones.
 
 **Mecanismos de coordinación:**
+
 - Reuniones semanales donde cada uno trae una propuesta de integración sobre el trabajo revisado del otro, que se valida conjuntamente.
 - Antes de cada reunión, ambos han revisado lo que produjo el otro.
 - Repositorio privado en GitHub para control de versiones del código y documentación.
@@ -51,6 +53,7 @@ Caso de estudio: Garza, marca líder en iluminación y conectividad IoT, distrib
 Pregunta de investigación: ¿Es posible optimizar las promociones comerciales B2B mediante segmentación analítica de clientes y simulación de escenarios de rentabilidad?
 
 **Conceptos a fundamentar con bibliografía:**
+
 - Segmentación de mercado y customer centricity
 - Decisiones HIPPO vs data-driven
 - Distribución FMCG y atomización de canales en España
@@ -64,6 +67,7 @@ Pregunta de investigación: ¿Es posible optimizar las promociones comerciales B
 Diseñar un sistema de segmentación de clientes B2B y optimización de promociones comerciales para la marca Garza, mediante técnicas de clustering y análisis de rentabilidad, aplicado a datos reales del ERP de Imprex Europe.
 
 **Objetivos específicos:**
+
 - OE1: Definir el alcance de datos y realizar el proceso ETL desde el data lake corporativo.
 - OE2: Segmentar la base de clientes B2B mediante clustering K-Means sobre variables de comportamiento de compra.
 - OE3: Perfilar los segmentos resultantes mediante árboles de decisión, generando reglas interpretables.
@@ -84,6 +88,7 @@ Diseñar un sistema de segmentación de clientes B2B y optimización de promocio
 - **Propuesta de atribución de campañas** en SAP para cerrar el ciclo de medición.
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -109,12 +114,14 @@ Diseñar un sistema de segmentación de clientes B2B y optimización de promocio
 | Margen | SUM(neto - coste) por cliente | Facturación + costes |
 
 **Pipeline metodológico:**
+
 ```
 ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 → Perfilado (árboles) → BEP (matrices de escenarios) → Dashboard (PowerBI)
 ```
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -126,6 +133,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 **Idea central:** Hoy las promociones se diseñan por RAMO (canal SAP) con descuento uniforme. Las decisiones son tipo HIPPO. No hay segmentación por comportamiento ni cálculo previo de rentabilidad. Los reportes son estáticos en Excel, sin cruce multivariable.
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar — ya tienes el contenido de "Planteamiento del problema" que puedes adaptar aquí]
 
 ---
@@ -144,12 +152,14 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 | Documentación | Quarto / Word | Informes reproducibles |
 
 **Datos disponibles en SAP:**
+
 - Maestros de clientes: Código, nombre, Ramo (canal), zona, comercial asignado
 - Transacciones: fecha, cliente, artículo, cantidad, precio neto, descuento, margen
 - Maestro de artículos: código, descripción, familia/categoría
 - Condiciones comerciales: descuentos vigentes por cliente/canal
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -161,6 +171,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 > Aquí: qué reportes tiene Imprex hoy y por qué no son suficientes.
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -170,6 +181,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 > Aquí: de HIPPO → data-driven, de genérico → segmentado, de estático → dinámico.
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -179,6 +191,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 > Aquí: Python, scikit-learn, PowerBI — todo open source o licencias existentes.
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -188,6 +201,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 > Aquí: cronograma del TFM (las fechas de entrega), recursos (equipo de 2, acceso a SAP), sin coste adicional.
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -197,6 +211,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 > Aquí: alcance = marca Garza, todas las categorías, 12-24 meses de datos.
 
 **Notas del alumno (borrador libre):**
+
 > [Espacio para redactar]
 
 ---
@@ -204,6 +219,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 ## Secciones 3-6: No se cubren en E1
 
 > Estas secciones se desarrollarán en entregas posteriores:
+> 
 > - 3. Análisis y definición (EDA, limpieza, modelado)
 > - 4. Construcción, prueba, implementación y despliegue
 > - 5. Cronograma del proyecto (Swimlanes)
@@ -241,12 +257,14 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 ## Bibliografía
 
 ### Ya encontrada (en temario UNIR o referencia Intriago)
+
 - [x] Luhn, H.P. (1958). A business intelligence system. *IBM Journal of Research and Development*, 2(4), 314-319. ← paper fundacional de BI (Estrategia Tema 2)
 - [x] Kaplan, R. y Norton, D. (1992). The Balanced Scorecard – Measures that Drive Performance. *Harvard Business Review*, 70(1), 47-54. (Estrategia Tema 6)
 - [x] Dolnicar, S., Grün, B. y Leisch, F. (2018). *Market Segmentation Analysis*. Springer. (Usado por Intriago)
 - [x] Caseiro, N. y Coelho, A. (2018). Business Intelligence and competitiveness. *Competitiveness Review*, 28(2), 213-226. (Estrategia Tema 1)
 
 ### Pendiente buscar (Perplexity Pro modo Académico + Biblioteca UNIR)
+
 - [ ] **HIPPO**: El temario UNIR lo define pero no cita fuente. Buscar: Avinash Kaushik (2006) *Web Analytics: An Hour a Day* o McAfee & Brynjolfsson (2012) en HBR.
 - [ ] **BEP de promociones**: No aparece en el temario. Buscar: Blattberg, R. y Neslin, S. (1990) *Sales Promotion*; o Kotler/Armstrong sobre análisis de punto de equilibrio promocional.
 - [ ] **K-Means**: El temario no cita el paper original. Buscar: MacQueen, J. (1967). "Some methods for classification and analysis of multivariate observations." *Proceedings of the 5th Berkeley Symposium*.
@@ -257,6 +275,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 - [ ] **Customer centricity**: Buscar: Fader, P. (2012). *Customer Centricity*. Wharton Press.
 
 ### Dónde buscar
+
 - **Perplexity Pro** (modo "Academic"): para papers y libros
 - **Biblioteca virtual UNIR**: revistas académicas con acceso institucional
 - **Google Scholar**: backup para confirmar citas APA correctas
@@ -264,7 +283,9 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 ---
 
 ## Checklist antes de entregar
+
 - [ ] Apartado "Organización del trabajo en grupo" en prosa
+- [ ] Modificar la introducción respecto a AECOC y sustituir por lo encontrado en perplexity
 - [ ] 1.1 Justificación + problema integrados
 - [ ] 1.3 Elementos innovadores redactado
 - [ ] 2.1-2.3 al menos parcialmente cubiertos
