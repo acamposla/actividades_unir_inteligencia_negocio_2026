@@ -285,6 +285,7 @@ ETL (Python/SQL) → EDA (pandas/seaborn) → K-Means (scikit-learn)
 ## Checklist antes de entregar
 
 - [ ] Apartado "Organización del trabajo en grupo" en prosa
+- [ ] Buscar cita real de AECOC (informe distribución gran consumo España) o quitar mención explícita
 - [ ] Modificar la introducción respecto a AECOC y sustituir por lo encontrado en perplexity
 - [ ] 1.1 Justificación + problema integrados
 - [ ] 1.3 Elementos innovadores redactado

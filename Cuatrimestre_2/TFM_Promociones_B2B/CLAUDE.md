@@ -2,7 +2,7 @@
 
 ## Tema
 Segmentación de clientes B2B y optimización de promociones comerciales en distribución FMCG.
-**Caso real: Imprex** (distribuidor de gran consumo, empresa familiar).
+**Caso real: marca Garza** (iluminación, conectividad e IoT), distribuida por Imprex. Todas las categorías incluidas.
 
 ## Equipo
 - **Alejandro Campos** y **Leticia** (trabajo grupal)
@@ -41,8 +41,10 @@ Imprex diseña promociones por RAMO (canal SAP) con descuento uniforme, sin segm
 
 El TFM aplica conocimiento adquirido en asignaturas del Máster BI:
 - **Estrategia y Gestión Empresarial** (C1) → BEP, customer centricity, KPIs SMART, ciclo intelligence-action
-- **Análisis de Datos con R** (C1) → fundamentos de EDA, clustering K-Means, regresión logística, árboles de decisión
-- **Machine Learning con Python** (C2, en curso) → implementación en Python con scikit-learn, pandas
+- **Análisis de Datos con R** (C1) → fundamentos conceptuales de EDA, clustering, regresión (referencia, no implementación)
+- **Machine Learning con Python** (C2, en curso) → implementación real en Python con scikit-learn, pandas
+
+**Decisión firme de stack: Python** (no R). Razones: es lo que se aprende en C2, mayor valor para Imprex a largo plazo, al tribunal le es indiferente el lenguaje. Los frameworks en `docs/metodologia/` tienen snippets en R como referencia histórica; la implementación real es íntegramente Python.
 
 ### Ciclo Intelligence-Action
 ```
@@ -76,23 +78,35 @@ El TFM aplica conocimiento adquirido en asignaturas del Máster BI:
 | Documentación | Quarto + Word (plantilla UNIR) | TFM + docs internas |
 
 ## Fases del Proyecto
-- [ ] **Fase 0**: Definir alcance y datos necesarios → pedir extracción a IT
-- [ ] **Fase 1**: Extraer datos SAP (clientes, pedidos, facturación últimos 12-24 meses) para segmento piloto
+- [x] **Fase 0**: Definir alcance y datos necesarios → petición enviada a IT (KNA1, KNVV, KNVH, VBRK, VBRP)
+- [ ] **Fase 1**: Extraer datos SAP (clientes, pedidos, facturación últimos 12-24 meses) para marca Garza
 - [ ] **Fase 2**: EDA en Python — distribuciones, correlaciones, anomalías, calidad de datos
 - [ ] **Fase 3**: Segmentación K-Means (scikit-learn) — perfilar segmentos con árboles de decisión
 - [ ] **Fase 4**: BEP por segmento — matrices de escenarios (r × g)
 - [ ] **Fase 5**: Diseñar y ejecutar promoción piloto real en Imprex
 - [ ] **Fase 6**: Medir resultados, documentar como caso de éxito
 
-## Datos SAP Necesarios (pendiente confirmar con IT)
+## Datos SAP / Oracle — Tablas Identificadas
 
-**Tablas clave del esquema REPORTING (Oracle, réplica SAP):**
-- Maestro de clientes: código, nombre, RAMO (canal), zona, comercial asignado
-- Pedidos/Facturación: fecha, cliente, artículo, cantidad, precio, descuento, margen
-- Maestro de artículos: código, descripción, familia, categoría
-- Condiciones comerciales: descuentos vigentes por cliente/canal
+Conexión Oracle funciona: host `172.16.62.24`, esquema REPORTING, user `reporting`.
 
-> **Próximo paso concreto**: Identificar las tablas exactas en el esquema REPORTING y confirmar disponibilidad de las variables de segmentación. Usar el skill `sap-distribucion` y el MCP `oracle-db` para explorar.
+**Estrategia ETL (decidida en sesión 2026-03-20):**
+
+| Capa | Tabla / Vista | Rol en ETL | Estado |
+|------|--------------|------------|--------|
+| Maestro productos Garza | `SALESLAYER_PRODUCTOS_GARZA` | Base del maestro (455 productos, ya enriquecida desde PIM) — preferir sobre reconstruir desde DIM_MARA | Disponible |
+| Costes y tarifa | `MV_GOLDEN_TABLE_COMPLETA` | JOIN puntual para `COSTE_UNITARIO` y `TARIFA_BASE_EUR` → calcular margen | Disponible |
+| Transacciones | `VBAK` / `VBAP` | Pedidos + líneas (volumen, frecuencia, categorías, ticket) | Disponible |
+| Maestro clientes | `KNA1` | Datos maestro: código, nombre, zona | Pendiente carga IT |
+| Clientes — canal | `KNVV` | RAMO (canal SAP), comercial asignado | Pendiente carga IT |
+| Jerarquía clientes | `KNVH` | Agrupaciones de clientes | Pendiente carga IT |
+| Facturación cabecera | `VBRK` | Facturas emitidas | Pendiente carga IT |
+| Facturación posiciones | `VBRP` | Líneas de factura | Pendiente carga IT |
+
+**Tablas adicionales a explorar:**
+- `VENTAS_MASTER_CE1IMPR` (CO-PA): posiblemente tiene margen directo — verificar antes de construirlo manualmente desde Golden Table.
+
+**Nota sobre RFM vs. multivariable**: Se descartó RFM explícitamente. RFM es operativo/ventas (mirar hacia atrás). Nuestra segmentación es estratégica/marketing (6 variables: volumen, frecuencia, nº categorías, ticket medio, tendencia, margen). Nota sincronizada en cerebro-digital.
 
 ## Estructura del Repositorio — Dos capas, un repo
 
@@ -130,11 +144,9 @@ docs/
 ### Frameworks metodológicos (`docs/metodologia/`)
 Estos documentos son la columna vertebral técnica del TFM. Conectan la teoría del Máster (profesor Herranz, asignaturas de Estrategia y R) con la implementación real:
 
-- **framework-segmentacion.md**: Pipeline completo de clustering B2B. Variables propuestas, perfilado con árboles ("engañar al ordenador"), y conexión segmento → acción comercial (captación/desarrollo/retención). Código de referencia en R, se implementará en Python (scikit-learn).
-- **framework-bep.md**: Fórmula BEP, matrices de escenarios (r × g), regla del threshold para minimizar dilución. Cada segmento tiene su propio BEP porque tiene distinto margen/ticket/frecuencia. Código de referencia en R, se implementará en Python (numpy/pandas).
-- **framework-scoring.md**: Scoring de propensión (logit) y reglas de negocio (árboles). Del score a la acción: solo ofrecer promo a clientes con P(respuesta) × Margen > Coste_oferta. Código de referencia en R, se implementará en Python (scikit-learn).
-
-> **Nota**: Los frameworks contienen snippets en R (del Cuatrimestre 1). La metodología es agnóstica al lenguaje; la implementación real será en Python.
+- **framework-segmentacion.md**: Pipeline completo de clustering B2B. Variables propuestas, perfilado con árboles ("engañar al ordenador"), y conexión segmento → acción comercial (captación/desarrollo/retención). Snippets en R como referencia; implementación en Python (scikit-learn).
+- **framework-bep.md**: Fórmula BEP, matrices de escenarios (r × g), regla del threshold para minimizar dilución. Cada segmento tiene su propio BEP porque tiene distinto margen/ticket/frecuencia. Snippets en R como referencia; implementación en Python (numpy/pandas).
+- **framework-scoring.md**: Scoring de propensión (logit) y reglas de negocio (árboles). Del score a la acción: solo ofrecer promo a clientes con P(respuesta) × Margen > Coste_oferta. Snippets en R como referencia; implementación en Python (scikit-learn).
 
 ## Restricciones de Originalidad e IA (CRITICO)
 
@@ -163,6 +175,17 @@ Claude NO genera:
 - **Antidetector IA:** prosa académica densa, conectores lógicos de papers. Prohibido: "En conclusión", "Es importante destacar", listas de viñetas simétricas, estructuras genéricas de IA.
 - Todo dato afirmado respaldado por bibliografía o datos empíricos de Imprex.
 - Apartado "Organización del trabajo en grupo" antes de la Introducción (obligatorio por ser grupal).
+
+## Decisiones Tomadas (registro acumulativo)
+
+| Fecha | Decisión | Justificación |
+|-------|----------|---------------|
+| 2026-03-20 | Stack Python (no R) | Se aprende en C2, mayor valor Imprex largo plazo, tribunal indiferente al lenguaje |
+| 2026-03-20 | Caso de estudio: marca Garza, todas las categorías | Datos reales disponibles, proyecto operativo real |
+| 2026-03-20 | Segmentación multivariable (6 vars), no RFM | RFM es operativo/ventas; nuestro enfoque es estratégico/marketing |
+| 2026-03-20 | SALESLAYER_PRODUCTOS_GARZA como base del maestro de productos | Ya filtrada y enriquecida desde PIM (455 productos); evita reconstruir desde DIM_MARA |
+| 2026-03-20 | JOIN puntual con MV_GOLDEN_TABLE_COMPLETA para márgenes | Tiene COSTE_UNITARIO y TARIFA_BASE_EUR; explorar antes CO-PA (VENTAS_MASTER_CE1IMPR) |
+| 2026-03-20 | Repo único: todo el trabajo aquí | analitica-comercial y optimizacion-promociones quedan como archivo/referencia |
 
 ## Proyectos Relacionados (solo referencia)
 | Proyecto | Qué aporta | Estado |
